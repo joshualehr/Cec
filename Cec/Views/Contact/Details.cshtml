@@ -1,0 +1,62 @@
+﻿@model Cec.Models.Contact
+
+@{
+    ViewBag.Title = "Contact";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Contacts", "Index")
+</p>
+<h2>@Model.FirstName @Model.LastName</h2>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ContactID }) |
+    @Html.ActionLink("Delete", "Delete", new { id = Model.ContactID })
+</p>
+<hr />
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Company)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Company)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Trade)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Trade)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Chat)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Chat)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Website)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Website)
+        </dd>
+    </dl>
+</div>

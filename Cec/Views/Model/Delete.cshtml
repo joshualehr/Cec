@@ -1,0 +1,28 @@
+﻿@model Cec.ViewModels.ModelDeleteViewModel
+
+@{
+    ViewBag.Title = "Delete Model";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectName + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Models", "Index", new { id = Model.ProjectId })
+</p>
+<h2 style="color:red">Are you sure you want to delete Model @Model.ModelName?</h2>
+<h3>@Html.ActionLink("Cancel", "Details", new { id = Model.ModelId })</h3>
+<p class="has-error">@ViewBag.ErrorMessage</p>
+<hr />
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.ModelId)
+        @Html.HiddenFor(model => model.ProjectId)
+        <div class="form-actions no-color">
+            <br/>
+            <input type="submit" value="Delete" class="btn btn-default" />
+        </div>
+    }
+</div>

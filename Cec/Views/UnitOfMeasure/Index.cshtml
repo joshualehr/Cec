@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Cec.Models.UnitOfMeasure>
+
+@{
+    ViewBag.Title = "Units of Measure";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Materials", "Index", "Material")
+</p>
+<h2>Units of Measure</h2>
+<p>
+    @Html.ActionLink("New Unit of Measure", "Create")
+</p>
+<table class="table">
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Designation)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.UnitOfMeasureID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.UnitOfMeasureID })
+        </td>
+    </tr>
+}
+
+</table>

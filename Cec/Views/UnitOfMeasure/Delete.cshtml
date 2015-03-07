@@ -1,0 +1,25 @@
+﻿@model Cec.Models.UnitOfMeasure
+
+@{
+    ViewBag.Title = "Delete " + Model.Designation;
+}
+
+<br />
+<p>
+    @Html.ActionLink("Materials", "Index", "Material")
+</p>
+<h2 style="color:red">Are you sure you want to delete @Model.Designation?</h2>
+<h3>@Html.ActionLink("Cancel", "Index")</h3>
+<p class="has-error">@ViewBag.ErrorMessage</p>
+<hr />
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <br/>
+            <input type="submit" value="Delete" class="btn btn-default" />
+        </div>
+    }
+</div>

@@ -1,0 +1,28 @@
+﻿@model Cec.ViewModels.MaterialDeleteViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Materials", "Index", new { page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })
+</p>
+<h2 style="color:red">Are you sure you want to delete @Model.Material?</h2>
+<h3>@Html.ActionLink("Cancel", "Details", new { id = Model.MaterialId, page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })</h3>
+<p class="has-error">@ViewBag.ErrorMessage</p>
+<hr />
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.MaterialId)
+        @Html.HiddenFor(model => model.ImagePath)
+
+        <div class="form-actions no-color">
+            <br/>
+            <input type="submit" value="Delete" class="btn btn-default" />
+        </div>
+    }
+</div>

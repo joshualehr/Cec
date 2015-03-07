@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Cec.ViewModels.AreaIndexViewModel>
+
+@{
+    ViewBag.Title = "Areas";
+    var amvm = Model.First();
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(amvm.Project + " Project", "Details", "Project", new { id = amvm.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", "Building", new { id = amvm.ProjectId }, null) >
+    @Html.ActionLink("Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, null)
+</p>
+<h2>Areas</h2>
+<p>
+    @Html.ActionLink("Create New", "Create", new { id = amvm.BuildingId })
+</p>
+
+@using (Html.BeginForm("Index", "Area", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <table class="table">
+            <tr>
+                <th>
+                    <input type="checkbox" class="checkall" /> Select All
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Area)
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+            @Html.DisplayFor(model => model)
+        </table>
+    </fieldset>
+    <input type="submit" value="Calculate Materials" class="btn btn-default" />
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    $(function () {
+        $('.checkall').on('click', function () {
+            $(this).closest('fieldset').find(':checkbox').prop('checked', this.checked);
+        });
+    });
+    </script>
+}

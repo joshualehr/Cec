@@ -1,0 +1,35 @@
+﻿@model Cec.ViewModels.AreaDeleteViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Building " + Model.BuildingDesignation, "Details", "Building", new { id = Model.BuildingId }, null) >
+    @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId })
+</p>
+<h2 style="color:red">Are you sure you want to delete Area @Model.AreaDesignation?</h2>
+<h3>@Html.ActionLink("Cancel", "Details", new { id = Model.AreaId })</h3>
+<hr />
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.AreaId)
+        @Html.HiddenFor(model => model.AreaDesignation)
+        @Html.HiddenFor(model => model.BuildingId)
+        @Html.HiddenFor(model => model.BuildingDesignation)
+        @Html.HiddenFor(model => model.ProjectId)
+        @Html.HiddenFor(model => model.ProjectDesignation)
+
+        <div class="form-actions no-color">
+            <br/>
+            <input type="submit" value="Delete" class="btn btn-default" />
+        </div>
+    }
+</div>

@@ -1,0 +1,12 @@
+﻿@model Cec.ViewModels.ModelIndexItemViewModel
+<tr>
+    <td>
+        @Html.ActionLink(Model.ModelName, "Details", new { id = Model.ModelId })
+    </td>
+    <td>
+        @Html.ActionLink("Material", "Index", "ModelMaterial", new { id = Model.ModelId }, null) |
+        @Html.ActionLink("Copy", "Copy", new { id = Model.ModelId }) |
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ModelId }) |
+        @Html.ActionLink("Delete", "Delete", new { id = Model.ModelId })
+    </td>
+</tr>

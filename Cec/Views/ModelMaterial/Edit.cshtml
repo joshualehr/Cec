@@ -1,0 +1,52 @@
+﻿@model Cec.Models.ModelMaterial
+
+@{
+    ViewBag.Title = "Edit Model Material";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.Model.Project.Designation + " Project", "Details", "Project", new { id = Model.Model.ProjectID }, null) >
+    @Html.ActionLink("Models", "Index", "Model", new { id = ViewBag.BuildingId }, null) >
+    @Html.ActionLink("Model " + Model.Model.Designation, "Details", "Model", new { id = Model.ModelID }, null)
+</p>
+<h2>Edit @Model.Material.Designation for Model @Model.Model.Designation</h2>
+<p>
+    @Html.ActionLink("Cancel", "Index", new { id = Model.ModelID })
+</p>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.ModelID)
+        @Html.HiddenFor(model => model.MaterialID)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Quantity)
+                @Html.ValidationMessageFor(model => model.Quantity)
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2"> </label>
+            <div class="col-md-10">
+                <input id="applyToAll" name="applyToAll" type="checkbox" checked="checked" value="true" />
+                <label for="applyToAll">Apply to existing areas?</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

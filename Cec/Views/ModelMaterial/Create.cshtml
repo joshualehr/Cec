@@ -1,0 +1,56 @@
+﻿@model Cec.ViewModels.ModelMaterialCreateViewModel
+
+@{
+    ViewBag.Title = "New Model Material";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectName + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Models", "Index", "Model", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Model " + Model.ModelName, "Details", "Model", new { id = Model.ModelId }, null)
+</p>
+<h2>Add to Model @Model.ModelName</h2>
+<p>
+    @Html.ActionLink("Cancel", "Index", new { id = Model.ModelId })
+</p>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.ModelId)
+    @Html.CheckBoxFor(model => model.OnlyProjectMaterial, new { @checked = Model.OnlyProjectMaterial, @onclick = "this.form.submit();" })
+    <label for="OnlyProjectMaterial">Show only material already used in this project</label>
+    <br />    
+    <table class="table">
+        <tr>
+            <th>
+                Quantity
+            </th>
+            <th>
+                U/M
+            </th>
+            <th>
+                Image
+            </th>
+            <th>
+                Material
+            </th>
+            <th>
+                Description
+            </th>
+        </tr>
+        @Html.EditorFor(model => model.Materials)
+    </table>
+    @Html.CheckBoxFor(model => model.ApplyToAllAreas, new { @checked = Model.ApplyToAllAreas })
+    <label for="ApplyToAllAreas">Apply to existing areas?</label>
+    <br/>
+    <input type="submit" value="Create" class="btn btn-default" />
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

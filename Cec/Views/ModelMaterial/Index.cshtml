@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Cec.Models.ModelMaterial>
+
+@{
+    ViewBag.Title = "Material";
+    var mod = Model.First().Model;
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(mod.Project.Designation + " Project", "Details", "Project", new { id = mod.Project.ProjectID }, null) >
+    @Html.ActionLink("Models", "Index", "Model", new { id = mod.Project.ProjectID }, null) >
+    @Html.ActionLink("Model " + mod.Designation, "Details", "Model", new { id = mod.ModelID }, null)
+</p>
+<h2>Material for Model @mod.Designation</h2>
+<p>
+    @Html.ActionLink("Add Item", "Create", new { id = mod.ModelID })
+</p>
+<table class="table">
+    <tr>
+        <th colspan="2">
+            @Html.DisplayNameFor(m => m.Material.Designation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Quantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Material.UnitOfMeasure.Designation)
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <img src="@item.Material.ImagePath" title="@item.Material.Designation" height="50" width="50" alt="@item.Material.Designation" />
+        </td>
+        <td>
+            @Html.ActionLink(item.Material.Designation, "Details", "Material", new { id = item.MaterialID }, null)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Material.UnitOfMeasure.Designation)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.ModelID, materialId = item.MaterialID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ModelID, materialId = item.MaterialID })
+        </td>
+    </tr>
+}
+</table>

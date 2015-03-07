@@ -1,0 +1,18 @@
+﻿@model Cec.ViewModels.BuildingIndexViewModel
+<tr>
+    <td width="10%">
+        @Html.CheckBoxFor(model => model.Selected)
+    </td>
+    <td>
+        @Html.ActionLink(Model.Building, "Details", new { id = Model.BuildingID })
+        @Html.HiddenFor(model => model.BuildingID)
+        @Html.HiddenFor(model => model.Building)
+        @Html.HiddenFor(model => Model.ProjectID)
+        @Html.HiddenFor(model => Model.Project)
+    </td>
+    <td>
+        @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingID }, null) |
+        @Html.ActionLink("Edit", "Edit", new { id = Model.BuildingID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = Model.BuildingID })
+    </td>
+</tr>

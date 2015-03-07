@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Cec.Models.Contact>
+
+@{
+    ViewBag.Title = "Contacts";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Home", "Index", "Home")
+</p>
+<h2>Contacts</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Company)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.FirstName + " " + item.LastName, "Details", new { id = item.ContactID })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Company)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.ContactID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ContactID })
+        </td>
+    </tr>
+}
+
+</table>

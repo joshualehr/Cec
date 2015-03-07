@@ -1,0 +1,31 @@
+﻿@model Cec.Models.ModelMaterial
+
+@{
+    ViewBag.Title = "Model Material from Model";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.Model.Project.Designation + " Project", "Details", "Project", new { id = Model.Model.ProjectID }, null) >
+    @Html.ActionLink("Models", "Index", "Model", new { id = ViewBag.BuildingId }, null) >
+    @Html.ActionLink("Model " + Model.Model.Designation, "Details", "Model", new { id = Model.ModelID }, null)
+</p>
+<h2 style="color:red">Are you sure you want to delete @Model.Material.Designation from Model @Model.Model.Designation?</h2>
+<h3>@Html.ActionLink("Cancel", "Index", new { id = Model.ModelID })</h3>
+<p class="has-error">@ViewBag.ErrorMessage</p>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <div>
+            <input id="applyToAll" name="applyToAll" type="checkbox" checked="checked" value="true" />
+            <label for="applyToAll">Apply to existing areas?</label>
+        </div>
+    </div>
+    <div class="form-actions no-color">
+        <input type="submit" value="Delete" class="btn btn-default" />
+    </div>
+}

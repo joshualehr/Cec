@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Cec.ViewModels.BuildingIndexViewModel>
+
+@{
+    ViewBag.Title = "Building";
+    var project = Model.First();
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(project.Project + " Project", "Details", "Project", new { id = project.ProjectID }, null)
+</p>
+<h2>Buildings</h2>
+<p>
+    @Html.ActionLink("Create New", "Create", new { id = project.ProjectID })
+</p>
+
+@using (Html.BeginForm("Index", "Building", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <table class="table">
+            <tr>
+                <th>
+                    <input type="checkbox" class="checkall" /> Select All
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Building)
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+            @Html.DisplayFor(model => model)
+        </table>
+    </fieldset>
+    <input type="submit" value="Calculate Materials" class="btn btn-default" />
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    $(function () {
+        $('.checkall').on('click', function () {
+            $(this).closest('fieldset').find(':checkbox').prop('checked', this.checked);
+        });
+    });
+    </script>
+}

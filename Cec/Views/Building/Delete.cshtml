@@ -1,0 +1,28 @@
+﻿@model Cec.Models.Building
+
+@{
+    ViewBag.Title = "Building";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.Project.Designation + " Project", "Details", "Project", new { id = Model.ProjectID }, null) >
+    @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectID })
+</p>
+<h2 style="color:red">Are you sure you want to delete Building @Model.Designation?</h2>
+<h3>@Html.ActionLink("Cancel", "Details", new { id = Model.BuildingID })</h3>
+<p class="has-error">@ViewBag.ErrorMessage</p>
+<hr />
+
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <br />
+            <input type="submit" value="Delete" class="btn btn-default" />
+        </div>
+    }
+</div>

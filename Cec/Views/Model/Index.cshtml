@@ -1,0 +1,26 @@
+﻿@model Cec.ViewModels.ModelIndexViewModel
+
+@{
+    ViewBag.Title = "Models";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectName + " Project", "Details", "Project", new { id = Model.ProjectId }, null)
+</p>
+<h2>Models</h2>
+<p>
+    @Html.ActionLink("Create New", "Create", new { id = Model.ProjectId })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Model
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    @Html.DisplayFor(model => model.Models)
+</table>

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Cec.Models.Project>
+
+@{
+    ViewBag.Title = "Project";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Materials", "Index", "Material")
+</p>
+<h2>Projects</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Designation)
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.Designation, "Details", new { id = item.ProjectID })
+        </td>
+        <td>
+            @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectID }, null) |
+            @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectID }, null) |
+            @Html.ActionLink("Edit", "Edit", new { id = item.ProjectID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ProjectID })
+        </td>
+    </tr>
+}
+
+</table>

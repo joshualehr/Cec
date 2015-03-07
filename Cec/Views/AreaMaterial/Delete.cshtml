@@ -1,0 +1,29 @@
+﻿@model Cec.Models.AreaMaterial
+
+@{
+    ViewBag.Title = "Delete Material from Area";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.Area.Building.Project.Designation + " Project", "Details", "Project", new { id = Model.Area.Building.Project.ProjectID }, null) >
+    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.Area.Building.ProjectID }, null) >
+    @Html.ActionLink("Building " + Model.Area.Building.Designation, "Details", "Building", new { id = Model.Area.BuildingID }, null) >
+    @Html.ActionLink("Areas", "Index", "Area", new { id = Model.Area.BuildingID }, null) >
+    @Html.ActionLink(Model.Area.Designation, "Details", "Area", new { id = Model.AreaID }, null)
+</p>
+<h2 style="color:red">Are you sure you want to delete @Model.Material.Designation from @Model.Area.Designation?</h2>
+<h3>@Html.ActionLink("Cancel", "Index", new { id = Model.AreaID })</h3>
+<p class="has-error">@ViewBag.ErrorMessage</p>
+<hr />
+<div>
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <br />
+            <input type="submit" value="Delete" class="btn btn-default" />
+        </div>
+    }
+</div>

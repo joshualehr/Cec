@@ -1,0 +1,47 @@
+﻿@model Cec.Models.AreaMaterial
+
+@{
+    ViewBag.Title = "Edit Area Material";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.Area.Building.Project.Designation + " Project", "Details", "Project", new { id = Model.Area.Building.Project.ProjectID }, null) >
+    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.Area.Building.ProjectID }, null) >
+    @Html.ActionLink("Building " + Model.Area.Building.Designation, "Details", "Building", new { id = Model.Area.BuildingID }, null) >
+    @Html.ActionLink("Areas", "Index", "Area", new { id = Model.Area.BuildingID }, null) >
+    @Html.ActionLink(Model.Area.Designation, "Details", "Area", new { id = Model.AreaID }, null)
+</p>
+<h2>Edit @Model.Material.Designation for @Model.Area.Designation</h2>
+<p>
+    @Html.ActionLink("Cancel", "Index", new { id = Model.AreaID })
+</p>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.AreaID)
+        @Html.HiddenFor(model => model.MaterialID)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Quantity)
+                @Html.ValidationMessageFor(model => model.Quantity)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,35 @@
+﻿@model Cec.ViewModels.MaterialDetailsViewModel
+
+@{
+    ViewBag.Title = Model.Material;
+}
+
+<br />
+<p>
+    @Html.ActionLink("Materials", "Index", new { page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })
+</p>
+<h2>@Model.Material</h2>
+<p>
+    @Html.ActionLink("Copy", "Copy", new { id = Model.MaterialId, page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MaterialId, page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
+    @Html.ActionLink("Delete", "Delete", new { id = Model.MaterialId, page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })
+</p>
+<img title="@Model.Material" width="150" src="@Model.ImagePath" />
+<hr />
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UnitOfMeasure)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UnitOfMeasure)
+        </dd>
+    </dl>
+</div>

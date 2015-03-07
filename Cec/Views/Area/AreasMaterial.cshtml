@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Cec.ViewModels.AreasMaterialViewModel>
+
+@{
+    ViewBag.Title = "AreasMaterial";
+    var amvm = Model.First();
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(amvm.Project + " Project", "Details", "Project", new { id = amvm.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", new { id = amvm.ProjectId }) >
+    @Html.ActionLink("Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, null) >
+    @Html.ActionLink("Areas", "Index", new { id = amvm.BuildingId })
+</p>
+<h2>Area(s) @TempData["areasString"].ToString()</h2>
+@using (Html.BeginForm("AreasMaterial", "Area", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    <fieldset>
+        <table class="table">
+            <tr>
+                <th>
+                    <input type="checkbox" class="checkall" /> Select All
+                </th>
+                <th>
+                    Image
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Material)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Total)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UnitOfMeasure)
+                </th>
+            </tr>
+            @Html.DisplayFor(model => model)
+        </table>
+    </fieldset>
+    <input type="submit" value="Download Data" class="btn btn-default" />
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    $(function () {
+        $('.checkall').on('click', function () {
+            $(this).closest('fieldset').find(':checkbox').prop('checked', this.checked);
+        });
+    });
+    </script>
+}

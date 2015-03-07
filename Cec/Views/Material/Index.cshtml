@@ -1,0 +1,62 @@
+﻿@model PagedList.IPagedList<Cec.ViewModels.MaterialIndexViewModel>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Materials";
+}
+
+<br />
+<p>
+    @Html.ActionLink("Projects", "Index", "Project")
+</p>
+<h2>Materials</h2>
+<p>
+    @Html.ActionLink("Create New", "Create", new { page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
+    @Html.ActionLink("Units of Measure", "Index", "UnitOfMeasure")
+</p>
+@using (Html.BeginForm("Index", "Material", FormMethod.Get))
+{
+    <p>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Description Search" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            Image
+        </th>
+        <th>
+            @Html.ActionLink("Material", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter }) &uarr;&darr;
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Description)
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td width="10%">
+            <a href="~/Material/Details/@item.MaterialID?page=@Model.PageNumber&sortOrder=@ViewBag.SortOrder&currentFilter=@ViewBag.CurrentFilter">
+                <img title="@item.Material" height="50" width="50" src="@item.ImagePath" alt="@item.Material" />
+            </a>
+        </td>
+        <td width="10%">
+            @Html.ActionLink(item.Material, "Details", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })
+        </td>
+        <td width="60%">
+            @item.Description
+        </td>
+        <td width="20%">
+            @Html.ActionLink("Copy", "Copy", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
+            @Html.ActionLink("Edit", "Edit", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })
+        </td>
+    </tr>
+}
+</table>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }), PagedListRenderOptions.ClassicPlusFirstAndLast)
