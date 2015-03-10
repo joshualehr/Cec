@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
 
 namespace Cec
@@ -32,7 +35,9 @@ namespace Cec
             //   appId: "",
             //   appSecret: "");
 
-            app.UseGoogleAuthentication();
+            app.UseGoogleAuthentication(
+                clientId: "162031405707-rskg2tjs4b42urk8llu6c7j2nki0vih7.apps.googleusercontent.com",
+                clientSecret: "G6Nx5dRwQKeAjNo4fxnPvdlR");
         }
     }
 }
