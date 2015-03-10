@@ -22,7 +22,9 @@ namespace Cec.Models
     public class ApplicationUser : IdentityUser
     {
         public Guid ContactID { get; set; }
+
         public virtual Contact Contact { get; set; }
+
         public virtual ICollection<Project> Projects { get; set; }
     }
 

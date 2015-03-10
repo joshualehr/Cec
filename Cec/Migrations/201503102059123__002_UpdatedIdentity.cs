@@ -10,7 +10,7 @@ namespace Cec.Migrations
             DropIndex("dbo.AspNetUsers", new[] { "ContactID" });
             RenameColumn(table: "dbo.AspNetUserClaims", name: "User_Id", newName: "UserId");
             RenameIndex(table: "dbo.AspNetUserClaims", name: "IX_User_Id", newName: "IX_UserId");
-            DropPrimaryKey("dbo.AspNetUserLogins");
+            //DropPrimaryKey("dbo.AspNetUserLogins");
             AddColumn("dbo.AspNetUsers", "Email", c => c.String(maxLength: 256));
             AddColumn("dbo.AspNetUsers", "EmailConfirmed", c => c.Boolean(nullable: false));
             AddColumn("dbo.AspNetUsers", "PhoneNumber", c => c.String());
@@ -22,7 +22,7 @@ namespace Cec.Migrations
             AlterColumn("dbo.AspNetUsers", "UserName", c => c.String(nullable: false, maxLength: 256));
             AlterColumn("dbo.AspNetUsers", "ContactID", c => c.Guid(nullable: false));
             AlterColumn("dbo.AspNetRoles", "Name", c => c.String(nullable: false, maxLength: 256));
-            AddPrimaryKey("dbo.AspNetUserLogins", new[] { "LoginProvider", "ProviderKey", "UserId" });
+            //AddPrimaryKey("dbo.AspNetUserLogins", new[] { "LoginProvider", "ProviderKey", "UserId" });
             CreateIndex("dbo.AspNetUsers", "ContactID");
             CreateIndex("dbo.AspNetUsers", "UserName", unique: true, name: "UserNameIndex");
             CreateIndex("dbo.AspNetRoles", "Name", unique: true, name: "RoleNameIndex");
@@ -35,7 +35,7 @@ namespace Cec.Migrations
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.AspNetUsers", new[] { "ContactID" });
-            DropPrimaryKey("dbo.AspNetUserLogins");
+            //DropPrimaryKey("dbo.AspNetUserLogins");
             AlterColumn("dbo.AspNetRoles", "Name", c => c.String(nullable: false));
             AlterColumn("dbo.AspNetUsers", "ContactID", c => c.Guid());
             AlterColumn("dbo.AspNetUsers", "UserName", c => c.String());
@@ -47,7 +47,7 @@ namespace Cec.Migrations
             DropColumn("dbo.AspNetUsers", "PhoneNumber");
             DropColumn("dbo.AspNetUsers", "EmailConfirmed");
             DropColumn("dbo.AspNetUsers", "Email");
-            AddPrimaryKey("dbo.AspNetUserLogins", new[] { "UserId", "LoginProvider", "ProviderKey" });
+            //AddPrimaryKey("dbo.AspNetUserLogins", new[] { "UserId", "LoginProvider", "ProviderKey" });
             RenameIndex(table: "dbo.AspNetUserClaims", name: "IX_UserId", newName: "IX_User_Id");
             RenameColumn(table: "dbo.AspNetUserClaims", name: "UserId", newName: "User_Id");
             CreateIndex("dbo.AspNetUsers", "ContactID");
