@@ -1,0 +1,35 @@
+﻿@helper SelectedTabClass(string tabName) { 
+    if (tabName == ViewBag.SelectedTab)
+    {
+        @: active
+    }
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CEC Admin</title>
+        @Styles.Render("~/admin/styles")
+        @Scripts.Render("~/bundles/modernizr")
+    </head>
+    <body>
+        <div class="container">
+            <ul class="nav nav-pills">
+                <li class="@SelectedTabClass("users")">
+                    @Html.ActionLink("Users", "Index", "User", new { area="admin" }, null)
+                </li>
+                <li class="@SelectedTabClass("roles")">
+                    @Html.ActionLink("Roles", "Index", "Role", new { area = "admin" }, null)
+                </li>
+                <li class="pull-right">
+                    @Html.RouteLink("Back to Home", "home")
+                </li>
+            </ul>
+            @RenderBody()
+        </div>
+        @Scripts.Render("~/admin/scripts")
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

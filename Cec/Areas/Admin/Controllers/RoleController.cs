@@ -7,11 +7,11 @@ using System.Web.Mvc;
 
 namespace Cec.Areas.Admin.Controllers
 {
-    [Authorize(Roles="canAdminister")]
-    [SelectedTab("users")]
-    public class UserController : Controller
+    [Authorize(Roles = "canAdminister")]
+    [SelectedTab("roles")]
+    public class RoleController : Controller
     {
-        // GET: Admin/User
+        // GET: Admin/Role
         public ActionResult Index()
         {
             return View();
