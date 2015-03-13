@@ -15,6 +15,7 @@ namespace CompleteElectric.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: /Area/5
+        [Authorize(Roles = "canAdminister")]
         public ActionResult Index(Guid id)
         {
             if (id == null)
@@ -36,6 +37,7 @@ namespace CompleteElectric.Controllers
         [HttpPost]
         [ActionName("Index")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canAdminister")]
         public ActionResult Index(AreaIndexViewModel[] areaIndexViewModels)
         {
             var aivm = new List<AreaIndexViewModel>();
@@ -60,6 +62,7 @@ namespace CompleteElectric.Controllers
         }
 
         // GET: /Area/Details/5
+        [Authorize(Roles = "canAdminister")]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -119,8 +122,7 @@ namespace CompleteElectric.Controllers
         [Authorize(Roles = "canAdminister")]
         public ActionResult Edit(Guid? id)
         {
-            
-if (id == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

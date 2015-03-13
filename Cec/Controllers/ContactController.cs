@@ -1,4 +1,5 @@
 ﻿using Cec.Models;
+using Cec.ViewModels;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -15,9 +16,10 @@ namespace Cec.Controllers
         // GET: /Contact/
         public ActionResult Index()
         {
-            if (db.Contacts.Count() > 0)
+            var contacts = new ContactIndexViewModel().ListAll();
+            if (contacts.Count() > 0)
             {
-                return View(db.Contacts.ToList());
+                return View(contacts);
             }
             else
             {
@@ -26,14 +28,15 @@ namespace Cec.Controllers
         }
 
         // GET: /Contact/Details/5
-        [Authorize(Roles = "canViewDetails")]
+        [Authorize(Roles = "canAdminister, isEmployee")]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Contact contact = db.Contacts.Find(id);
+            var contactId = id ?? Guid.Empty;
+            var contact = new ContactDetailsViewModel(contactId);
             if (contact == null)
             {
                 return HttpNotFound();
@@ -42,7 +45,7 @@ namespace Cec.Controllers
         }
 
         // GET: /Contact/Create
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canAdminister, isEmployee")]
         public ActionResult Create()
         {
             return View();
@@ -53,16 +56,14 @@ namespace Cec.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
-        public ActionResult Create([Bind(Include = "ContactID,FirstName,LastName,Company,Title,Trade,Phone,Email,Chat,Website")] Contact contact)
+        [Authorize(Roles = "canAdminister, isEmployee")]
+        public ActionResult Create([Bind(Include = "ContactID,FirstName,LastName,Company,Title,Trade,Phone,Email,Chat,Website")] ContactCreateViewModel contact)
         {
             try
             {
                 if (ModelState.IsValid)
                     {
-                        db.Contacts.Add(contact);
-                        db.SaveChanges();
-                        return RedirectToAction("Details", new { id = contact.ContactID });
+                        return RedirectToAction("Details", new { id = contact.CreateContact() });
                     }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -74,14 +75,15 @@ namespace Cec.Controllers
         }
 
         // GET: /Contact/Edit/5
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canAdminister, isEmployee")]
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Contact contact = db.Contacts.Find(id);
+            var contactId = id ?? Guid.Empty;
+            var contact = new ContactEditViewModel(contactId);
             if (contact == null)
             {
                 return HttpNotFound();
@@ -94,16 +96,14 @@ namespace Cec.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
-        public ActionResult Edit([Bind(Include = "ContactID,FirstName,LastName,Company,Title,Trade,Phone,Email,Chat,Website")] Contact contact)
+        [Authorize(Roles = "canAdminister, isEmployee")]
+        public ActionResult Edit([Bind(Include = "ContactID,FirstName,LastName,Company,Title,Trade,Phone,Email,Chat,Website")] ContactEditViewModel contact)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    db.Entry(contact).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Details", new { id = contact.ContactID });
+                    return RedirectToAction("Details", new { id = contact.EditContact() });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -122,7 +122,8 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Contact contact = db.Contacts.Find(id);
+            var contactId = id ?? Guid.Empty;
+            var contact = new ContactDeleteViewModel(contactId);
             if (saveChangesError.GetValueOrDefault())
             {
                 ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
@@ -142,9 +143,7 @@ namespace Cec.Controllers
         {
             try
             {
-                Contact contact = db.Contacts.Find(id);
-                db.Contacts.Remove(contact);
-                db.SaveChanges();
+                new ContactDeleteViewModel(id).DeleteContact();
                 return RedirectToAction("Index");
             }
             catch (RetryLimitExceededException/* dex */)

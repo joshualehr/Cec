@@ -50,8 +50,6 @@ namespace Cec.Models
         public virtual DbSet<ModelMaterial> ModelMaterials { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
-
-        public System.Data.Entity.DbSet<Cec.ViewModels.ModelMaterialCreateItemViewModel> ModelMaterialCreateItemViewModels { get; set; }
     }
 
     public class CecInitializer : System.Data.Entity.CreateDatabaseIfNotExists<ApplicationDbContext>

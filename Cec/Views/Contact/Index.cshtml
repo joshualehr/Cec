@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Cec.Models.Contact>
+﻿@model IEnumerable<Cec.ViewModels.ContactIndexViewModel>
 
 @{
     ViewBag.Title = "Contacts";
@@ -31,7 +31,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.ActionLink(item.FirstName + " " + item.LastName, "Details", new { id = item.ContactID })
+            @Html.ActionLink(item.FullName, "Details", new { id = item.ContactId })
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Company)
@@ -40,8 +40,8 @@
             @Html.DisplayFor(modelItem => item.Title)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.ContactID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ContactID })
+            @Html.ActionLink("Edit", "Edit", new { id = item.ContactId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ContactId })
         </td>
     </tr>
 }

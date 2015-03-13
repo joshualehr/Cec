@@ -1,4 +1,4 @@
-﻿@model Cec.Models.Contact
+﻿@model Cec.ViewModels.ContactDetailsViewModel
 
 @{
     ViewBag.Title = "Contact";
@@ -8,10 +8,10 @@
 <p>
     @Html.ActionLink("Contacts", "Index")
 </p>
-<h2>@Model.FirstName @Model.LastName</h2>
+<h2>@Model.FullName</h2>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ContactID }) |
-    @Html.ActionLink("Delete", "Delete", new { id = Model.ContactID })
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ContactId }) |
+    @Html.ActionLink("Delete", "Delete", new { id = Model.ContactId })
 </p>
 <hr />
 <div>

@@ -136,7 +136,7 @@ namespace Cec.ViewModels
         [DisplayFormat(NullDisplayText = "-")]
         public string State { get; set; }
 
-        [Display(Name = "Postal Code", ShortName = "Zip", Prompt = "Enter postal code")]
+        [Display(Name = "Postal Code", ShortName = "Zip")]
         [DisplayFormat(NullDisplayText = "-")]
         public Nullable<int> PostalCode { get; set; }
 

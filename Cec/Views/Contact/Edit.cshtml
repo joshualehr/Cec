@@ -1,4 +1,4 @@
-﻿@model Cec.Models.Contact
+﻿@model Cec.ViewModels.ContactEditViewModel
 
 @{
     ViewBag.Title = "Edit Contact";
@@ -10,7 +10,7 @@
 </p>
 <h2>Edit @Model.FirstName @Model.LastName</h2>
 <p>
-    @Html.ActionLink("Cancel", "Details", new { id = Model.ContactID })
+    @Html.ActionLink("Cancel", "Details", new { id = Model.ContactId })
 </p>
 <hr />
 
@@ -20,7 +20,7 @@
     
     <div class="form-horizontal">
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.ContactID)
+        @Html.HiddenFor(model => model.ContactId)
 
         <div class="form-group">
             @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })

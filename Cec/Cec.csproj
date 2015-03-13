@@ -228,6 +228,10 @@
     <Compile Include="Migrations\201503102059123__002_UpdatedIdentity.Designer.cs">
       <DependentUpon>201503102059123__002_UpdatedIdentity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503122028169__003_DeletedModelMaterialCreateViewModel.cs" />
+    <Compile Include="Migrations\201503122028169__003_DeletedModelMaterialCreateViewModel.Designer.cs">
+      <DependentUpon>201503122028169__003_DeletedModelMaterialCreateViewModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Area.cs" />
@@ -245,6 +249,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AreaViewModels.cs" />
     <Compile Include="ViewModels\BuildingViewModels.cs" />
+    <Compile Include="ViewModels\ContactViewModels.cs" />
     <Compile Include="ViewModels\MaterialViewModels.cs" />
     <Compile Include="ViewModels\ModelViewModels.cs" />
     <Compile Include="ViewModels\UnitOfMeasureViewModels.cs" />
@@ -461,6 +466,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503102059123__002_UpdatedIdentity.resx">
       <DependentUpon>201503102059123__002_UpdatedIdentity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503122028169__003_DeletedModelMaterialCreateViewModel.resx">
+      <DependentUpon>201503122028169__003_DeletedModelMaterialCreateViewModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
