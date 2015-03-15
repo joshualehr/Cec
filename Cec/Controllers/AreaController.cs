@@ -88,7 +88,7 @@ namespace CompleteElectric.Controllers
             }
             var buildingId = id ?? Guid.Empty;
             var areaCreateViewModel = new AreaCreateViewModel(buildingId);
-            ViewBag.ModelID = new ModelSelectList(areaCreateViewModel.ProjectId);
+            ViewBag.ModelId = new ModelSelectList(areaCreateViewModel.ProjectId);
             ViewBag.Status = new StatusSelectList();
             return View(areaCreateViewModel);
         }
@@ -113,7 +113,7 @@ namespace CompleteElectric.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            ViewBag.ModelID = new ModelSelectList(areaCreateViewModel.ProjectId, areaCreateViewModel.ModelId);
+            ViewBag.ModelId = new ModelSelectList(areaCreateViewModel.ProjectId, areaCreateViewModel.ModelId);
             ViewBag.Status = new StatusSelectList(areaCreateViewModel.Status);
             return View(areaCreateViewModel);
         }
@@ -132,7 +132,7 @@ namespace CompleteElectric.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ModelID = new ModelSelectList(areaEditViewModel.ProjectId, areaEditViewModel.ModelId);
+            ViewBag.ModelId = new ModelSelectList(areaEditViewModel.ProjectId, areaEditViewModel.ModelId);
             ViewBag.Status = new StatusSelectList(areaEditViewModel.Status);
             Session["OriginalModelId"] = areaEditViewModel.ModelId;
             return View(areaEditViewModel);
@@ -160,7 +160,7 @@ namespace CompleteElectric.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            ViewBag.ModelID = new ModelSelectList(areaEditViewModel.ProjectId, areaEditViewModel.ModelId);
+            ViewBag.ModelId = new ModelSelectList(areaEditViewModel.ProjectId, areaEditViewModel.ModelId);
             ViewBag.Status = new StatusSelectList(areaEditViewModel.Status);
             return View(areaEditViewModel);
         }
@@ -180,7 +180,7 @@ namespace CompleteElectric.Controllers
                 return HttpNotFound();
             }
             var bslvm = new BuildingSelectListViewModel(areaCopyViewModel.ProjectId);
-            ViewBag.BuildingID = new SelectList(bslvm.BuildingList, "BuildingId", "Designation", areaCopyViewModel.BuildingId);
+            ViewBag.BuildingId = new SelectList(bslvm.BuildingList, "BuildingId", "Designation", areaCopyViewModel.BuildingId);
             ViewBag.Status = new StatusSelectList(areaCopyViewModel.Status);
             return View(areaCopyViewModel);
         }
@@ -206,7 +206,7 @@ namespace CompleteElectric.Controllers
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             var bslvm = new BuildingSelectListViewModel(areaCopyViewModel.ProjectId);
-            ViewBag.BuildingID = new SelectList(bslvm.BuildingList, "BuildingId", "Designation", areaCopyViewModel.BuildingId);
+            ViewBag.BuildingId = new SelectList(bslvm.BuildingList, "BuildingId", "Designation", areaCopyViewModel.BuildingId);
             ViewBag.Status = new StatusSelectList(areaCopyViewModel.Status);
             return View(areaCopyViewModel);
         }

@@ -1,4 +1,5 @@
 ﻿using Cec.Models;
+using Cec.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
@@ -10,18 +11,19 @@ namespace Cec.Controllers
     public class ProfileController : Controller
     {
         private ApplicationDbContext db;
-        private UserManager<ApplicationUser> manager;
+        private UserManager<ApplicationUser> _manager;
 
         public ProfileController()
         {
             db = new ApplicationDbContext();
-            manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            _manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
         }
+
         // GET: /Profile/Details
         public ActionResult Details()
         {
-            var currentUser = manager.FindById(User.Identity.GetUserId());
-            Contact contact = db.Contacts.Find(currentUser.Contact.ContactID);
+            var currentUser = _manager.FindById(User.Identity.GetUserId());
+            var contact = new ContactDetailsViewModel(currentUser.ContactID);
             if (contact == null)
             {
                 return RedirectToAction("Edit");
@@ -32,8 +34,8 @@ namespace Cec.Controllers
         // GET: /Profile/Edit
         public ActionResult Edit()
         {
-            var currentUser = manager.FindById(User.Identity.GetUserId());
-            Contact contact = db.Contacts.Find(currentUser.Contact.ContactID);
+            var currentUser = _manager.FindById(User.Identity.GetUserId());
+            var contact = new ContactEditViewModel(currentUser.ContactID);
             if (contact == null)
             {
                 return HttpNotFound();
@@ -46,15 +48,13 @@ namespace Cec.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="ContactID,FirstName,LastName,Company,Title,Trade,Phone,Email,Chat,Website")] Contact contact)
+        public ActionResult Edit([Bind(Include = "ContactID,FirstName,LastName,Company,Title,Trade,Phone,Email,Chat,Website")] ContactEditViewModel contact)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    db.Entry(contact).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Details");
+                    return RedirectToAction("Details", new { id = contact.EditContact() });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
