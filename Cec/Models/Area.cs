@@ -53,8 +53,8 @@ namespace Cec.Models
         [DisplayFormat(NullDisplayText = "-")]
         public string Status { get; set; }
 
-        [Index(IsClustered = false, IsUnique = false)]
         [Required()]
+        [Index(IsClustered = false, IsUnique = false)]
         [Display(Name = "Building ID")]
         public Guid BuildingID { get; set; }
 
@@ -62,6 +62,9 @@ namespace Cec.Models
         [Display(Name = "Model ID")]
         [DisplayFormat(NullDisplayText = "-")]
         public Guid? ModelID { get; set; }
+
+        [Index(IsClustered = false, IsUnique = false)]
+        public Guid? StatusId { get; set; }
 
         public virtual Building Building { get; set; }
         public virtual Model Model { get; set; }

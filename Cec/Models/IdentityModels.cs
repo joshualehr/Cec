@@ -49,6 +49,7 @@ namespace Cec.Models
         public virtual DbSet<Model> Models { get; set; }
         public virtual DbSet<ModelMaterial> ModelMaterials { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
+        public virtual DbSet<Status> Statuses { get; set; }
         public virtual DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
     }
 

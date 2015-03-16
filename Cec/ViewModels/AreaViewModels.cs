@@ -333,6 +333,10 @@ namespace Cec.ViewModels
 
         public Guid? ModelId { get; set; }
 
+        public ModelSelectList Models { get; set; }
+
+        public StatusSelectList Statuses { get; set; }
+
         //Constructors
         public AreaEditViewModel()
         {
@@ -355,6 +359,8 @@ namespace Cec.ViewModels
             this.ProjectId = area.Building.ProjectID;
             this.State = area.State;
             this.Status = area.Status;
+            this.Models = new ModelSelectList(this.ProjectId, this.ModelId);
+            this.Statuses = new StatusSelectList(this.Status);
         }
 
         //Methods
