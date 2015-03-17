@@ -10,39 +10,29 @@ using System.Web.Mvc;
 
 namespace Cec.ViewModels
 {
-    public enum AreaStatus
-    {
-        Plan,
-        Schedule,
-        [Description("Lock Out")]
-        LockOut,
-        Boxing,
-        [Description("Rough In")]
-        RoughIn,
-        Finish,
-        [Description("Punch Out")]
-        PunchOut,
-        Complete,
-        Billed,
-        Warranty
-    }
-
     public class StatusSelectList : SelectList
     {
         //Constructors
         public StatusSelectList()
-            : base(items()) { }
+            : base(items(), "Value", "Text") { }
 
         public StatusSelectList(object selectedValue)
-            : base(items(), selectedValue) { }
+            : base(items(), "Value", "Text", selectedValue) { }
 
         //Static Methods
         public static System.Collections.IEnumerable items()
         {
-            var selectListItems = new List<string>();
-            foreach (var item in EnumHelper.EnumToList<AreaStatus>())
+            var db = new ApplicationDbContext();
+            var selectListItems = new List<SelectListItem>();
+            var models = db.Statuses.OrderBy(s => s.Designation);
+            foreach (var item in models)
             {
-                selectListItems.Add(EnumHelper.GetEnumDescription(item));
+                var model = new SelectListItem()
+                {
+                    Value = item.StatusId.ToString(),
+                    Text = item.Designation
+                };
+                selectListItems.Add(model);
             }
             return selectListItems;
         }
@@ -140,7 +130,6 @@ namespace Cec.ViewModels
         [DisplayFormat(NullDisplayText = "-")]
         public Nullable<int> PostalCode { get; set; }
 
-        [DisplayFormat(NullDisplayText = "-")]
         public string Status { get; set; }
 
         public Guid? ModelId { get; set; }
@@ -174,7 +163,7 @@ namespace Cec.ViewModels
             this.ProjectDesignation = area.Building.Project.Designation;
             this.ProjectId = area.Building.ProjectID;
             this.State = area.State;
-            this.Status = area.Status;
+            this.Status = area.Status.Designation;
         }
     }
 
@@ -223,12 +212,13 @@ namespace Cec.ViewModels
         public Nullable<int> PostalCode { get; set; }
 
         [Required]
-        [DataType(DataType.Text)]
-        [StringLength(20, ErrorMessage = "Cannot be longer than 20 characters.")]
-        [DisplayFormat(NullDisplayText = "-")]
-        public string Status { get; set; }
+        public Guid StatusId { get; set; }
 
         public Guid? ModelId { get; set; }
+
+        public ModelSelectList Models { get; set; }
+
+        public StatusSelectList Statuses { get; set; }
 
         //Constructors
         public AreaCreateViewModel()
@@ -243,6 +233,8 @@ namespace Cec.ViewModels
             this.BuildingId = building.BuildingID;
             this.ProjectDesignation = building.Project.Designation;
             this.ProjectId = building.ProjectID;
+            this.Models = new ModelSelectList(this.ProjectId);
+            this.Statuses = new StatusSelectList();
         }
 
         //Methods
@@ -258,7 +250,7 @@ namespace Cec.ViewModels
             area.ModelID = this.ModelId;
             area.PostalCode = this.PostalCode;
             area.State = this.State;
-            area.Status = this.Status;
+            area.StatusId = this.StatusId;
             db.Areas.Add(area);
             db.SaveChanges();
             if (area.ModelID != null)
@@ -326,10 +318,7 @@ namespace Cec.ViewModels
         public Nullable<int> PostalCode { get; set; }
 
         [Required]
-        [DataType(DataType.Text)]
-        [StringLength(20, ErrorMessage = "Cannot be longer than 20 characters.")]
-        [DisplayFormat(NullDisplayText = "-")]
-        public string Status { get; set; }
+        public Guid StatusId { get; set; }
 
         public Guid? ModelId { get; set; }
 
@@ -358,9 +347,9 @@ namespace Cec.ViewModels
             this.ProjectDesignation = area.Building.Project.Designation;
             this.ProjectId = area.Building.ProjectID;
             this.State = area.State;
-            this.Status = area.Status;
+            this.StatusId = area.StatusId;
             this.Models = new ModelSelectList(this.ProjectId, this.ModelId);
-            this.Statuses = new StatusSelectList(this.Status);
+            this.Statuses = new StatusSelectList(this.StatusId);
         }
 
         //Methods
@@ -376,7 +365,7 @@ namespace Cec.ViewModels
             area.ModelID = this.ModelId;
             area.PostalCode = this.PostalCode;
             area.State = this.State;
-            area.Status = this.Status;
+            area.StatusId = this.StatusId;
             db.Entry(area).State = EntityState.Modified;
             if (originalModel != null && originalModel != this.ModelId)
             {
@@ -449,12 +438,13 @@ namespace Cec.ViewModels
         public Nullable<int> PostalCode { get; set; }
 
         [Required]
-        [DataType(DataType.Text)]
-        [StringLength(20, ErrorMessage = "Cannot be longer than 20 characters.")]
-        [DisplayFormat(NullDisplayText = "-")]
-        public string Status { get; set; }
+        public Guid StatusId { get; set; }
 
         public Guid? ModelId { get; set; }
+
+        public BuildingSelectList Buildings { get; set; }
+
+        public StatusSelectList Statuses { get; set; }
 
         //Constructors
         public AreaCopyViewModel()
@@ -477,7 +467,9 @@ namespace Cec.ViewModels
             this.ProjectDesignation = area.Building.Project.Designation;
             this.ProjectId = area.Building.ProjectID;
             this.State = area.State;
-            this.Status = area.Status;
+            this.StatusId = area.StatusId;
+            this.Buildings = new BuildingSelectList(this.ProjectId);
+            this.Statuses = new StatusSelectList(this.StatusId);
         }
 
         //Methods
@@ -493,7 +485,7 @@ namespace Cec.ViewModels
             area.ModelID = this.ModelId;
             area.PostalCode = this.PostalCode;
             area.State = this.State;
-            area.Status = this.Status;
+            area.StatusId = this.StatusId;
             db.Areas.Add(area);
             db.SaveChanges();
             var areaMaterials = db.AreaMaterials.Where(am => am.AreaID == this.AreaId);

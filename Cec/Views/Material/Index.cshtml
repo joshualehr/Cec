@@ -18,8 +18,8 @@
 @using (Html.BeginForm("Index", "Material", FormMethod.Get))
 {
     <p>
-        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-        <input type="submit" value="Description Search" />
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+        <input type="submit" value="Description Search" class="btn btn-sm btn-info" />
     </p>
 }
 <table class="table">

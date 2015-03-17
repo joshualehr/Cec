@@ -47,12 +47,6 @@ namespace Cec.Models
         [DisplayFormat(NullDisplayText = "-")]
         public Nullable<int> PostalCode { get; set; }
 
-        [Required]
-        [DataType(DataType.Text)]
-        [StringLength(20, ErrorMessage = "Cannot be longer than 20 characters.")]
-        [DisplayFormat(NullDisplayText = "-")]
-        public string Status { get; set; }
-
         [Required()]
         [Index(IsClustered = false, IsUnique = false)]
         [Display(Name = "Building ID")]
@@ -63,11 +57,13 @@ namespace Cec.Models
         [DisplayFormat(NullDisplayText = "-")]
         public Guid? ModelID { get; set; }
 
+        [Required()]
         [Index(IsClustered = false, IsUnique = false)]
-        public Guid? StatusId { get; set; }
+        public Guid StatusId { get; set; }
 
         public virtual Building Building { get; set; }
         public virtual Model Model { get; set; }
+        public virtual Status Status { get; set; }
         public virtual ICollection<AreaMaterial> AreaMaterials { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
     }

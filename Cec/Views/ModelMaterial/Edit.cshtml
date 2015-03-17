@@ -28,7 +28,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Quantity)
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Quantity)
             </div>
         </div>
@@ -36,12 +36,12 @@
             <label class="control-label col-md-2"> </label>
             <div class="col-md-10">
                 <input id="applyToAll" name="applyToAll" type="checkbox" checked="checked" value="true" />
-                <label for="applyToAll">Apply to existing areas?</label>
+                <label for="applyToAll" class="control-label">Apply to existing areas?</label>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-sm btn-default" />
             </div>
         </div>
     </div>

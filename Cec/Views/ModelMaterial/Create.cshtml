@@ -21,8 +21,9 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
     @Html.HiddenFor(model => model.ModelId)
+    
     @Html.CheckBoxFor(model => model.OnlyProjectMaterial, new { @checked = Model.OnlyProjectMaterial, @onclick = "this.form.submit();" })
-    <label for="OnlyProjectMaterial">Show only material already used in this project</label>
+    <label for="OnlyProjectMaterial" class="control-label">Show only material already used in this project</label>
     <br />    
     <table class="table">
         <tr>
@@ -45,9 +46,9 @@
         @Html.EditorFor(model => model.Materials)
     </table>
     @Html.CheckBoxFor(model => model.ApplyToAllAreas, new { @checked = Model.ApplyToAllAreas })
-    <label for="ApplyToAllAreas">Apply to existing areas?</label>
+    <label for="ApplyToAllAreas" class="control-label">Apply to existing areas?</label>
     <br/>
-    <input type="submit" value="Create" class="btn btn-default" />
+    <input type="submit" value="Create" class="btn btn-sm btn-default" />
 }
 
 

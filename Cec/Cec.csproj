@@ -236,6 +236,10 @@
     <Compile Include="Migrations\201503160401037__004_AddedStatusTable.Designer.cs">
       <DependentUpon>201503160401037__004_AddedStatusTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503160436171__005_AddedAreaRequireStatusId.cs" />
+    <Compile Include="Migrations\201503160436171__005_AddedAreaRequireStatusId.Designer.cs">
+      <DependentUpon>201503160436171__005_AddedAreaRequireStatusId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -477,6 +481,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503160401037__004_AddedStatusTable.resx">
       <DependentUpon>201503160401037__004_AddedStatusTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503160436171__005_AddedAreaRequireStatusId.resx">
+      <DependentUpon>201503160436171__005_AddedAreaRequireStatusId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

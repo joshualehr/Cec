@@ -28,14 +28,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Material, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Material)
+                @Html.EditorFor(model => model.Material, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Material)
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Description)
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Description)
             </div>
         </div>
@@ -55,12 +55,12 @@
         <div class="form-group">
             @Html.Label("Change Image", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="file" name="photo" class="btn btn-default" />
+                <input type="file" name="photo" class="btn btn-sm btn-default" />
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-sm btn-default" />
             </div>
         </div>
     </div>

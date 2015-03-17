@@ -4,49 +4,36 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace Cec.ViewModels
 {
-    public class BuildingSelectListViewModel
+    public class BuildingSelectList : SelectList
     {
-        //Private Properties
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        public class _Building
-        {
-            public Guid BuildingId { get; set; }
-            public string Designation { get; set; }
-        }
-
-        private List<_Building> _BuildingList = new List<_Building>();
-
-        //Public Propeties
-        public List<_Building> BuildingList
-        {
-            get { return _BuildingList; }
-            set { _BuildingList = value; }
-        }
-
         //Constructors
-        public BuildingSelectListViewModel()
-        {
+        public BuildingSelectList(Guid projectId)
+            : base(items(projectId), "Value", "Text") { }
 
-        }
+        public BuildingSelectList(Guid projectId, object selectedValue)
+            : base(items(projectId), "Value", "Text", selectedValue) { }
 
-        public BuildingSelectListViewModel(Guid projectId)
+        //Static Metods
+        public static System.Collections.IEnumerable items(Guid projectId)
         {
-            var buildings = db.Buildings.Include(b => b.Project)
-                                     .Where(b => b.ProjectID == projectId)
-                                     .OrderBy(b => b.Designation);
+            var db = new ApplicationDbContext();
+            var selectListItems = new List<SelectListItem>();
+            var buildings = db.Buildings.Where(b => b.ProjectID == projectId)
+                                        .OrderBy(b => b.Designation);
             foreach (var item in buildings)
             {
-                var building = new _Building()
+                var building = new SelectListItem()
                 {
-                    BuildingId = item.BuildingID,
-                    Designation = item.Designation
+                    Value = item.BuildingID.ToString(),
+                    Text = item.Designation
                 };
-                this.BuildingList.Add(building);
+                selectListItems.Add(building);
             }
+            return selectListItems;
         }
     }
 
