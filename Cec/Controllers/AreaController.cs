@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 
-namespace CompleteElectric.Controllers
+namespace Cec.Controllers
 {
     public class AreaController : Controller
     {
@@ -34,8 +34,7 @@ namespace CompleteElectric.Controllers
         }
 
         // POST: /Area/5
-        [HttpPost]
-        [ActionName("Index")]
+        [HttpPost, ActionName("Index")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
         public ActionResult Index(AreaIndexViewModel[] areaIndexViewModels)
@@ -69,8 +68,7 @@ namespace CompleteElectric.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areaId = id ?? Guid.Empty;
-            var areaDetailsViewModel = new AreaDetailsViewModel(areaId);
+            var areaDetailsViewModel = new AreaDetailsViewModel(id ?? Guid.Empty);
             if (areaDetailsViewModel == null)
             {
                 return HttpNotFound();
@@ -86,8 +84,7 @@ namespace CompleteElectric.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var buildingId = id ?? Guid.Empty;
-            var areaCreateViewModel = new AreaCreateViewModel(buildingId);
+            var areaCreateViewModel = new AreaCreateViewModel(id ?? Guid.Empty);
             return View(areaCreateViewModel);
         }
 
@@ -97,7 +94,7 @@ namespace CompleteElectric.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Create([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaDesignation,Description,Address,City,State,PostalCode,Status,ModelId")] AreaCreateViewModel areaCreateViewModel)
+        public ActionResult Create([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaDesignation,Description,Address,City,State,PostalCode,StatusId,ModelId")] AreaCreateViewModel areaCreateViewModel)
         {
             try
             {
@@ -138,7 +135,7 @@ namespace CompleteElectric.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Edit([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,Status")] AreaEditViewModel areaEditViewModel)
+        public ActionResult Edit([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,StatusId")] AreaEditViewModel areaEditViewModel)
         {
             try
             {
@@ -180,7 +177,7 @@ namespace CompleteElectric.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,Status")] AreaCopyViewModel areaCopyViewModel)
+        public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,StatusId")] AreaCopyViewModel areaCopyViewModel)
         {
             try
             {

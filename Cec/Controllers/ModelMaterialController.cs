@@ -10,7 +10,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
-namespace CompleteElectric.Controllers
+namespace Cec.Controllers
 {
     public class ModelMaterialController : Controller
     {

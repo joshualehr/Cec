@@ -459,6 +459,7 @@
     <Content Include="Views\Area\AreasMaterial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ModelMaterialCreateItemViewModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ModelIndexItemViewModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\BuildingStatusViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

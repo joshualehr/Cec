@@ -8,8 +8,8 @@
 <br />
 <p>
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(bmvm.Project + " Project", "Details", "Project", new { id = bmvm.ProjectID }, null) >
-    @Html.ActionLink("Buildings", "Index", new { id = bmvm.ProjectID })
+    @Html.ActionLink(bmvm.Project + " Project", "Details", "Project", new { id = bmvm.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", new { id = bmvm.ProjectId })
 </p>
 <h2>Building(s) Material</h2>
 @using (Html.BeginForm("BuildingsMaterial", "Building", FormMethod.Post))

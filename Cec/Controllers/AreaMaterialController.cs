@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 
-namespace CompleteElectric.Controllers
+namespace Cec.Controllers
 {
     public class AreaMaterialController : Controller
     {

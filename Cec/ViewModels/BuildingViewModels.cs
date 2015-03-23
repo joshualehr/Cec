@@ -39,10 +39,13 @@ namespace Cec.ViewModels
 
     public class BuildingIndexViewModel
     {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         //Public Properties
-        public Guid ProjectID { get; set; }
+        public Guid ProjectId { get; set; }
         public string Project { get; set; }
-        public Guid BuildingID { get; set; }
+        public Guid BuildingId { get; set; }
         public string Building { get; set; }
         public bool Selected { get; set; }
 
@@ -54,10 +57,125 @@ namespace Cec.ViewModels
 
         public BuildingIndexViewModel(Building building)
         {
-            this.ProjectID = building.ProjectID;
+            this.ProjectId = building.ProjectID;
             this.Project = building.Project.Designation;
-            this.BuildingID = building.BuildingID;
+            this.BuildingId = building.BuildingID;
             this.Building = building.Designation;
+        }
+
+        //Methods
+        public List<BuildingIndexViewModel> ListByProject(Guid projectId)
+        {
+            var buildings = db.Buildings.Include(b => b.Project)
+                                        .Where(b => b.ProjectID == projectId)
+                                        .OrderBy(b => b.Designation);
+            if (buildings.Count() > 0)
+            {
+                var buildingIndexViewModels = new List<BuildingIndexViewModel>();
+                foreach (var building in buildings)
+                {
+                    var buildingIndexViewModel = new BuildingIndexViewModel(building);
+                    buildingIndexViewModels.Add(buildingIndexViewModel);
+                }
+                return buildingIndexViewModels;
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
+    public class BuildingStatusViewModel
+    {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        public Guid StatusId { get; set; }
+        public string Status { get; set; }
+        public int AreaCount { get; set; }
+        public double Percent { get; set; }
+        public IDictionary<Guid, string> Areas { get; set; }
+
+        public BuildingStatusViewModel()
+        {
+            this.Areas = new Dictionary<Guid, string>();
+        }
+
+        public BuildingStatusViewModel(Status status, Guid buildingId)
+        {
+            var building = db.Buildings.Find(buildingId);
+            this.StatusId = status.StatusId;
+            this.Status = status.Designation;
+            this.AreaCount = status.Area.Where(a => a.BuildingID == buildingId).Count();
+            this.Percent = (100 * this.AreaCount) / building.Areas.Count;
+            this.Areas = new Dictionary<Guid, string>();
+            foreach (var area in building.Areas.Where(a => a.StatusId == this.StatusId))
+            {
+                this.Areas.Add(area.AreaID, area.Designation);
+            }
+        }
+    }
+
+    public class BuildingDetailsViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        //Public Properties
+        public Guid ProjectId { get; set; }
+
+        [Display(Name = "Project")]
+        public string Project { get; set; }
+
+        public Guid BuildingId { get; set; }
+
+        [Display(Name = "Building")]
+        public string Building { get; set; }
+
+        [DisplayFormat(NullDisplayText = "-")]
+        public string Description { get; set; }
+
+        [DisplayFormat(NullDisplayText = "-")]
+        public string Address { get; set; }
+
+        [DisplayFormat(NullDisplayText = "-")]
+        public string City { get; set; }
+
+        [DisplayFormat(NullDisplayText = "-")]
+        public string State { get; set; }
+
+        [Display(Name = "Postal Code", ShortName = "Zip")]
+        [DisplayFormat(NullDisplayText = "-")]
+        public Nullable<int> PostalCode { get; set; }
+
+        public int AreaCount { get; set; }
+
+        public IList<BuildingStatusViewModel> Statuses { get; set; }
+
+        //Constructors
+        public BuildingDetailsViewModel()
+        {
+
+        }
+
+        public BuildingDetailsViewModel(Guid buildingId)
+        {
+            var building = db.Buildings.Find(buildingId);
+            this.ProjectId = building.ProjectID;
+            this.Project = building.Project.Designation;
+            this.BuildingId = building.BuildingID;
+            this.Building = building.Designation;
+            this.Description = building.Description;
+            this.Address = building.Address;
+            this.City = building.City;
+            this.State = building.State;
+            this.PostalCode = building.PostalCode;
+            this.AreaCount = building.Areas.Count;
+            this.Statuses = new List<BuildingStatusViewModel>();
+            foreach (var status in building.Areas.Select(a => a.Status).Distinct().OrderBy(s => s.Designation))
+            {
+                this.Statuses.Add(new BuildingStatusViewModel(status, this.BuildingId));
+            }
         }
     }
 
@@ -65,9 +183,9 @@ namespace Cec.ViewModels
     {
         //Public Properties
         public bool Selected { get; set; }
-        public Guid ProjectID { get; set; }
+        public Guid ProjectId { get; set; }
         public string Project { get; set; }
-        public Guid BuildingID { get; set; }
+        public Guid BuildingId { get; set; }
         public string Building { get; set; }
         public string ImagePath { get; set; }
         public Guid MaterialId { get; set; }
@@ -85,9 +203,9 @@ namespace Cec.ViewModels
 
         public BuildingsMaterialViewModel(BuildingIndexViewModel buildingIndexViewModel)
         {
-            this.ProjectID = buildingIndexViewModel.ProjectID;
+            this.ProjectId = buildingIndexViewModel.ProjectId;
             this.Project = buildingIndexViewModel.Project;
-            this.BuildingID = buildingIndexViewModel.BuildingID;
+            this.BuildingId = buildingIndexViewModel.BuildingId;
             this.Building = buildingIndexViewModel.Building;
         }
     }

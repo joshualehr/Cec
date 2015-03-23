@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 
-namespace CompleteElectric.Views
+namespace Cec.Views
 {
     public class UnitOfMeasureController : Controller
     {

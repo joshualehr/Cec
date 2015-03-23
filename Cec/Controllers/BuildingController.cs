@@ -19,23 +19,16 @@ namespace Cec.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: /Building/ProjectID=5
+        [Authorize(Roles = "canAdminister")]
         public ActionResult Index(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var buildings = db.Buildings.Include(b => b.Project)
-                                        .Where(b => b.ProjectID == id)
-                                        .OrderBy(b => b.Designation);
-            if (buildings.Count() > 0)
+            var buildingIndexViewModels = new BuildingIndexViewModel().ListByProject(id);
+            if (buildingIndexViewModels != null)
             {
-                var buildingIndexViewModels = new List<BuildingIndexViewModel>();
-                foreach (var item in buildings)
-                {
-                    var buildingIndexViewModel = new BuildingIndexViewModel(item);
-                    buildingIndexViewModels.Add(buildingIndexViewModel);
-                }
                 return View(buildingIndexViewModels);
             }
             else
@@ -47,6 +40,7 @@ namespace Cec.Controllers
         // POST: /Building/5
         [HttpPost, ActionName("Index")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canAdminister")]
         public ActionResult Index(BuildingIndexViewModel[] buildingIndexViewModels)
         {
             var bivm = new List<BuildingIndexViewModel>();
@@ -67,18 +61,19 @@ namespace Cec.Controllers
         }
 
         // GET: /Building/Details/5
+        [Authorize(Roles = "canAdminister")]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Building building = db.Buildings.Find(id);
-            if (building == null)
+            var buildingDetailsViewModel = new BuildingDetailsViewModel(id ?? Guid.Empty);
+            if (buildingDetailsViewModel == null)
             {
                 return HttpNotFound();
             }
-            return View(building);
+            return View(buildingDetailsViewModel);
         }
 
         // GET: /Building/Create/5
@@ -216,16 +211,16 @@ namespace Cec.Controllers
             {
                 areaMaterials.AddRange(db.AreaMaterials.Include(a => a.Material)
                                                        .Include(a => a.Material.UnitOfMeasure)
-                                                       .Where(a => a.Area.BuildingID == buildingItem.BuildingID)
+                                                       .Where(a => a.Area.BuildingID == buildingItem.BuildingId)
                                                        .OrderBy(a => a.Material.Designation));
             }
             var materials = areaMaterials.GroupBy(m => m.MaterialID);
             foreach (var item in materials)
             {
                 var buildingsMaterialViewModel = new BuildingsMaterialViewModel();
-                buildingsMaterialViewModel.ProjectID = item.First().Area.Building.ProjectID;
+                buildingsMaterialViewModel.ProjectId = item.First().Area.Building.ProjectID;
                 buildingsMaterialViewModel.Project = item.First().Area.Building.Project.Designation;
-                buildingsMaterialViewModel.BuildingID = item.First().Area.BuildingID;
+                buildingsMaterialViewModel.BuildingId = item.First().Area.BuildingID;
                 buildingsMaterialViewModel.Building = item.First().Area.Building.Designation;
                 buildingsMaterialViewModel.MaterialId = item.First().MaterialID;
                 buildingsMaterialViewModel.Material = item.First().Material.Designation;

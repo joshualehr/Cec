@@ -8,9 +8,9 @@
     </td>
     <td>
         @Html.ActionLink(Model.Material, "Details", "Material", new { id = Model.MaterialId }, null)
-        @Html.HiddenFor(model => model.ProjectID)
+        @Html.HiddenFor(model => model.ProjectId)
         @Html.HiddenFor(model => model.Project)
-        @Html.HiddenFor(model => model.BuildingID)
+        @Html.HiddenFor(model => model.BuildingId)
         @Html.HiddenFor(model => model.Building)
         @Html.HiddenFor(model => model.MaterialId)
         @Html.HiddenFor(model => model.Material)

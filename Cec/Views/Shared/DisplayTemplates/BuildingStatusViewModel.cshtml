@@ -1,0 +1,14 @@
+﻿@model Cec.ViewModels.BuildingStatusViewModel
+
+<tr>
+    <td class="text-left col-sm-2">@Html.DisplayFor(model => model.Status)</td>
+    <td class="text-center col-sm-2">@Html.DisplayFor(model => model.Percent)%</td>
+    <td class="text-center col-sm-2">@Html.DisplayFor(model => model.AreaCount)</td>
+    <td class="text-center col-sm-4">
+        @String.Join(", ", Model.Areas.Values)
+        @*@foreach (var item in Model.Areas)
+        {
+            @Html.ActionLink(item.Value, "Details", "Area", new { id = item.Key.ToString() }, null)
+        }*@
+    </td>
+</tr>

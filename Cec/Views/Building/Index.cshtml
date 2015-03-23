@@ -2,17 +2,17 @@
 
 @{
     ViewBag.Title = "Building";
-    var project = Model.First();
+    var bivm = Model.First();
 }
 
 <br />
 <p>
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(project.Project + " Project", "Details", "Project", new { id = project.ProjectID }, null)
+    @Html.ActionLink(bivm.Project + " Project", "Details", "Project", new { id = bivm.ProjectId }, null)
 </p>
 <h2>Buildings</h2>
 <p>
-    @Html.ActionLink("Create New", "Create", new { id = project.ProjectID })
+    @Html.ActionLink("Create New", "Create", new { id = bivm.ProjectId })
 </p>
 
 @using (Html.BeginForm("Index", "Building", FormMethod.Post))
