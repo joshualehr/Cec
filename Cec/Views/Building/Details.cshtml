@@ -4,22 +4,17 @@
     ViewBag.Title = "Building";
 }
 
-<br />
 <p>
     @Html.ActionLink("Projects", "Index", "Project") >
     @Html.ActionLink(Model.Project + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
     @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId })
 </p>
-<h2>Building @Model.Building</h2>
-<p class="h3">
-    Go to
-    @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, null)
+<i class="h2">Building @Model.Building</i>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.BuildingId }) |
     @Html.ActionLink("Delete", "Delete", new { id = Model.BuildingId })
 </p>
 <hr />
-
 <div>
     <dl class="dl-horizontal list-group">
         <dt class="list-group-item-heading">
@@ -53,7 +48,7 @@
             @Html.DisplayFor(model => model.PostalCode)
         </dd>
     </dl>
-    <h4>Total Areas: @Html.DisplayFor(model => model.AreaCount)</h4>
+    <h4>Total @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, null): @Html.DisplayFor(model => model.AreaCount)</h4>
     <table class="table-bordered">
         <tr>
             <th class="text-left col-sm-2">Status</th>

@@ -257,6 +257,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AreaViewModels.cs" />
+    <Compile Include="ViewModels\ProjectViewModels.cs" />
     <Compile Include="ViewModels\BuildingViewModels.cs" />
     <Compile Include="ViewModels\ContactViewModels.cs" />
     <Compile Include="ViewModels\MaterialViewModels.cs" />
@@ -460,6 +461,7 @@
     <Content Include="Views\Shared\EditorTemplates\ModelMaterialCreateItemViewModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ModelIndexItemViewModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\BuildingStatusViewModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ProjectStatusViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

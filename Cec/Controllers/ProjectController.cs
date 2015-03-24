@@ -1,4 +1,5 @@
 ﻿using Cec.Models;
+using Cec.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -27,11 +28,11 @@ namespace Cec.Controllers
             var currentUser = manager.FindById(User.Identity.GetUserId());
             if (manager.IsInRole(currentUser.Id, "canAdminister") && db.Projects.Count() > 0)
             {
-                return View(db.Projects.ToList().OrderBy(p => p.Designation));
+                return View(new ProjectIndexViewModel().ListAll());
             }
             else if (db.Projects.Where(p => p.User.Id == currentUser.Id).Count() > 0)
             {
-                return View(db.Projects.ToList().Where(p => p.User.Id == currentUser.Id).OrderBy(p => p.Designation));
+                return View(new ProjectIndexViewModel().ListByUser(currentUser.Id));
             }
             else
             {
@@ -47,7 +48,7 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = db.Projects.Find(id);
+            var project = new ProjectDetailsViewModel(id ?? Guid.Empty);
             if (project == null)
             {
                 return HttpNotFound();

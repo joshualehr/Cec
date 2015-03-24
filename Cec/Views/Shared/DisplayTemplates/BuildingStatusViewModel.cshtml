@@ -5,10 +5,6 @@
     <td class="text-center col-sm-2">@Html.DisplayFor(model => model.Percent)%</td>
     <td class="text-center col-sm-2">@Html.DisplayFor(model => model.AreaCount)</td>
     <td class="text-center col-sm-4">
-        @String.Join(", ", Model.Areas.Values)
-        @*@foreach (var item in Model.Areas)
-        {
-            @Html.ActionLink(item.Value, "Details", "Area", new { id = item.Key.ToString() }, null)
-        }*@
+        @Html.Raw(String.Join(", ", Model.Areas.Select(p => Html.ActionLink(p.Value, "Edit", "Area", new { id = p.Key }, null).ToHtmlString()).ToArray()))
     </td>
 </tr>

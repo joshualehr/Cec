@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Cec.Models.Project>
+﻿@model IEnumerable<Cec.ViewModels.ProjectIndexViewModel>
 
 @{
     ViewBag.Title = "Project";
@@ -15,7 +15,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Designation)
+            @Html.DisplayNameFor(model => model.First().Project)
         </th>
         <th>
             Actions
@@ -25,13 +25,13 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.ActionLink(item.Designation, "Details", new { id = item.ProjectID })
+            @Html.ActionLink(item.Project, "Details", new { id = item.ProjectId })
         </td>
         <td>
-            @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectID }, null) |
-            @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectID }, null) |
-            @Html.ActionLink("Edit", "Edit", new { id = item.ProjectID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ProjectID })
+            @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectId }, null) |
+            @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectId }, null) |
+            @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId })
         </td>
     </tr>
 }
