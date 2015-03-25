@@ -4,15 +4,10 @@
     ViewBag.Title = "Edit " + Model.Designation + " Project";
 }
 
-<br />
-<p>
+<p class="nav">
     @Html.ActionLink("Projects", "Index")
 </p>
 <h2>Edit @Model.Designation Project</h2>
-<p>
-    @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectID })
-</p>
-<hr />
 
 @using (Html.BeginForm())
 {
@@ -79,7 +74,8 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-offset-2 col-md-10 btn-group">
+                @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectID }, new { @class = "btn btn-primary btn-sm" })
                 <input type="submit" value="Save" class="btn btn-sm btn-default" />
             </div>
         </div>

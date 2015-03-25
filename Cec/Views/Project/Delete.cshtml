@@ -4,21 +4,18 @@
     ViewBag.Title = "Project";
 }
 
-<br />
-<p>
+<p class="nav">
     @Html.ActionLink("Projects", "Index")
 </p>
-<h2 style="color:red">Are you sure you want to delete the @Model.Designation Project?</h2>
-<h3>@Html.ActionLink("Cancel", "Details", new { id = Model.ProjectID })</h3>
+<h2 class="text-danger">Are you sure you want to delete the @Model.Designation Project?</h2>
 <p class="has-error">@ViewBag.ErrorMessage</p>
-<hr />
 <div>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <br/>
+        <div class="form-actions btn-group">
+            @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectID }, new { @class = "btn btn-primary" })
             <input type="submit" value="Delete" class="btn btn-default" />
         </div>
     }

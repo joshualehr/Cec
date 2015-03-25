@@ -4,34 +4,33 @@
     ViewBag.Title = "Project";
 }
 
-<br />
 <p>
     @Html.ActionLink("Materials", "Index", "Material")
 </p>
 <h2>Projects</h2>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-xs" })
 </p>
 <table class="table">
-    <tr>
-        <th>
+    <tr class="row">
+        <th class="col-lg-6">
             @Html.DisplayNameFor(model => model.First().Project)
         </th>
-        <th>
+        <th class="col-lg-6">
             Actions
         </th>
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink(item.Project, "Details", new { id = item.ProjectId })
+    <tr class="row">
+        <td class="col-lg-6">
+            @Html.ActionLink(item.Project, "Details", new { id = item.ProjectId }, new { @class = "text-primary" })
         </td>
-        <td>
-            @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectId }, null) |
-            @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectId }, null) |
-            @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId })
+        <td class="col-lg-6 btn-group">
+            @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectId }, new { @class = "btn btn-info btn-xs" })
+            @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectId }, new { @class = "btn btn-danger btn-xs" })
+            @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }, new { @class = "btn btn-primary btn-xs" })
+            @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId }, new { @class = "btn btn-default btn-xs" })
         </td>
     </tr>
 }

@@ -20,13 +20,13 @@ namespace Cec
                 .Include("~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/admin/scripts")
-                .Include("~/Scripts/jquery-{version}.js")
+                .Include("~/Scripts/jquery-2.1.3.js")
                 .Include("~/Scripts/jquery.validate.js")
                 .Include("~/Scripts/jquery.validate.unobtrusive.js")
                 .Include("~/Scripts/bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/scripts")
-                .Include("~/Scripts/jquery-{version}.js")
+                .Include("~/Scripts/jquery-2.1.3.js")
                 .Include("~/Scripts/jquery.validate.js")
                 .Include("~/Scripts/jquery.validate.unobtrusive.js")
                 .Include("~/Scripts/bootstrap.js"));
