@@ -1,13 +1,10 @@
-﻿using Cec.Helpers;
-using Cec.Models;
+﻿using Cec.Models;
 using Cec.ViewModels;
-using PagedList;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Cec.Controllers
@@ -17,20 +14,17 @@ namespace Cec.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: /ModelMaterial/5
-        public ActionResult Index(Guid? id)
+        [Authorize(Roles = "canAdminister")]
+        public ActionResult Index(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var modelmaterials = db.ModelMaterials.Include(m => m.Model)
-                                                  .Include(m => m.Material)
-                                                  .Include(m => m.Material.UnitOfMeasure)
-                                                  .Where(m => m.ModelID == id)
-                                                  .OrderBy(m => m.Material.Designation);
-            if (modelmaterials.Count() > 0)
+            var modelmaterials = new ModelMaterialIndexViewModel().ListByModel(id);
+            if (modelmaterials != null)
             {
-                return View(modelmaterials.ToList());
+                return View(modelmaterials);
             }
             else
             {
@@ -55,7 +49,7 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Create([Bind(Include = "ModelId, ApplyToAllAreas, OnlyProjectMaterial, Materials")] ModelMaterialCreateViewModel model)
+        public ActionResult Create([Bind(Include = "ProjectId,Project,ModelId,Model,ApplyToAllAreas,Materials")] ModelMaterialCreateViewModel model)
         {
             try
             {
@@ -80,12 +74,12 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ModelMaterial modelmaterial = db.ModelMaterials.Find(id, materialId);
-            if (modelmaterial == null)
+            var modelMaterialEditViewModel = new ModelMaterialEditViewModel(id ?? Guid.Empty, materialId ?? Guid.Empty);
+            if (modelMaterialEditViewModel == null)
             {
                 return HttpNotFound();
             }
-            return View(modelmaterial);
+            return View(modelMaterialEditViewModel);
         }
 
         // POST: /ModelMaterial/Edit/5
@@ -94,24 +88,13 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Edit([Bind(Include = "ModelID,MaterialID,Quantity")] ModelMaterial modelmaterial, bool applyToAll = false)
+        public ActionResult Edit([Bind(Include = "ProjectId,Project,ModelID,MaterialID,Material,ImagePath,UnitOfMeasure,Quantity,ApplyToExisting")] ModelMaterialEditViewModel modelMaterial)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    db.Entry(modelmaterial).State = EntityState.Modified;
-                    if (applyToAll)
-                    {
-                        var areaMaterials = db.AreaMaterials.Where(a => a.Area.ModelID == modelmaterial.ModelID && a.MaterialID == modelmaterial.MaterialID);
-                        foreach (var item in areaMaterials)
-                        {
-                            item.Quantity = modelmaterial.Quantity;
-                            db.Entry(item).State = EntityState.Modified;
-                        }
-                    }
-                    db.SaveChanges();
-                    return RedirectToAction("Index", new { id = modelmaterial.ModelID });
+                    return RedirectToAction("Index", new { id = modelMaterial.Edit(modelMaterial.ApplyToExisting) });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -119,55 +102,40 @@ namespace Cec.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            return View(modelmaterial);
+            return View(modelMaterial);
         }
 
         // GET: /ModelMaterial/Delete/5
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Delete(Guid? id, Guid? materialId, bool? saveChangesError = false)
+        public ActionResult Delete(Guid? id, Guid? materialId)
         {
             if (id == null | materialId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if (saveChangesError.GetValueOrDefault())
-            {
-                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
-            }
-            ModelMaterial modelmaterial = db.ModelMaterials.Find(id, materialId);
-            if (modelmaterial == null)
+            var modelMaterialDeleteViewModel = new ModelMaterialDeleteViewModel(id ?? Guid.Empty, materialId ?? Guid.Empty);
+            if (modelMaterialDeleteViewModel == null)
             {
                 return HttpNotFound();
             }
-            return View(modelmaterial);
+            return View(modelMaterialDeleteViewModel);
         }
 
         // POST: /ModelMaterial/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult DeleteConfirmed(Guid id, Guid materialId, bool applyToAll = false)
+        public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,Project,ModelID,MaterialID,Material,ApplyToExisting")] ModelMaterialDeleteViewModel modelMaterialDeleteViewModel)
         {
             try
             {
-                ModelMaterial modelmaterial = db.ModelMaterials.Find(id, materialId);
-                db.ModelMaterials.Remove(modelmaterial);
-                if (applyToAll)
-                {
-                    var areaMaterials = db.AreaMaterials.Where(a => a.Area.ModelID == modelmaterial.ModelID & a.MaterialID == modelmaterial.MaterialID);
-                    foreach (var item in areaMaterials)
-                    {
-                        db.AreaMaterials.Remove(item);
-                    }
-                }
-                db.SaveChanges();
-                return RedirectToAction("Index", new { id = modelmaterial.ModelID });
-
+                return RedirectToAction("Index", new { id = modelMaterialDeleteViewModel.Delete() });
             }
             catch (RetryLimitExceededException/* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+                ModelState.AddModelError("", "Delete failed. Try again, and if the problem persists see your system administrator.");
+                return View(modelMaterialDeleteViewModel);
             }
         }
 

@@ -22,10 +22,10 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areaIndexViewModels = new AreaIndexViewModel().ListByBuilding(id);
-            if (areaIndexViewModels != null)
+            var areas = new AreaIndexViewModel().ListByBuilding(id);
+            if (areas != null)
             {
-                return View(areaIndexViewModels);
+                return View(areas);
             }
             else
             {
@@ -37,23 +37,23 @@ namespace Cec.Controllers
         [HttpPost, ActionName("Index")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Index(AreaIndexViewModel[] areaIndexViewModels)
+        public ActionResult Index(AreaIndexViewModel[] areas)
         {
             var aivm = new List<AreaIndexViewModel>();
             var areasStr = new System.Text.StringBuilder();
-            foreach (var item in areaIndexViewModels)
+            foreach (var area in areas)
             {
-                if (item.Selected == true)
+                if (area.Selected == true)
                 {
-                    aivm.Add(item);
-                    areasStr.Append(item.Area);
+                    aivm.Add(area);
+                    areasStr.Append(area.Area);
                     areasStr.Append("-");
                 }
             }
             if (aivm.Count() < 1)
             {
                 ModelState.AddModelError("noneSelected", "No areas selected. Please select at least one area.");
-                return View(areaIndexViewModels.ToList());
+                return View(areas.ToList());
             }
             TempData["aivm"] = aivm;
             TempData["areasString"] = areasStr.Remove(areasStr.Length - 1, 1).ToString();
@@ -119,8 +119,7 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areaId = id ?? Guid.Empty;
-            var areaEditViewModel = new AreaEditViewModel(areaId);
+            var areaEditViewModel = new AreaEditViewModel(id ?? Guid.Empty);
             if (areaEditViewModel == null)
             {
                 return HttpNotFound();
@@ -202,8 +201,7 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areaId = id ?? Guid.Empty;
-            var areaDeleteViewModel = new AreaDeleteViewModel(areaId);
+            var areaDeleteViewModel = new AreaDeleteViewModel(id ?? Guid.Empty);
             if (areaDeleteViewModel == null)
             {
                 return HttpNotFound();

@@ -294,6 +294,74 @@ namespace Cec.ViewModels
         }
     }
 
+    public class ModelMaterialIndexViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        //Public Properties
+        public Guid ProjectId { get; set; }
+
+        public string Project { get; set; }
+
+        public Guid ModelId { get; set; }
+
+        public string Model { get; set; }
+
+        public Guid MaterialId { get; set; }
+
+        public string Material { get; set; }
+
+        [Display(Name = "Image")]
+        public string ImagePath { get; set; }
+
+        public double Quantity { get; set; }
+
+        [Display(Name = "Unit of Measure", ShortName = "U/M")]
+        public string UnitOfMeasure { get; set; }
+
+        //Constructors
+        public ModelMaterialIndexViewModel()
+        {
+
+        }
+
+        public ModelMaterialIndexViewModel(ModelMaterial modelMaterial)
+        {
+            this.ProjectId = modelMaterial.Model.ProjectID;
+            this.Project = modelMaterial.Model.Project.Designation;
+            this.ModelId = modelMaterial.ModelID;
+            this.Model = modelMaterial.Model.Designation;
+            this.MaterialId = modelMaterial.MaterialID;
+            this.Material = modelMaterial.Material.Designation;
+            this.ImagePath = modelMaterial.Material.ImagePath;
+            this.Quantity = modelMaterial.Quantity;
+            this.UnitOfMeasure = modelMaterial.Material.UnitOfMeasure.Designation;
+        }
+
+        //Methods
+        public List<ModelMaterialIndexViewModel> ListByModel(Guid modelId)
+        {
+            var modelMaterials = db.ModelMaterials.Where(mm => mm.ModelID == modelId)
+                                                  .OrderBy(mm => mm.Material.Designation)
+                                                  .ToList();
+            if (modelMaterials.Count() > 0)
+            {
+                var modelMaterialIndexViewModels = new List<ModelMaterialIndexViewModel>();
+                foreach (var modelMaterial in modelMaterials)
+                {
+                    var modelMaterialIndexViewModel = new ModelMaterialIndexViewModel(modelMaterial);
+                    modelMaterialIndexViewModels.Add(modelMaterialIndexViewModel);
+                }
+                return modelMaterialIndexViewModels;
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
     public class ModelMaterialCreateViewModel
     {
         //Private Properties
@@ -301,50 +369,35 @@ namespace Cec.ViewModels
 
         //Public Properties
         public Guid ProjectId { get; set; }
-        public string ProjectName { get; set; }
+        public string Project { get; set; }
         public Guid ModelId { get; set; }
-        public string ModelName { get; set; }
-        public bool OnlyProjectMaterial { get; set; }
+        public string Model { get; set; }
         public bool ApplyToAllAreas { get; set; }
         public List<ModelMaterialCreateItemViewModel> Materials { get; set; }
 
         //Constructors
-        public ModelMaterialCreateViewModel() { }
+        public ModelMaterialCreateViewModel()
+        {
+            this.Materials = new List<ModelMaterialCreateItemViewModel>();
+        }
 
         public ModelMaterialCreateViewModel(Guid modelId)
         {
             var modelData = db.Models.Find(modelId);
             this.ProjectId = modelData.ProjectID;
-            this.ProjectName = modelData.Project.Designation;
+            this.Project = modelData.Project.Designation;
             this.ModelId = modelData.ModelID;
-            this.ModelName = modelData.Designation;
-            this.OnlyProjectMaterial = true;
+            this.Model = modelData.Designation;
             this.ApplyToAllAreas = true;
             this.Materials = new List<ModelMaterialCreateItemViewModel>();
-            var materialData = new List<Material>();
             var currentModelMaterial = db.ModelMaterials.Include(m => m.Material)
-                                                      .Distinct()
-                                                      .Where(m => m.ModelID == this.ModelId)
-                                                      .Select(m => m.Material);
-            if (this.OnlyProjectMaterial)
-            {
-                var materialExceptCurrentInProject = db.ModelMaterials.Include(m => m.Material)
-                                                          .Include(m => m.Model)
-                                                          .Distinct()
-                                                          .Where(m => m.Model.ProjectID == this.ProjectId)
-                                                          .Select(m => m.Material)
-                                                          .Except(currentModelMaterial)
-                                                          .OrderBy(m => m.Designation)
-                                                          .ToList();
-                materialData = materialExceptCurrentInProject.ToList();
-            }
-            else
-            {
-                var materialExceptCurrent = db.Materials.Except(currentModelMaterial)
-                                                .OrderBy(m => m.Designation);
-                materialData = materialExceptCurrent.ToList();
-            }
-            foreach (var item in materialData)
+                                                        .Where(m => m.ModelID == this.ModelId)
+                                                        .Select(m => m.Material)
+                                                        .Distinct();
+            var materialExceptCurrent = db.Materials.Except(currentModelMaterial)
+                                                    .OrderBy(m => m.Designation)
+                                                    .ToList();
+            foreach (var item in materialExceptCurrent)
             {
                 this.Materials.Add(new ModelMaterialCreateItemViewModel(this.ModelId, item.MaterialID));
             }
@@ -402,14 +455,21 @@ namespace Cec.ViewModels
         //Public Properties
         [Key, Column(Order = 0)]
         public Guid ModelId { get; set; }
+
         [Key, Column(Order = 1)]
         public Guid MaterialId { get; set; }
+
+        [Display(Name = "Material")]
         public string MaterialName { get; set; }
+
         [DataType(DataType.MultilineText), Display(ShortName = "Desc.")]
         public string Description { get; set; }
+
         public string ImagePath { get; set; }
+
         [Display(Name = "Unit of Measure", ShortName = "U/M")]
         public string UnitOfMeasureName { get; set; }
+
         [Range(0, 99999)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F0}", HtmlEncode = false)]
         public int Quantity { get; set; }
@@ -427,6 +487,136 @@ namespace Cec.ViewModels
             this.ImagePath = materialData.ImagePath;
             this.UnitOfMeasureName = materialData.UnitOfMeasure.Designation;
             this.Quantity = 0;
+        }
+    }
+
+    public class ModelMaterialEditViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        //Public Properties
+        public Guid ProjectId { get; set; }
+
+        public string Project { get; set; }
+
+        public Guid ModelId { get; set; }
+
+        public string Model { get; set; }
+
+        public Guid MaterialId { get; set; }
+
+        public string Material { get; set; }
+
+        public string ImagePath { get; set; }
+
+        [Display(Name = "Unit of Measure", ShortName = "U/M")]
+        public string UnitOfMeasure { get; set; }
+
+        [Range(1, 99999)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F0}", HtmlEncode = false)]
+        public double Quantity { get; set; }
+
+        public bool ApplyToExisting { get; set; }
+
+        //Constructors
+        public ModelMaterialEditViewModel()
+        {
+
+        }
+
+        public ModelMaterialEditViewModel(Guid modelId, Guid materialId)
+        {
+            var modelMaterial = db.ModelMaterials.Find(modelId, materialId);
+            this.ProjectId = modelMaterial.Model.ProjectID;
+            this.Project = modelMaterial.Model.Project.Designation;
+            this.ModelId = modelMaterial.ModelID;
+            this.Model = modelMaterial.Model.Designation;
+            this.MaterialId = modelMaterial.MaterialID;
+            this.Material = modelMaterial.Material.Designation;
+            this.ImagePath = modelMaterial.Material.ImagePath;
+            this.UnitOfMeasure = modelMaterial.Material.UnitOfMeasure.Designation;
+            this.Quantity = modelMaterial.Quantity;
+            this.ApplyToExisting = true;
+        }
+
+        //Methods
+        public Guid Edit(bool applyToExisting)
+        {
+            var modelMaterial = new ModelMaterial()
+            {
+                ModelID = this.ModelId,
+                MaterialID = this.MaterialId,
+                Quantity = this.Quantity
+            };
+            db.Entry(modelMaterial).State = EntityState.Modified;
+            if (this.ApplyToExisting)
+            {
+                var areaMaterials = db.AreaMaterials.Where(a => a.Area.ModelID == this.ModelId && a.MaterialID == this.MaterialId);
+                foreach (var areaMaterial in areaMaterials)
+                {
+                    areaMaterial.Quantity = this.Quantity;
+                    db.Entry(areaMaterial).State = EntityState.Modified;
+                }
+            }
+            db.SaveChanges();
+            return this.ModelId;
+        }
+    }
+
+    public class ModelMaterialDeleteViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        //Public Properties
+        public Guid ProjectId { get; set; }
+
+        public string Project { get; set; }
+
+        public Guid ModelId { get; set; }
+
+        public string Model { get; set; }
+
+        public Guid MaterialId { get; set; }
+
+        public string Material { get; set; }
+
+        public bool ApplyToExisting { get; set; }
+
+        //Constructors
+        public ModelMaterialDeleteViewModel()
+        {
+
+        }
+
+        public ModelMaterialDeleteViewModel(Guid modelId, Guid materialId)
+        {
+            var modelMaterial = db.ModelMaterials.Find(modelId, materialId);
+            this.ProjectId = modelMaterial.Model.ProjectID;
+            this.Project = modelMaterial.Model.Project.Designation;
+            this.ModelId = modelMaterial.ModelID;
+            this.Model = modelMaterial.Model.Designation;
+            this.MaterialId = modelMaterial.MaterialID;
+            this.Material = modelMaterial.Material.Designation;
+            this.ApplyToExisting = true;
+        }
+
+        //Methods
+        public Guid Delete()
+        {
+            var modelMaterial = db.ModelMaterials.Find(this.ModelId, this.MaterialId);
+            db.ModelMaterials.Remove(modelMaterial);
+            if (this.ApplyToExisting)
+            {
+                var areaMaterials = db.AreaMaterials.Where(a => a.Area.ModelID == this.ModelId & a.MaterialID == this.MaterialId);
+                foreach (var areaMaterial in areaMaterials)
+                {
+                    db.AreaMaterials.Remove(areaMaterial);
+                }
+            }
+            db.SaveChanges();
+            return this.ModelId;
         }
     }
 }

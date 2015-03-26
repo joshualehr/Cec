@@ -4,17 +4,13 @@
     ViewBag.Title = "New Model Material";
 }
 
-<br />
 <p>
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.ProjectName + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink(Model.Project + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
     @Html.ActionLink("Models", "Index", "Model", new { id = Model.ProjectId }, null) >
-    @Html.ActionLink("Model " + Model.ModelName, "Details", "Model", new { id = Model.ModelId }, null)
+    @Html.ActionLink("Model " + Model.Model, "Details", "Model", new { id = Model.ModelId }, null)
 </p>
-<h2>Add to Model @Model.ModelName</h2>
-<p>
-    @Html.ActionLink("Cancel", "Index", new { id = Model.ModelId })
-</p>
+<h2>Add to Model @Model.Model</h2>
 
 @using (Html.BeginForm())
 {
@@ -22,24 +18,23 @@
     @Html.ValidationSummary(true)
     @Html.HiddenFor(model => model.ModelId)
     
-    @Html.CheckBoxFor(model => model.OnlyProjectMaterial, new { @checked = Model.OnlyProjectMaterial, @onclick = "this.form.submit();" })
-    <label for="OnlyProjectMaterial" class="control-label">Show only material already used in this project</label>
-    <br />    
+    //Html.CheckBoxFor(model => model.OnlyProjectMaterial, new { @checked = Model.OnlyProjectMaterial, @onclick = "this.form.submit();" })
+    //<label for="OnlyProjectMaterial" class="control-label">Show only material already used in this project</label>
     <table class="table">
         <tr>
-            <th>
+            <th class="col-lg-1 text-center">
                 Quantity
             </th>
-            <th>
+            <th class="col-lg-1 text-center">
                 U/M
             </th>
-            <th>
+            <th class="col-lg-1 text-center">
                 Image
             </th>
-            <th>
+            <th class="col-lg-2 text-center">
                 Material
             </th>
-            <th>
+            <th class="col-lg-7 text-left">
                 Description
             </th>
         </tr>
@@ -47,8 +42,12 @@
     </table>
     @Html.CheckBoxFor(model => model.ApplyToAllAreas, new { @checked = Model.ApplyToAllAreas })
     <label for="ApplyToAllAreas" class="control-label">Apply to existing areas?</label>
-    <br/>
-    <input type="submit" value="Create" class="btn btn-sm btn-default" />
+    <br />
+    <br />
+    <div class="btn-group">
+        @Html.ActionLink("Cancel", "Index", new { id = Model.ModelId }, new { @class = "btn btn-primary" })
+        <input type="submit" value="Create" class="btn btn-default" />
+    </div>
 }
 
 

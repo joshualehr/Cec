@@ -1,22 +1,22 @@
 ﻿@model Cec.ViewModels.ModelMaterialCreateItemViewModel
 
 <tr>
-    <td width="10%">
+    <td class="col-lg-1 text-center">
         @Html.HiddenFor(model => model.ModelId)
         @Html.HiddenFor(model => model.MaterialId)
-        @Html.EditorFor(model => model.Quantity, new { HtmlAttributes = new { style = "width: 100%" } })
+        @Html.EditorFor(model => model.Quantity, new { HtmlAttributes = new { @class = "form-control" } })
         @Html.ValidationMessageFor(model => model.Quantity)
     </td>
-    <td width="10%">
+    <td class="col-lg-1 text-center">
         @Html.DisplayFor(model => model.UnitOfMeasureName)
     </td>
-    <td width="10%">
+    <td class="col-lg-1 text-center">
         <img title="@Model.MaterialName" height="50" width="50" src="@Model.ImagePath" alt="@Model.MaterialName" />
     </td>
-    <td width="10%">
+    <td class="col-lg-2 text-center">
         @Html.DisplayFor(model => model.MaterialName)
     </td>
-    <td width="60%">
+    <td class="col-lg-7 text-justify">
         @Html.DisplayFor(model => model.Description)
     </td>
 </tr>

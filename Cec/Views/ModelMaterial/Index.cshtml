@@ -1,54 +1,55 @@
-﻿@model IEnumerable<Cec.Models.ModelMaterial>
+﻿@model IEnumerable<Cec.ViewModels.ModelMaterialIndexViewModel>
 
 @{
     ViewBag.Title = "Material";
-    var mod = Model.First().Model;
+    var modelMaterial = Model.First();
 }
 
-<br />
-<p>
+<p class="nav">
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(mod.Project.Designation + " Project", "Details", "Project", new { id = mod.Project.ProjectID }, null) >
-    @Html.ActionLink("Models", "Index", "Model", new { id = mod.Project.ProjectID }, null) >
-    @Html.ActionLink("Model " + mod.Designation, "Details", "Model", new { id = mod.ModelID }, null)
+    @Html.ActionLink(modelMaterial.Project + " Project", "Details", "Project", new { id = modelMaterial.ProjectId }, null) >
+    @Html.ActionLink("Models", "Index", "Model", new { id = modelMaterial.ProjectId }, null) >
+    @Html.ActionLink("Model " + modelMaterial.Model, "Details", "Model", new { id = modelMaterial.ModelId }, null)
 </p>
-<h2>Material for Model @mod.Designation</h2>
+<h2>Material for Model @modelMaterial.Model</h2>
 <p>
-    @Html.ActionLink("Add Item", "Create", new { id = mod.ModelID })
+    @Html.ActionLink("Add Item", "Create", new { id = modelMaterial.ModelId }, new { @class = "btn btn-primary" })
 </p>
 <table class="table">
     <tr>
-        <th colspan="2">
-            @Html.DisplayNameFor(m => m.Material.Designation)
+        <th colspan="2" class="col-lg-5 text-center">
+            @Html.DisplayNameFor(model => model.Material)
         </th>
-        <th>
-            @Html.DisplayNameFor(m => m.Quantity)
+        <th class="col-lg-2 text-center">
+            @Html.DisplayNameFor(model => model.Quantity)
         </th>
-        <th>
-            @Html.DisplayNameFor(m => m.Material.UnitOfMeasure.Designation)
+        <th class="col-lg-2 text-center">
+            @Html.DisplayNameFor(model => model.UnitOfMeasure)
         </th>
-        <th>
+        <th class="col-lg-3 text-center">
             Actions
         </th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>
-            <img src="@item.Material.ImagePath" title="@item.Material.Designation" height="50" width="50" alt="@item.Material.Designation" />
+        <td class="col-lg-2 text-center">
+            <img src="@item.ImagePath" title="@item.Material" height="50" width="50" alt="@item.Material" />
         </td>
-        <td>
-            @Html.ActionLink(item.Material.Designation, "Details", "Material", new { id = item.MaterialID }, null)
+        <td class="col-lg-3 text-center">
+            @Html.ActionLink(item.Material, "Details", "Material", new { id = item.MaterialId }, null)
         </td>
-        <td>
+        <td class="col-lg-2 text-center">
             @Html.DisplayFor(modelItem => item.Quantity)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Material.UnitOfMeasure.Designation)
+        <td class="col-lg-2 text-center">
+            @Html.DisplayFor(modelItem => item.UnitOfMeasure)
         </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.ModelID, materialId = item.MaterialID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ModelID, materialId = item.MaterialID })
+        <td class="col-lg-3 text-center">
+            <div class="btn-group">
+                @Html.ActionLink("Edit", "Edit", new { id = item.ModelId, materialId = item.MaterialId }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.ModelId, materialId = item.MaterialId }, new { @class = "btn btn-default" })
+            </div>
         </td>
     </tr>
 }

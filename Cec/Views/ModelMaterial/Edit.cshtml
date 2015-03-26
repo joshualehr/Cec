@@ -1,21 +1,16 @@
-﻿@model Cec.Models.ModelMaterial
+﻿@model Cec.ViewModels.ModelMaterialEditViewModel
 
 @{
     ViewBag.Title = "Edit Model Material";
 }
 
-<br />
-<p>
+<p class="nav">
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.Model.Project.Designation + " Project", "Details", "Project", new { id = Model.Model.ProjectID }, null) >
-    @Html.ActionLink("Models", "Index", "Model", new { id = ViewBag.BuildingId }, null) >
-    @Html.ActionLink("Model " + Model.Model.Designation, "Details", "Model", new { id = Model.ModelID }, null)
+    @Html.ActionLink(Model.Project + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Models", "Index", "Model", new { id = Model.ModelId }, null) >
+    @Html.ActionLink("Model " + Model.Model, "Details", "Model", new { id = Model.ModelId }, null)
 </p>
-<h2>Edit @Model.Material.Designation for Model @Model.Model.Designation</h2>
-<p>
-    @Html.ActionLink("Cancel", "Index", new { id = Model.ModelID })
-</p>
-<hr />
+<h2>Edit @Model.Material for Model @Model.Model</h2>
 
 @using (Html.BeginForm())
 {
@@ -23,8 +18,22 @@
     
     <div class="form-horizontal">
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.ModelID)
-        @Html.HiddenFor(model => model.MaterialID)
+        @Html.HiddenFor(model => model.ProjectId)
+        @Html.HiddenFor(model => model.Project)
+        @Html.HiddenFor(model => model.ModelId)
+        @Html.HiddenFor(model => model.Model)
+        @Html.HiddenFor(model => model.MaterialId)
+        @Html.HiddenFor(model => model.Material)
+        @Html.HiddenFor(model => model.ImagePath)
+        @Html.HiddenFor(model => model.UnitOfMeasure)
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <img src="@Model.ImagePath" title="@Model.Material" height="100" width="100" alt="@Model.Material" />
+                <br />
+                Measure by: @Model.UnitOfMeasure
+            </div>
+        </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -33,15 +42,15 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-md-2"> </label>
-            <div class="col-md-10">
-                <input id="applyToAll" name="applyToAll" type="checkbox" checked="checked" value="true" />
-                <label for="applyToAll" class="control-label">Apply to existing areas?</label>
+            <div class="col-md-offset-2 col-md-10">
+                @Html.CheckBoxFor(model => model.ApplyToExisting)
+                <label for="ApplyToExisting" class="control-label">Apply to existing areas?</label>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-sm btn-default" />
+            <div class="col-md-offset-2 col-md-10 btn-group">
+                @Html.ActionLink("Cancel", "Index", new { id = Model.ModelId }, new { @class = "btn btn-primary" })
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>

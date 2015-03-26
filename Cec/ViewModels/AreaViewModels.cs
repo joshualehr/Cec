@@ -72,9 +72,7 @@ namespace Cec.ViewModels
         //Methods
         public List<AreaIndexViewModel> ListByBuilding(Guid buildingId)
         {
-            var areas = db.Areas.Include(a => a.Building)
-                                .Include(a => a.Building.Project)
-                                .Where(a => a.BuildingID == buildingId)
+            var areas = db.Areas.Where(a => a.BuildingID == buildingId)
                                 .OrderBy(a => a.Designation);
             if (areas.Count() > 0)
             {
@@ -540,6 +538,7 @@ namespace Cec.ViewModels
             this.ProjectId = area.Building.ProjectID;
         }
 
+        //Methods
         public Guid Delete()
         {
             var area = db.Areas.Find(this.AreaId);
