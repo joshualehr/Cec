@@ -8,11 +8,11 @@
     @Html.ActionLink("Projects", "Index")
 </p>
 <h2 class="text-danger">Are you sure you want to delete the @Model.Designation Project?</h2>
-<p class="has-error">@ViewBag.ErrorMessage</p>
 <div>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
 
         <div class="form-actions btn-group">
             @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectID }, new { @class = "btn btn-primary" })

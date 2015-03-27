@@ -11,12 +11,9 @@
     <ul class="list-unstyled">
         <li class="column-break-avoid">
             <h2>@Model.Project Project</h2>
-            <p class="h4">
-                Go to @Html.ActionLink("Models", "Index", "Model", new { id = Model.ProjectId }, null)
-            </p>
             <div class="btn-group">
-                @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }, new { @class = "btn btn-primary btn-xs" })
-                @Html.ActionLink("Delete", "Delete", new { id = Model.ProjectId }, new { @class = "btn btn-default btn-xs" })
+                @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Delete", "Delete", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
             </div>
         </li>
         <li class="column-break-avoid">
@@ -62,5 +59,6 @@
         </li>
     </ul>
 </div>
+<h4>Go to @Html.ActionLink("Models", "Index", "Model", new { id = Model.ProjectId }, null)</h4>
 <h4>Total @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null): @Html.DisplayFor(model => model.BuildingCount)</h4>
 @Html.DisplayFor(model => model.Buildings)

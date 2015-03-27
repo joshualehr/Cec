@@ -8,6 +8,7 @@
     @Html.ActionLink("Projects", "Index")
 </p>
 <h2>Edit @Model.Designation Project</h2>
+<hr />
 
 @using (Html.BeginForm())
 {
@@ -75,8 +76,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10 btn-group">
-                @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectID }, new { @class = "btn btn-primary btn-sm" })
-                <input type="submit" value="Save" class="btn btn-sm btn-default" />
+                @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectID }, new { @class = "btn btn-primary" })
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>

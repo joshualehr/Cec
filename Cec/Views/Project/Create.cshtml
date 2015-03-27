@@ -4,14 +4,10 @@
     ViewBag.Title = "Project";
 }
 
-<br />
-<p>
+<p class="nav">
     @Html.ActionLink("Projects", "Index")
 </p>
 <h2>New Project</h2>
-<p>
-    @Html.ActionLink("Cancel", "Index")
-</p>
 <hr />
 
 @using (Html.BeginForm()) 
@@ -78,8 +74,9 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-sm btn-default" />
+            <div class="col-md-offset-2 col-md-10 btn-group">
+                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-primary" })
+                <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>

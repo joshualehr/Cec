@@ -1,8 +1,6 @@
-﻿using Cec.Helpers;
-using Cec.Models;
+﻿using Cec.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
@@ -73,7 +71,8 @@ namespace Cec.ViewModels
         public List<AreaIndexViewModel> ListByBuilding(Guid buildingId)
         {
             var areas = db.Areas.Where(a => a.BuildingID == buildingId)
-                                .OrderBy(a => a.Designation);
+                                .OrderBy(a => a.Designation)
+                                .ToList();
             if (areas.Count() > 0)
             {
                 var areaIndexViewModels = new List<AreaIndexViewModel>();
