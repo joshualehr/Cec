@@ -22,39 +22,42 @@
         <input type="submit" value="Description Search" class="btn btn-sm btn-info" />
     </p>
 }
-<table class="table">
-    <tr>
-        <th>
+<table class="table table-hover">
+    <tr class="row">
+        <th class="col-lg-2">
             Image
         </th>
-        <th>
+        <th class="col-lg-1 text-center">
             @Html.ActionLink("Material", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter }) &uarr;&darr;
         </th>
-        <th>
+        <th class="col-lg-6 text-left">
             @Html.DisplayNameFor(model => model.First().Description)
         </th>
-        <th>
+        <th class="col-lg-3 text-center">
             Actions
         </th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td width="10%">
+@foreach (var item in Model)
+{
+    <tr class="row">
+        <td class="col-lg-2">
             <a href="~/Material/Details/@item.MaterialID?page=@Model.PageNumber&sortOrder=@ViewBag.SortOrder&currentFilter=@ViewBag.CurrentFilter">
-                <img title="@item.Material" height="50" width="50" src="@item.ImagePath" alt="@item.Material" />
+                <img title="@item.Material" src="@item.ImagePath" alt="@item.Material" class="img-responsive" style="max-height: 100px;" />
             </a>
         </td>
-        <td width="10%">
+        <td class="col-lg-1 text-center">
             @Html.ActionLink(item.Material, "Details", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })
         </td>
-        <td width="60%">
-            @item.Description
+        <td class="col-lg-6 text-left">
+            <pre class="pre-scrollable" style="max-height: 100px;">@item.Description</pre>
         </td>
-        <td width="20%">
-            @Html.ActionLink("Copy", "Copy", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
-            @Html.ActionLink("Edit", "Edit", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })
+        <td class="col-lg-3 text-center">
+            <div class="btn-group">
+                @Html.ActionLink("Copy", "Copy", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-sm btn-danger" })
+                @Html.ActionLink("Edit", "Edit", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-sm btn-primary" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-sm btn-default" })
+            </div>
         </td>
     </tr>
 }

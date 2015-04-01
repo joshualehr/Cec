@@ -11,8 +11,10 @@
         @Html.HiddenFor(model => Model.Project)
     </td>
     <td>
-        @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, null) |
-        @Html.ActionLink("Edit", "Edit", new { id = Model.BuildingId }) |
-        @Html.ActionLink("Delete", "Delete", new { id = Model.BuildingId })
+        <div class="btn-group">
+            @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, new { @class = "btn btn-danger" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Delete", "Delete", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+        </div>
     </td>
 </tr>

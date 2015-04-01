@@ -37,7 +37,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            <img src="@item.Material.ImagePath" title="@item.Material.Designation" height="50" width="50" alt="@item.Material.Designation" />
+            <img src="@item.Material.ImagePath" height="100" width="100" title="@item.Material.Designation" alt="@item.Material.Designation" class="img-responsive" />
         </td>
         <td>
             @Html.ActionLink(item.Material.Designation, "Details", "Material", new { id = item.MaterialID }, null)

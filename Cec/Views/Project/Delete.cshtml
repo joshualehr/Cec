@@ -7,16 +7,18 @@
 <p class="nav">
     @Html.ActionLink("Projects", "Index")
 </p>
-<h2 class="text-danger">Are you sure you want to delete the @Model.Designation Project?</h2>
 <div>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary()
 
-        <div class="form-actions btn-group">
+        <h2 class="text-danger">Are you sure you want to delete the @Model.Designation Project?</h2>
+        <div class="form-actions btn-group pull-right">
             @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectID }, new { @class = "btn btn-primary" })
             <input type="submit" value="Delete" class="btn btn-default" />
         </div>
+        <br />
+        <br />
     }
 </div>

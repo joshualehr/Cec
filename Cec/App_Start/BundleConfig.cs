@@ -9,10 +9,10 @@ namespace Cec
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new StyleBundle("~/styles")
-                .Include("~/content/styles/bootstrap.css", "~/content/styles/bootstrap-theme.css", "~/content/styles/site.css"));
+                .Include("~/content/styles/bootstrap.css", "~/content/styles/site.css"));
 
             bundles.Add(new StyleBundle("~/admin/styles")
-                .Include("~/content/styles/bootstrap.css", "~/content/styles/bootstrap-theme.css", "~/content/styles/admin.css"));
+                .Include("~/content/styles/bootstrap.css", "~/content/styles/admin.css"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
