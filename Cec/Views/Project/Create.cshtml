@@ -1,19 +1,19 @@
-﻿@model Cec.Models.Project
+﻿@model Cec.ViewModels.ProjectCreateViewModel
 
 @{
-    ViewBag.Title = "Project";
+    ViewBag.Title = "New Project";
 }
 
-<p class="nav">
+<div class="breadcrumb">
     @Html.ActionLink("Projects", "Index")
-</p>
+</div>
 <h2>New Project</h2>
 <hr />
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         @Html.ValidationSummary(true)
 

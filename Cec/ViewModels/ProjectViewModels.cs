@@ -124,10 +124,6 @@ namespace Cec.ViewModels
         public IList<ProjectStatusViewModel> Buildings { get; set; }
 
         //Constructors
-        public ProjectDetailsViewModel()
-        {
-
-        }
 
         public ProjectDetailsViewModel(Guid projectId)
         {
@@ -147,6 +143,171 @@ namespace Cec.ViewModels
             {
                 this.Buildings.Add(new ProjectStatusViewModel(building));
             }
+        }
+    }
+
+    public class ProjectCreateViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        //Public Properties
+        [Required]
+        [DataType(DataType.Text)]
+        [StringLength(50, ErrorMessage = "Cannot be longer than 50 characters or shorter than 2.", MinimumLength = 2)]
+        [Display(Name = "Project")]
+        public string Designation { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(ShortName = "Desc.")]
+        public string Description { get; set; }
+
+        [Display(Name = "Purchase Order", ShortName = "PO")]
+        public string PurchaseOrder { get; set; }
+
+        [DataType(DataType.Text)]
+        [StringLength(100, ErrorMessage = "Cannot be longer than 100 characters.")]
+        public string Address { get; set; }
+
+        [DataType(DataType.Text)]
+        [StringLength(50, ErrorMessage = "Cannot be longer than 50 characters.")]
+        public string City { get; set; }
+
+        [DataType(DataType.Text)]
+        [StringLength(2, ErrorMessage = "Cannot be longer than 2 characters.")]
+        public string State { get; set; }
+
+        [DataType(DataType.PostalCode)]
+        [RegularExpression(@"^\d{5}$", ErrorMessage = "Please enter a 5 digit code.")]
+        [Display(Name = "Postal Code", ShortName = "Zip", Prompt = "Enter postal code")]
+        public Nullable<int> PostalCode { get; set; }
+
+        //Constructors
+        public ProjectCreateViewModel()
+        {
+            
+        }
+
+        //Methods
+        public Guid Create(string userId)
+        {
+            var project = new Project();
+            project.ProjectID = Guid.Empty;
+            project.Designation = this.Designation;
+            project.Description = this.Description;
+            project.PurchaseOrder = this.PurchaseOrder;
+            project.Address = this.Address;
+            project.City = this.City;
+            project.State = this.State;
+            project.PostalCode = this.PostalCode;
+            project.UserId = userId;
+            db.Projects.Add(project);
+            db.SaveChanges();
+            return project.ProjectID;
+        }
+    }
+
+    public class ProjectEditViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        //Public Properties
+        public Guid ProjectId { get; set; }
+
+        [Required]
+        public string Designation { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(ShortName = "Desc.")]
+        public string Description { get; set; }
+
+        [Display(Name = "Purchase Order", ShortName = "PO")]
+        public string PurchaseOrder { get; set; }
+
+        [DataType(DataType.Text)]
+        [StringLength(100, ErrorMessage = "Cannot be longer than 100 characters.")]
+        public string Address { get; set; }
+
+        [DataType(DataType.Text)]
+        [StringLength(50, ErrorMessage = "Cannot be longer than 50 characters.")]
+        public string City { get; set; }
+
+        [DataType(DataType.Text)]
+        [StringLength(2, ErrorMessage = "Cannot be longer than 2 characters.")]
+        public string State { get; set; }
+
+        [DataType(DataType.PostalCode)]
+        [RegularExpression(@"^\d{5}$", ErrorMessage = "Please enter a 5 digit code.")]
+        [Display(Name = "Postal Code", ShortName = "Zip", Prompt = "Enter postal code")]
+        public Nullable<int> PostalCode { get; set; }
+
+        //Constructors
+        public ProjectEditViewModel()
+        {
+
+        }
+
+        public ProjectEditViewModel(Guid projectId)
+        {
+            var project = db.Projects.Find(projectId);
+            this.ProjectId = project.ProjectID;
+            this.Designation = project.Designation;
+            this.Description = project.Description;
+            this.PurchaseOrder = project.PurchaseOrder;
+            this.Address = project.Address;
+            this.City = project.City;
+            this.State = project.State;
+            this.PostalCode = project.PostalCode;
+        }
+
+        //Methods
+        public Guid Edit()
+        {
+            var project = db.Projects.Find(this.ProjectId);
+            project.Designation = this.Designation;
+            project.Description = this.Description;
+            project.PurchaseOrder = this.PurchaseOrder;
+            project.Address = this.Address;
+            project.City = this.City;
+            project.State = this.State;
+            project.PostalCode = this.PostalCode;
+            db.Entry(project).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            return this.ProjectId;
+        }
+    }
+
+    public class ProjectDeleteViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        //Public Properties
+        public Guid ProjectId { get; set; }
+
+        public string Designation { get; set; }
+
+        //Constructors
+        public ProjectDeleteViewModel()
+        {
+
+        }
+
+        public ProjectDeleteViewModel(Guid projectId)
+        {
+            var project = db.Projects.Find(projectId);
+            this.ProjectId = project.ProjectID;
+            this.Designation = project.Designation;
+        }
+
+        //Methods
+        public Guid Delete()
+        {
+            var project = db.Projects.Find(this.ProjectId);
+            db.Projects.Remove(project);
+            db.SaveChanges();
+            return project.ProjectID;
         }
     }
 }

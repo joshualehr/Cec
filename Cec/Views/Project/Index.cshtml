@@ -4,25 +4,25 @@
     ViewBag.Title = "Project";
 }
 
-<p>
+<div class="breadcrumb">
     @Html.ActionLink("Materials", "Index", "Material")
-</p>
+</div>
 <h2>Projects</h2>
 <table class="table table-hover">
     <tr class="row">
-        <th class="col-lg-2 text-left">
+        <th class="col-lg-6 col-xs-2 text-left">
             @Html.DisplayNameFor(model => model.First().Project)
         </th>
-        <th class="col-lg-10 text-center">
+        <th class="col-lg-6 col-xs-10 text-center">
             Actions
         </th>
     </tr>
     @foreach (var item in Model) {
         <tr class="row">
-            <td class="col-lg-2 text-left">
+            <td class="col-lg-6 col-xs-2 text-left">
                 @Html.ActionLink(item.Project, "Details", new { id = item.ProjectId }, new { @class = "" })
             </td>
-            <td class="col-lg-10 text-center">
+            <td class="col-lg-6 col-xs-10 text-center">
                 <div class="btn-group">
                     @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectId }, new { @class = "btn btn-danger" })
                     @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectId }, new { @class = "btn btn-info" })
@@ -33,10 +33,10 @@
         </tr>
     }
     <tr class="row">
-        <td class="col-lg-2 text-left">
+        <td class="col-lg-6 col-xs-2 text-left">
             @Html.ActionLink("Create a New Project", "Create")
         </td>
-        <td class="col-lg-10 text-center">
+        <td class="col-lg-6 col-xs-10 text-center">
             &nbsp;
         </td>
     </tr>

@@ -1,22 +1,22 @@
-﻿@model Cec.Models.Project
+﻿@model Cec.ViewModels.ProjectEditViewModel
 
 @{
     ViewBag.Title = "Edit " + Model.Designation + " Project";
 }
 
-<p class="nav">
+<div class="breadcrumb">
     @Html.ActionLink("Projects", "Index")
-</p>
+</div>
 <h2>Edit @Model.Designation Project</h2>
 <hr />
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+    @Html.HiddenFor(model => model.ProjectId)
+
     <div class="form-horizontal">
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.ProjectID)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Designation, new { @class = "control-label col-md-2" })
@@ -76,7 +76,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10 btn-group">
-                @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectID }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>

@@ -84,8 +84,7 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areaCreateViewModel = new AreaCreateViewModel(id ?? Guid.Empty);
-            return View(areaCreateViewModel);
+            return View(new AreaCreateViewModel(id ?? Guid.Empty));
         }
 
         // POST: /Area/Create
@@ -94,13 +93,13 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Create([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaDesignation,Description,Address,City,State,PostalCode,StatusId,ModelId")] AreaCreateViewModel areaCreateViewModel)
+        public ActionResult Create([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaDesignation,Description,Address,City,State,PostalCode,StatusId,ModelId")] AreaCreateViewModel area)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    return RedirectToAction("Details", new { id = areaCreateViewModel.Create() });
+                    return RedirectToAction("Details", new { id = area.Create() });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -108,7 +107,7 @@ namespace Cec.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            return View(areaCreateViewModel);
+            return View(area);
         }
 
         // GET: /Area/Edit/5
@@ -119,13 +118,13 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areaEditViewModel = new AreaEditViewModel(id ?? Guid.Empty);
-            if (areaEditViewModel == null)
+            var area = new AreaEditViewModel(id ?? Guid.Empty);
+            if (area == null)
             {
                 return HttpNotFound();
             }
-            Session["OriginalModelId"] = areaEditViewModel.ModelId;
-            return View(areaEditViewModel);
+            Session["OriginalModelId"] = area.ModelId;
+            return View(area);
         }
 
         // POST: /Area/Edit/5
@@ -134,14 +133,14 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Edit([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,StatusId")] AreaEditViewModel areaEditViewModel)
+        public ActionResult Edit([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,StatusId")] AreaEditViewModel area)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     Guid originalModelId = (Guid)Session["OriginalModelId"];
-                    return RedirectToAction("Details", new { id = areaEditViewModel.Edit(originalModelId) });
+                    return RedirectToAction("Details", new { id = area.Edit(originalModelId) });
                 }
 
             }
@@ -150,7 +149,7 @@ namespace Cec.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            return View(areaEditViewModel);
+            return View(area);
         }
 
         // GET: /Area/Copy/5
@@ -162,12 +161,12 @@ namespace Cec.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var areaId = id ?? Guid.Empty;
-            var areaCopyViewModel = new AreaCopyViewModel(areaId);
-            if (areaCopyViewModel == null)
+            var area = new AreaCopyViewModel(areaId);
+            if (area == null)
             {
                 return HttpNotFound();
             }
-            return View(areaCopyViewModel);
+            return View(area);
         }
 
         // POST: /Area/Copy/5
@@ -176,13 +175,13 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,StatusId")] AreaCopyViewModel areaCopyViewModel)
+        public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,StatusId")] AreaCopyViewModel area)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    return RedirectToAction("Details", new { id = areaCopyViewModel.Copy() });
+                    return RedirectToAction("Details", new { id = area.Copy() });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -190,7 +189,7 @@ namespace Cec.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            return View(areaCopyViewModel);
+            return View(area);
         }
 
         // GET: /Area/Delete/5
@@ -201,29 +200,29 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areaDeleteViewModel = new AreaDeleteViewModel(id ?? Guid.Empty);
-            if (areaDeleteViewModel == null)
+            var area = new AreaDeleteViewModel(id ?? Guid.Empty);
+            if (area == null)
             {
                 return HttpNotFound();
             }
-            return View(areaDeleteViewModel);
+            return View(area);
         }
 
         // POST: /Area/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation")] AreaDeleteViewModel areaDeleteViewModel)
+        public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation")] AreaDeleteViewModel area)
         {
             try
             {
-                return RedirectToAction("Index", new { id = areaDeleteViewModel.Delete() });
+                return RedirectToAction("Index", new { id = area.Delete() });
             }
             catch (RetryLimitExceededException/* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Delete failed. Try again, and if the problem persists see your system administrator.");
-                return View(areaDeleteViewModel);
+                return View(area);
             }
         }
 

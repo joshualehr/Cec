@@ -60,7 +60,7 @@ namespace Cec.Controllers
         [Authorize(Roles = "canAdminister")]
         public ActionResult Create()
         {
-            return View();
+            return View(new ProjectCreateViewModel());
         }
 
         // POST: /Project/Create
@@ -69,17 +69,13 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Create([Bind(Include = "ProjectID,Designation,Description,PurchaseOrder,Address,City,State,PostalCode")] Project project)
+        public ActionResult Create([Bind(Include = "Designation,Description,PurchaseOrder,Address,City,State,PostalCode")] ProjectCreateViewModel project)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var currentUser = manager.FindById(User.Identity.GetUserId());
-                    project.User = currentUser;
-                    db.Projects.Add(project);
-                    db.SaveChanges();
-                    return RedirectToAction("Details", new { id = project.ProjectID });
+                    return RedirectToAction("Details", new { id = project.Create(User.Identity.GetUserId()) });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -94,7 +90,7 @@ namespace Cec.Controllers
         [Authorize(Roles = "canAdminister")]
         public ActionResult AdminCreate()
         {
-            return View();
+            return View(new ProjectCreateViewModel());
         }
 
         // POST: /Project/Create
@@ -103,15 +99,14 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult AdminCreate([Bind(Include = "ProjectID,Designation,Description,PurchaseOrder,Address,City,State,PostalCode")] Project project)
+        public ActionResult AdminCreate([Bind(Include = "Designation,Description,PurchaseOrder,Address,City,State,PostalCode")] ProjectCreateViewModel project)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    db.Projects.Add(project);
-                    db.SaveChanges();
-                    return RedirectToAction("Details", new { id = project.ProjectID });
+                    //Change User's source later
+                    return RedirectToAction("Details", new { id = project.Create(User.Identity.GetUserId()) });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -130,7 +125,7 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = db.Projects.Find(id);
+            var project = new ProjectEditViewModel(id ?? Guid.Empty);
             if (project == null)
             {
                 return HttpNotFound();
@@ -144,15 +139,13 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Edit([Bind(Include = "ProjectID,Designation,Description,PurchaseOrder,Address,City,State,PostalCode")] Project project)
+        public ActionResult Edit([Bind(Include = "ProjectId,Designation,Description,PurchaseOrder,Address,City,State,PostalCode")] ProjectEditViewModel project)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    db.Entry(project).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Details", new { id = project.ProjectID });
+                    return RedirectToAction("Details", new { id = project.Edit() });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -165,17 +158,13 @@ namespace Cec.Controllers
 
         // GET: /Project/Delete/5
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Delete(Guid? id, bool? saveChangesError = false)
+        public ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if (saveChangesError.GetValueOrDefault())
-            {
-                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
-            }
-            Project project = db.Projects.Find(id);
+            var project = new ProjectDeleteViewModel(id ?? Guid.Empty);
             if (project == null)
             {
                 return HttpNotFound();
@@ -187,19 +176,17 @@ namespace Cec.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult DeleteConfirmed(Guid id)
+        public ActionResult DeleteConfirmed([Bind(Include = "ProjectId, Designation")] ProjectDeleteViewModel project)
         {
             try
             {
-                Project project = db.Projects.Find(id);
-                db.Projects.Remove(project);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = project.Delete() });
             }
             catch (RetryLimitExceededException/* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+                ModelState.AddModelError("", "Delete failed. Try again, and if the problem persists see your system administrator.");
+                return View(project);
             }
         }
 
