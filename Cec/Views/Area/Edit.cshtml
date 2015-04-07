@@ -47,7 +47,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ModelId, "Model", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ModelId, Model.Models, new { @class = "form-control"})
+                @Html.DropDownListFor(model => model.ModelId, Model.Models, "", new { @class = "form-control"})
                 @Html.ValidationMessageFor(model => model.ModelId)
             </div>
         </div>

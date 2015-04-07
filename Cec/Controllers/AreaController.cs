@@ -139,8 +139,8 @@ namespace Cec.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Guid originalModelId = (Guid)Session["OriginalModelId"];
-                    return RedirectToAction("Details", new { id = area.Edit(originalModelId) });
+                    var originalModelId = (Guid?)Session["OriginalModelId"];
+                    return RedirectToAction("Details", new { id = area.Edit(originalModelId ?? null) });
                 }
 
             }

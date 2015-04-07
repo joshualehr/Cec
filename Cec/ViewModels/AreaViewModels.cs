@@ -364,7 +364,7 @@ namespace Cec.ViewModels
             area.State = this.State;
             area.StatusId = this.StatusId;
             db.Entry(area).State = EntityState.Modified;
-            if (originalModel != null && originalModel != this.ModelId)
+            if (originalModel != this.ModelId)
             {
                 var areaMaterials = db.AreaMaterials.Where(am => am.AreaID == this.AreaId);
                 foreach (var item in areaMaterials)
