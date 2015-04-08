@@ -5,10 +5,10 @@
     var bivm = Model.First();
 }
 
-<p class="nav">
+<div class="breadcrumb">
     @Html.ActionLink("Projects", "Index", "Project") >
     @Html.ActionLink(bivm.Project + " Project", "Details", "Project", new { id = bivm.ProjectId }, null)
-</p>
+</div>
 <h2>Buildings</h2>
 
 @using (Html.BeginForm("Index", "Building", FormMethod.Post))
@@ -16,34 +16,35 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
 
-    <fieldset>
-        <table class="table">
-            <tr>
-                <th>
-                    <input type="checkbox" class="checkall" /> Select All
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Building)
-                </th>
-                <th>
-                    Actions
-                </th>
-            </tr>
-            @Html.DisplayFor(model => model)
-        </table>
-    </fieldset>
+    <table class="table">
+        <tr>
+            <th>
+                <input type="checkbox" onclick="checkAll(this)" /> Select All
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Building)
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+        @Html.DisplayFor(model => model)
+    </table>
     <div class="btn-group">
         <input type="submit" value="Calculate Materials" class="btn btn-primary" />
         @Html.ActionLink("Create New", "Create", new { id = bivm.ProjectId }, new { @class = "btn btn-default" })
     </div>
 }
+
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
     <script>
-    $(function () {
-        $('.checkall').on('click', function () {
-            $(this).closest('fieldset').find(':checkbox').prop('checked', this.checked);
-        });
-    });
-    </script>
+        function checkAll(bx) {
+            var cbs = document.getElementsByTagName('input');
+            for (var i = 0; i < cbs.length; i++) {
+                if (cbs[i].type == 'checkbox') {
+                    cbs[i].checked = bx.checked;
+                }
+            }
+        }
+</script>
 }

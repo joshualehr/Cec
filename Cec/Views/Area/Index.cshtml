@@ -5,47 +5,48 @@
     var amvm = Model.First();
 }
 
-<br />
-<p>
+<div class="breadcrumb">
     @Html.ActionLink("Projects", "Index", "Project") >
     @Html.ActionLink(amvm.Project + " Project", "Details", "Project", new { id = amvm.ProjectId }, null) >
     @Html.ActionLink("Buildings", "Index", "Building", new { id = amvm.ProjectId }, null) >
     @Html.ActionLink("Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, null)
-</p>
+</div>
 <h2>Areas</h2>
-<p>
-    @Html.ActionLink("Create New", "Create", new { id = amvm.BuildingId })
-</p>
 
 @using (Html.BeginForm("Index", "Area", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
 
-    <fieldset>
-        <table class="table">
-            <tr>
-                <th>
-                    <input type="checkbox" class="checkall" /> Select All
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Area)
-                </th>
-                <th>
-                    Actions
-                </th>
-            </tr>
-            @Html.DisplayFor(model => model)
-        </table>
-    </fieldset>
-    <input type="submit" value="Calculate Materials" class="btn btn-sm btn-default" />
+    <table class="table">
+        <tr>
+            <th>
+                <input type="checkbox" onclick="checkAll(this)" /> Select All
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Area)
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+        @Html.DisplayFor(model => model)
+    </table>
+    <div class="btn-group">
+        <input type="submit" value="Calculate Materials" class="btn btn-primary" />
+        @Html.ActionLink("Create New", "Create", new { id = amvm.BuildingId }, new { @class = "btn btn-default" })
+    </div>
 }
+
 @section scripts {
     <script>
-    $(function () {
-        $('.checkall').on('click', function () {
-            $(this).closest('fieldset').find(':checkbox').prop('checked', this.checked);
-        });
-    });
+        function checkAll(bx) {
+            var cbs = document.getElementsByTagName('input');
+            for (var i = 0; i < cbs.length; i++) {
+                if (cbs[i].type == 'checkbox') {
+                    cbs[i].checked = bx.checked;
+                }
+            }
+        }
     </script>
 }

@@ -5,48 +5,50 @@
     var bmvm = Model.First();
 }
 
-<br />
-<p>
+<div class="breadcrumb">
     @Html.ActionLink("Projects", "Index", "Project") >
     @Html.ActionLink(bmvm.Project + " Project", "Details", "Project", new { id = bmvm.ProjectId }, null) >
     @Html.ActionLink("Buildings", "Index", new { id = bmvm.ProjectId })
-</p>
+</div>
 <h2>Building(s) Material</h2>
+
 @using (Html.BeginForm("BuildingsMaterial", "Building", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
-    <fieldset>
-        <table class="table">
-            <tr>
-                <th>
-                    <input type="checkbox" class="checkall" /> Select All
-                </th>
-                <th>
-                    Image
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Material)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Total)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UnitOfMeasure)
-                </th>
-            </tr>
-            @Html.DisplayFor(model => model)
-        </table>
-    </fieldset>
-    <input type="submit" value="Download Data" class="btn btn-sm btn-default" />
+    
+    <table class="table">
+        <tr>
+            <th>
+                <input type="checkbox" onclick="checkAll(this)" /> Select All
+            </th>
+            <th>
+                Image
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Material)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitOfMeasure)
+            </th>
+        </tr>
+        @Html.DisplayFor(model => model)
+    </table>
+    <input type="submit" value="Download Data" class="btn btn-primary" />
 }
+
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
 <script>
-    $(function () {
-        $('.checkall').on('click', function () {
-            $(this).closest('fieldset').find(':checkbox').prop('checked', this.checked);
-        });
-    });
+    function checkAll(bx) {
+        var cbs = document.getElementsByTagName('input');
+        for (var i = 0; i < cbs.length; i++) {
+            if (cbs[i].type == 'checkbox') {
+                cbs[i].checked = bx.checked;
+            }
+        }
+    }
 </script>
 }
