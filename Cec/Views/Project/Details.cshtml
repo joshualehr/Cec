@@ -8,14 +8,14 @@
     @Html.ActionLink("Projects", "Index")
 </div>
 <div class="row">
-    <div class="col-xs-6">
+    <div class="col-sm-6 col-xs-12">
         <h2>@Model.Project Project</h2>
         <div class="btn-group">
             @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
             @Html.ActionLink("Delete", "Delete", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
         </div>
     </div>
-    <div class="col-xs-6">
+    <div class="col-sm-6">
         <dl class="dl-horizontal">
             <dt>
                 @Html.DisplayNameFor(model => model.Description)

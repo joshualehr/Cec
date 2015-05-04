@@ -1,10 +1,10 @@
 ﻿@model Cec.ViewModels.BuildingStatusViewModel
 
-<tr>
+<tr class="row">
     <td class="text-left col-sm-2">@Html.DisplayFor(model => model.Status)</td>
     <td class="text-center col-sm-2">@Html.DisplayFor(model => model.Percent)%</td>
     <td class="text-center col-sm-2">@Html.DisplayFor(model => model.AreaCount)</td>
-    <td class="text-center col-sm-4">
-        @Html.Raw(String.Join(", ", Model.Areas.Select(p => Html.ActionLink(p.Value, "Edit", "Area", new { id = p.Key }, null).ToHtmlString()).ToArray()))
+    <td class="text-center col-sm-6">
+        @Html.Raw(String.Join(", ", Model.Areas.OrderBy(p => p.Value).Select(p => Html.ActionLink(p.Value, "Edit", "Area", new { id = p.Key }, null).ToHtmlString()).ToArray()))
     </td>
 </tr>

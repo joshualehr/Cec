@@ -1,13 +1,12 @@
 ﻿@model IEnumerable<Cec.ViewModels.BuildingIndexViewModel>
 
 @{
-    ViewBag.Title = "Building";
-    var bivm = Model.First();
+    ViewBag.Title = "Buildings";
 }
 
 <div class="breadcrumb">
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(bivm.Project + " Project", "Details", "Project", new { id = bivm.ProjectId }, null)
+    @Html.ActionLink(Model.First().Project + " Project", "Details", "Project", new { id = Model.First().ProjectId }, null)
 </div>
 <h2>Buildings</h2>
 
@@ -16,24 +15,31 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
 
-    <table class="table">
-        <tr>
-            <th>
-                <input type="checkbox" onclick="checkAll(this)" /> Select All
+    <table class="table table-hover">
+        <tr class="row">
+            <th class="col-lg-3 col-xs-2 text-center">
+                <input type="checkbox" onclick="checkAll(this)" /> All
             </th>
-            <th>
+            <th class="col-lg-3 col-xs-2 text-center">
                 @Html.DisplayNameFor(model => model.Building)
             </th>
-            <th>
+            <th class="col-lg-6 col-xs-8 text-center">
                 Actions
             </th>
         </tr>
         @Html.DisplayFor(model => model)
+        <tr class="row">
+            <td class="col-lg-3 col-xs-2 text-center">
+                <input type="submit" value="Material" class="btn btn-link" />
+            </td>
+            <td class="col-lg-3 col-xs-2 text-center">
+                @Html.ActionLink("Create", "Create", new { id = Model.First().ProjectId }, new { @class = "btn btn-link" })
+            </td>
+            <td class="col-lg-6 col-xs-8 text-center">
+                &nbsp;
+            </td>
+        </tr>
     </table>
-    <div class="btn-group">
-        <input type="submit" value="Calculate Materials" class="btn btn-primary" />
-        @Html.ActionLink("Create New", "Create", new { id = bivm.ProjectId }, new { @class = "btn btn-default" })
-    </div>
 }
 
 @section Scripts {

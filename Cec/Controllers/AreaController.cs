@@ -39,23 +39,23 @@ namespace Cec.Controllers
         [Authorize(Roles = "canAdminister")]
         public ActionResult Index(AreaIndexViewModel[] areas)
         {
-            var aivm = new List<AreaIndexViewModel>();
+            var areaList = new List<AreaIndexViewModel>();
             var areasStr = new System.Text.StringBuilder();
             foreach (var area in areas)
             {
                 if (area.Selected == true)
                 {
-                    aivm.Add(area);
+                    areaList.Add(area);
                     areasStr.Append(area.Area);
                     areasStr.Append("-");
                 }
             }
-            if (aivm.Count() < 1)
+            if (areaList.Count() < 1)
             {
                 ModelState.AddModelError("noneSelected", "No areas selected. Please select at least one area.");
                 return View(areas.ToList());
             }
-            TempData["aivm"] = aivm;
+            TempData["aivm"] = areaList;
             TempData["areasString"] = areasStr.Remove(areasStr.Length - 1, 1).ToString();
             return RedirectToAction("AreasMaterial");
         }
@@ -68,12 +68,12 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areaDetailsViewModel = new AreaDetailsViewModel(id ?? Guid.Empty);
-            if (areaDetailsViewModel == null)
+            var area = new AreaDetailsViewModel(id ?? Guid.Empty);
+            if (area == null)
             {
                 return HttpNotFound();
             }
-            return View(areaDetailsViewModel);
+            return View(area);
         }
 
         // GET: /Area/Create/5
@@ -160,8 +160,7 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areaId = id ?? Guid.Empty;
-            var area = new AreaCopyViewModel(areaId);
+            var area = new AreaCopyViewModel(id ?? Guid.Empty);
             if (area == null)
             {
                 return HttpNotFound();
@@ -229,7 +228,7 @@ namespace Cec.Controllers
         //GET: /Area/AreasMaterial
         public ActionResult AreasMaterial()
         {
-            var areaIndexViewModels = TempData["aivm"] as List<AreaIndexViewModel>;
+            var areaIndexViewModels = TempData["areaList"] as List<AreaIndexViewModel>;
             var areasStr = TempData["areasString"];
             if (areaIndexViewModels == null)
             {

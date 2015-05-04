@@ -1,28 +1,32 @@
-﻿@model Cec.Models.Building
+﻿@model Cec.ViewModels.BuildingDeleteViewModel
 
 @{
     ViewBag.Title = "Building";
 }
 
-<br />
-<p>
+<div class="breadcrumb">
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.Project.Designation + " Project", "Details", "Project", new { id = Model.ProjectID }, null) >
-    @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectID })
-</p>
-<h2 style="color:red">Are you sure you want to delete Building @Model.Designation?</h2>
-<h3>@Html.ActionLink("Cancel", "Details", new { id = Model.BuildingID })</h3>
-<p class="has-error">@ViewBag.ErrorMessage</p>
+    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId })
+</div>
+<h2 class="text-danger">Are you sure you want to delete Building @Model.BuildingDesignation?</h2>
 <hr />
 
 <div>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.ProjectId)
+        @Html.HiddenFor(model => model.ProjectDesignation)
+        @Html.HiddenFor(model => model.BuildingId)
+        @Html.HiddenFor(model => model.BuildingDesignation)
+        @Html.ValidationSummary(true)
 
-        <div class="form-actions no-color">
-            <br />
+        <div class="btn-group pull-right">
+            @Html.ActionLink("Cancel", "Details", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
             <input type="submit" value="Delete" class="btn btn-default" />
         </div>
+        <br />
+        <br />
     }
 </div>

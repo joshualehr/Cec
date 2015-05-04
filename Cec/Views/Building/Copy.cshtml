@@ -1,27 +1,32 @@
-﻿@model Cec.ViewModels.ProjectCreateViewModel
+﻿@model Cec.ViewModels.BuildingCopyViewModel
 
 @{
-    ViewBag.Title = "New Project";
+    ViewBag.Title = "Duplicate Building";
 }
 
 <div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index")
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null)
+    @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId })
 </div>
-<h2>New Project</h2>
+<h2>Building @Model.BuildingDesignation</h2>
 <hr />
 
-@using (Html.BeginForm())
+@using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ProjectId)
+    @Html.HiddenFor(model => model.ProjectDesignation)
+    @Html.HiddenFor(model => model.BuildingId)
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Designation, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.BuildingDesignation, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Designation, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Designation)
+                @Html.EditorFor(model => model.BuildingDesignation, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BuildingDesignation)
             </div>
         </div>
 
@@ -30,14 +35,6 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Description)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PurchaseOrder, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PurchaseOrder, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PurchaseOrder)
             </div>
         </div>
 
@@ -75,8 +72,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10 btn-group">
-                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-primary" })
-                <input type="submit" value="Create" class="btn btn-default" />
+                @Html.ActionLink("Cancel", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
 

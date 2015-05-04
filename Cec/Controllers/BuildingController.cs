@@ -18,7 +18,7 @@ namespace Cec.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /Building/ProjectID=5
+        // GET: /Building/5
         [Authorize(Roles = "canAdminister")]
         public ActionResult Index(Guid id)
         {
@@ -26,10 +26,10 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var buildingIndexViewModels = new BuildingIndexViewModel().ListByProject(id);
-            if (buildingIndexViewModels != null)
+            var buildings = new BuildingIndexViewModel().ListByProject(id);
+            if (buildings != null)
             {
-                return View(buildingIndexViewModels);
+                return View(buildings);
             }
             else
             {
@@ -41,22 +41,22 @@ namespace Cec.Controllers
         [HttpPost, ActionName("Index")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Index(BuildingIndexViewModel[] buildingIndexViewModels)
+        public ActionResult Index(BuildingIndexViewModel[] buildings)
         {
-            var bivm = new List<BuildingIndexViewModel>();
-            foreach (var item in buildingIndexViewModels)
+            var buildingList = new List<BuildingIndexViewModel>();
+            foreach (var building in buildings)
             {
-                if (item.Selected == true)
+                if (building.Selected == true)
                 {
-                    bivm.Add(item);
+                    buildingList.Add(building);
                 }
             }
-            if (bivm.Count() < 1)
+            if (buildingList.Count() < 1)
             {
                 ModelState.AddModelError("noneSelected", "No buildings selected. Please select at least one building.");
-                return View(buildingIndexViewModels.ToList());
+                return View(buildings.ToList());
             }
-            TempData["bivm"] = bivm;
+            TempData["buildingList"] = buildingList;
             return RedirectToAction("BuildingsMaterial");
         }
 
@@ -68,12 +68,12 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var buildingDetailsViewModel = new BuildingDetailsViewModel(id ?? Guid.Empty);
-            if (buildingDetailsViewModel == null)
+            var building = new BuildingDetailsViewModel(id ?? Guid.Empty);
+            if (building == null)
             {
                 return HttpNotFound();
             }
-            return View(buildingDetailsViewModel);
+            return View(building);
         }
 
         // GET: /Building/Create/5
@@ -84,10 +84,7 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Building building = new Building();
-            building.Project = db.Projects.Find(id);
-            building.ProjectID = building.Project.ProjectID;
-            return View(building);
+            return View(new BuildingCreateViewModel(id ?? Guid.Empty));
         }
 
         // POST: /Building/Create
@@ -96,15 +93,13 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Create([Bind(Include = "BuildingID,Designation,Description,Address,City,State,PostalCode,ProjectID")] Building building)
+        public ActionResult Create([Bind(Include = "ProjectId,ProjectDesignation,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingCreateViewModel building)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    db.Buildings.Add(building);
-                    db.SaveChanges();
-                    return RedirectToAction("Details", new { id = building.BuildingID });
+                    return RedirectToAction("Details", new { id = building.Create() });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -123,7 +118,7 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Building building = db.Buildings.Find(id);
+            var building = new BuildingEditViewModel(id ?? Guid.Empty);
             if (building == null)
             {
                 return HttpNotFound();
@@ -137,15 +132,52 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Edit([Bind(Include="BuildingID,Designation,Description,Address,City,State,PostalCode,ProjectID")] Building building)
+        public ActionResult Edit([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingEditViewModel building)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    db.Entry(building).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Details", new { id = building.BuildingID });
+                    return RedirectToAction("Details", new { id = building.Edit() });
+                }
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+            return View(building);
+        }
+
+        // GET: /Building/Copy/5
+        [Authorize(Roles = "canAdminister")]
+        public ActionResult Copy(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var building = new BuildingCopyViewModel(id ?? Guid.Empty);
+            if (building == null)
+            {
+                return HttpNotFound();
+            }
+            return View(building);
+        }
+
+        // POST: /Building/Copy/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canAdminister")]
+        public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingCopyViewModel building)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    return RedirectToAction("Details", new { id = building.Copy() });
                 }
             }
             catch (RetryLimitExceededException /* dex */)
@@ -158,17 +190,13 @@ namespace Cec.Controllers
 
         // GET: /Building/Delete/5
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Delete(Guid? id, bool? saveChangesError = false)
+        public ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if (saveChangesError.GetValueOrDefault())
-            {
-                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
-            }
-            Building building = db.Buildings.Find(id);
+            var building = new BuildingDeleteViewModel(id ?? Guid.Empty);
             if (building == null)
             {
                 return HttpNotFound();
@@ -180,68 +208,42 @@ namespace Cec.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult DeleteConfirmed(Guid id)
+        public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation")] BuildingDeleteViewModel building)
         {
             try
             {
-                Building building = db.Buildings.Find(id);
-                db.Buildings.Remove(building);
-                db.SaveChanges();
-                return RedirectToAction("Index", new { id = building.ProjectID });
+                return RedirectToAction("Index", new { id = building.Delete() });
 
             }
             catch (RetryLimitExceededException/* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+                ModelState.AddModelError("", "Delete failed. Try again, and if the problem persists see your system administrator.");
+                return View(building);
             }
         }
 
         // GET: /Building/BuildingsMaterial
         public ActionResult BuildingsMaterial()
         {
-            var buildingIndexViewModels = TempData["bivm"] as List<BuildingIndexViewModel>;
-            if (buildingIndexViewModels == null)
+            var buildings = TempData["buildingList"] as List<BuildingIndexViewModel>;
+            if (buildings == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var buildingsMaterialViewModels = new List<BuildingsMaterialViewModel>();
-            var areaMaterials = new List<AreaMaterial>();
-            foreach (var buildingItem in buildingIndexViewModels)
-            {
-                areaMaterials.AddRange(db.AreaMaterials.Include(a => a.Material)
-                                                       .Include(a => a.Material.UnitOfMeasure)
-                                                       .Where(a => a.Area.BuildingID == buildingItem.BuildingId)
-                                                       .OrderBy(a => a.Material.Designation));
-            }
-            var materials = areaMaterials.GroupBy(m => m.MaterialID);
-            foreach (var item in materials)
-            {
-                var buildingsMaterialViewModel = new BuildingsMaterialViewModel();
-                buildingsMaterialViewModel.ProjectId = item.First().Area.Building.ProjectID;
-                buildingsMaterialViewModel.Project = item.First().Area.Building.Project.Designation;
-                buildingsMaterialViewModel.BuildingId = item.First().Area.BuildingID;
-                buildingsMaterialViewModel.Building = item.First().Area.Building.Designation;
-                buildingsMaterialViewModel.MaterialId = item.First().MaterialID;
-                buildingsMaterialViewModel.Material = item.First().Material.Designation;
-                buildingsMaterialViewModel.ImagePath = item.First().Material.ImagePath;
-                buildingsMaterialViewModel.UnitOfMeasure = item.First().Material.UnitOfMeasure.Designation;
-                buildingsMaterialViewModel.Total = item.Sum(i => i.Quantity);
-                buildingsMaterialViewModels.Add(buildingsMaterialViewModel);
-            }
-           return View(buildingsMaterialViewModels);
+           return View(new BuildingsMaterialViewModel().ListByBuildings(buildings));
         }
 
         // POST: /Building/BuildingsMaterial
         [HttpPost, ActionName("BuildingsMaterial")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult DownloadData(BuildingsMaterialViewModel[] buildingsMaterialViewModels)
+        public ActionResult DownloadData(BuildingsMaterialViewModel[] buildingsMaterial)
         {
             try
             {
                 var model = new List<BuildingsMaterialCsvViewModel>();
-                foreach (var item in buildingsMaterialViewModels)
+                foreach (var item in buildingsMaterial)
                 {
                     if (item.Selected)
                     {
@@ -257,14 +259,14 @@ namespace Cec.Controllers
                 else
                 {
                     ModelState.AddModelError("", "No items selected. Please select items to download.");
-                    return View(buildingsMaterialViewModels.ToList());
+                    return View(buildingsMaterial.ToList());
                 }
             }
             catch (RetryLimitExceededException/* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to download at this time. Try again, and if the problem persists see your system administrator.");
-                return View(buildingsMaterialViewModels.ToList());
+                return View(buildingsMaterial.ToList());
             }
         }
 

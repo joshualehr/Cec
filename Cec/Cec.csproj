@@ -466,6 +466,7 @@
     <Content Include="Views\Shared\DisplayTemplates\ModelIndexItemViewModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\BuildingStatusViewModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ProjectStatusViewModel.cshtml" />
+    <Content Include="Views\Building\Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

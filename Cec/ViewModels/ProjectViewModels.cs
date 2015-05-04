@@ -13,6 +13,7 @@ namespace Cec.ViewModels
 
         //Public Properties
         public Guid ProjectId { get; set; }
+
         public string Project { get; set; }
 
         //Constructors
@@ -183,10 +184,7 @@ namespace Cec.ViewModels
         public Nullable<int> PostalCode { get; set; }
 
         //Constructors
-        public ProjectCreateViewModel()
-        {
-            
-        }
+        public ProjectCreateViewModel(){ }
 
         //Methods
         public Guid Create(string userId)

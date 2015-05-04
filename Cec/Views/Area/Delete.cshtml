@@ -4,32 +4,31 @@
     ViewBag.Title = "Delete";
 }
 
-<br />
-<p>
+<div class="breadcrumb">
     @Html.ActionLink("Projects", "Index", "Project") >
     @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
     @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null) >
     @Html.ActionLink("Building " + Model.BuildingDesignation, "Details", "Building", new { id = Model.BuildingId }, null) >
     @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId })
-</p>
-<h2 style="color:red">Are you sure you want to delete Area @Model.AreaDesignation?</h2>
-<h3>@Html.ActionLink("Cancel", "Details", new { id = Model.AreaId })</h3>
-<hr />
+</div>
+<h2 class="text-danger">Are you sure you want to delete Area @Model.AreaDesignation?</h2>
 <div>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.AreaId)
-        @Html.HiddenFor(model => model.AreaDesignation)
-        @Html.HiddenFor(model => model.BuildingId)
-        @Html.HiddenFor(model => model.BuildingDesignation)
         @Html.HiddenFor(model => model.ProjectId)
         @Html.HiddenFor(model => model.ProjectDesignation)
+        @Html.HiddenFor(model => model.BuildingId)
+        @Html.HiddenFor(model => model.BuildingDesignation)
+        @Html.HiddenFor(model => model.AreaId)
+        @Html.HiddenFor(model => model.AreaDesignation)
+        @Html.ValidationSummary(true)
 
-        <div class="form-actions no-color">
-            <br/>
+        <div class="btn-group pull-right">
+            @Html.ActionLink("Cancel", "Details", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
             <input type="submit" value="Delete" class="btn btn-default" />
         </div>
+        <br />
+        <br />
     }
 </div>

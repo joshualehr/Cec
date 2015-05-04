@@ -218,18 +218,15 @@ namespace Cec.ViewModels
         public StatusSelectList Statuses { get; set; }
 
         //Constructors
-        public AreaCreateViewModel()
-        {
-
-        }
+        public AreaCreateViewModel(){ }
 
         public AreaCreateViewModel(Guid buildingId)
         {
             var building = db.Buildings.Find(buildingId);
-            this.BuildingDesignation = building.Designation;
-            this.BuildingId = building.BuildingID;
-            this.ProjectDesignation = building.Project.Designation;
             this.ProjectId = building.ProjectID;
+            this.ProjectDesignation = building.Project.Designation;
+            this.BuildingId = building.BuildingID;
+            this.BuildingDesignation = building.Designation;
             this.Models = new ModelSelectList(this.ProjectId);
             this.Statuses = new StatusSelectList();
         }
@@ -237,17 +234,19 @@ namespace Cec.ViewModels
         //Methods
         public Guid Create()
         {
-            var area = new Area();
-            area.Address = this.Address;
-            area.AreaID = Guid.Empty;
-            area.BuildingID = this.BuildingId;
-            area.City = this.City;
-            area.Description = this.Description;
-            area.Designation = this.AreaDesignation;
-            area.ModelID = this.ModelId;
-            area.PostalCode = this.PostalCode;
-            area.State = this.State;
-            area.StatusId = this.StatusId;
+            var area = new Area()
+            {
+                Address = this.Address, 
+                AreaID = Guid.Empty, 
+                BuildingID = this.BuildingId, 
+                City = this.City, 
+                Description = this.Description, 
+                Designation = this.AreaDesignation, 
+                ModelID = this.ModelId, 
+                PostalCode = this.PostalCode, 
+                State = this.State, 
+                StatusId = this.StatusId
+            };
             db.Areas.Add(area);
             db.SaveChanges();
             if (area.ModelID != null)
@@ -255,10 +254,12 @@ namespace Cec.ViewModels
                 var modelMaterials = db.ModelMaterials.Where(p => p.ModelID == area.ModelID);
                 foreach (var item in modelMaterials)
                 {
-                    var areaMaterial = new AreaMaterial();
-                    areaMaterial.AreaID = area.AreaID;
-                    areaMaterial.MaterialID = item.MaterialID;
-                    areaMaterial.Quantity = item.Quantity;
+                    var areaMaterial = new AreaMaterial()
+                    {
+                        AreaID = area.AreaID, 
+                        MaterialID = item.MaterialID, 
+                        Quantity = item.Quantity
+                    };
                     db.AreaMaterials.Add(areaMaterial);
                 }
                 db.SaveChanges();
@@ -324,10 +325,7 @@ namespace Cec.ViewModels
         public StatusSelectList Statuses { get; set; }
 
         //Constructors
-        public AreaEditViewModel()
-        {
-
-        }
+        public AreaEditViewModel(){ }
 
         public AreaEditViewModel(Guid areaId)
         {
@@ -352,17 +350,19 @@ namespace Cec.ViewModels
         //Methods
         public Guid Edit(Guid? originalModel)
         {
-            var area = new Area();
-            area.Address = this.Address;
-            area.AreaID = this.AreaId;
-            area.BuildingID = this.BuildingId;
-            area.City = this.City;
-            area.Description = this.Description;
-            area.Designation = this.AreaDesignation;
-            area.ModelID = this.ModelId;
-            area.PostalCode = this.PostalCode;
-            area.State = this.State;
-            area.StatusId = this.StatusId;
+            var area = new Area()
+            {
+                Address = this.Address, 
+                AreaID = this.AreaId, 
+                BuildingID = this.BuildingId, 
+                City = this.City, 
+                Description = this.Description, 
+                Designation = this.AreaDesignation, 
+                ModelID = this.ModelId, 
+                PostalCode = this.PostalCode, 
+                State = this.State, 
+                StatusId = this.StatusId
+            };
             db.Entry(area).State = EntityState.Modified;
             if (originalModel != this.ModelId)
             {
@@ -375,10 +375,12 @@ namespace Cec.ViewModels
                 var modelMaterials = db.ModelMaterials.Where(mm => mm.ModelID == this.ModelId);
                 foreach (var item in modelMaterials)
                 {
-                    var areaMaterial = new AreaMaterial();
-                    areaMaterial.AreaID = this.AreaId;
-                    areaMaterial.MaterialID = item.MaterialID;
-                    areaMaterial.Quantity = item.Quantity;
+                    var areaMaterial = new AreaMaterial()
+                    {
+                        AreaID = this.AreaId, 
+                        MaterialID = item.MaterialID, 
+                        Quantity = item.Quantity
+                    };
                     db.AreaMaterials.Add(areaMaterial);
                 }
             }
@@ -444,10 +446,7 @@ namespace Cec.ViewModels
         public StatusSelectList Statuses { get; set; }
 
         //Constructors
-        public AreaCopyViewModel()
-        {
-
-        }
+        public AreaCopyViewModel(){ }
 
         public AreaCopyViewModel(Guid areaId)
         {
@@ -472,17 +471,20 @@ namespace Cec.ViewModels
         //Methods
         public Guid Copy()
         {
-            var area = new Area();
-            area.Address = this.Address;
-            area.AreaID = Guid.Empty;
-            area.BuildingID = this.BuildingId;
-            area.City = this.City;
-            area.Description = this.Description;
-            area.Designation = this.AreaDesignation;
-            area.ModelID = this.ModelId;
-            area.PostalCode = this.PostalCode;
-            area.State = this.State;
-            area.StatusId = this.StatusId;
+            var area = new Area()
+            {
+                Address = this.Address, 
+                AreaID = Guid.Empty, 
+                BuildingID = this.BuildingId, 
+                City = this.City, 
+                Description = this.Description, 
+                Designation = this.AreaDesignation, 
+                ModelID = this.ModelId, 
+                PostalCode = this.PostalCode, 
+                State = this.State, 
+                StatusId = this.StatusId
+
+            };
             db.Areas.Add(area);
             db.SaveChanges();
             var areaMaterials = db.AreaMaterials.Where(am => am.AreaID == this.AreaId);
@@ -554,18 +556,31 @@ namespace Cec.ViewModels
 
         //Public Properties
         public bool Selected { get; set; }
+
         public Guid ProjectId { get; set; }
+
         public string Project { get; set; }
+
         public Guid BuildingId { get; set; }
+
         public string Building { get; set; }
+
         public Guid AreaId { get; set; }
+
         public string Area { get; set; }
+
+        [Display(Name = "Image")]
         public string ImagePath { get; set; }
+
         public Guid MaterialId { get; set; }
+
+        [Display(Name = "Material")]
         public string Material { get; set; }
+
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F2}", HtmlEncode = false)]
         public double Total { get; set; }
-        [Display(Name = "U/M")]
+
+        [Display(Name = "Unit of Measure", ShortName = "U/M")]
         public string UnitOfMeasure { get; set; }
 
         //Constructors
@@ -574,14 +589,14 @@ namespace Cec.ViewModels
 
         }
 
-        public AreasMaterialViewModel(AreaIndexViewModel areaIndexViewModel)
+        public AreasMaterialViewModel(AreaIndexViewModel area)
         {
-            this.ProjectId = areaIndexViewModel.ProjectId;
-            this.Project = areaIndexViewModel.Project;
-            this.BuildingId = areaIndexViewModel.BuildingId;
-            this.Building = areaIndexViewModel.Building;
-            this.AreaId = areaIndexViewModel.AreaId;
-            this.Area = areaIndexViewModel.Area;
+            this.ProjectId = area.ProjectId;
+            this.Project = area.Project;
+            this.BuildingId = area.BuildingId;
+            this.Building = area.Building;
+            this.AreaId = area.AreaId;
+            this.Area = area.Area;
         }
 
         //Methods
