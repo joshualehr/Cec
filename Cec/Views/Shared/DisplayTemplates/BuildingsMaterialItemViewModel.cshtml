@@ -1,26 +1,23 @@
-﻿@model Cec.ViewModels.BuildingsMaterialViewModel
-<tr>
-    <td>
-        @Html.CheckBox("Selected")
+﻿@model Cec.ViewModels.BuildingsMaterialItemViewModel
+<tr class="row">
+    <td class="col-xs-1 text-left">
+        @Html.CheckBoxFor(model => model.Selected)
     </td>
-    <td>
-        <img title="@Model.MaterialDesignation" alt="@Model.MaterialDesignation" src="@Model.ImagePath" height="100" width="100" class="img-responsive" />
+    <td class="col-xs-1 text-center">
+        <img title="@Model.MaterialDesignation" alt="@Model.MaterialDesignation" src="@Model.ImagePath" class="img-responsive" />
     </td>
-    <td>
+    <td class="col-xs-6 text-center">
         @Html.ActionLink(Model.MaterialDesignation, "Details", "Material", new { id = Model.MaterialId }, null)
-        @Html.HiddenFor(model => model.ProjectId)
-        @Html.HiddenFor(model => model.ProjectDesignation)
-        @Html.HiddenFor(model => model.BuildingId)
         @Html.HiddenFor(model => model.MaterialId)
         @Html.HiddenFor(model => model.MaterialDesignation)
         @Html.HiddenFor(model => model.ImagePath)
         @Html.HiddenFor(model => model.Total)
         @Html.HiddenFor(model => model.UnitOfMeasure)
     </td>
-    <td>
+    <td class="col-xs-2 text-center">
         @Html.DisplayFor(model => model.Total)
     </td>
-    <td>
+    <td class="col-xs-2 text-center">
         @Html.DisplayFor(model => model.UnitOfMeasure)
     </td>
 </tr>

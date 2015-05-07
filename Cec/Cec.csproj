@@ -452,9 +452,9 @@
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Profile\Details.cshtml" />
     <Content Include="Views\Profile\Edit.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\BuildingIndexViewModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\BuildingIndexItemViewModel.cshtml" />
     <Content Include="Views\Building\BuildingsMaterial.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\BuildingsMaterialViewModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\BuildingsMaterialItemViewModel.cshtml" />
     <Content Include="Views\Area\Copy.cshtml" />
     <Content Include="Views\Model\Copy.cshtml" />
     <Content Include="Views\Material\Copy.cshtml" />

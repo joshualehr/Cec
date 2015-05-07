@@ -1,4 +1,4 @@
-﻿@model Cec.ViewModels.BuildingIndexViewModel
+﻿@model Cec.ViewModels.BuildingIndexItemViewModel
 <tr class="row">
     <td class="col-lg-3 col-xs-2 text-center">
         @Html.CheckBoxFor(model => model.Selected)
@@ -7,8 +7,6 @@
         @Html.ActionLink(Model.Building, "Details", new { id = Model.BuildingId })
         @Html.HiddenFor(model => model.BuildingId)
         @Html.HiddenFor(model => model.Building)
-        @Html.HiddenFor(model => Model.ProjectId)
-        @Html.HiddenFor(model => Model.Project)
     </td>
     <td class="col-lg-6 col-xs-8 text-center">
         <div class="btn-group">

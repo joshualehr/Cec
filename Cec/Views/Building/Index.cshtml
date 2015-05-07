@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Cec.ViewModels.BuildingIndexViewModel>
+﻿@model Cec.ViewModels.BuildingIndexViewModel
 
 @{
     ViewBag.Title = "Buildings";
@@ -6,13 +6,15 @@
 
 <div class="breadcrumb">
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.First().Project + " Project", "Details", "Project", new { id = Model.First().ProjectId }, null)
+    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null)
 </div>
 <h2>Buildings</h2>
 
 @using (Html.BeginForm("Index", "Building", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ProjectId)
+    @Html.HiddenFor(model => model.ProjectDesignation)
     @Html.ValidationSummary()
 
     <table class="table table-hover">
@@ -21,19 +23,19 @@
                 <input type="checkbox" onclick="checkAll(this)" /> All
             </th>
             <th class="col-lg-3 col-xs-2 text-center">
-                @Html.DisplayNameFor(model => model.Building)
+                Building
             </th>
             <th class="col-lg-6 col-xs-8 text-center">
                 Actions
             </th>
         </tr>
-        @Html.DisplayFor(model => model)
+        @Html.DisplayFor(model => model.Buildings)
         <tr class="row">
             <td class="col-lg-3 col-xs-2 text-center">
-                <input type="submit" value="Material" class="btn btn-link" />
+                <input type="submit" value="Calculate" class="btn btn-primary" />
             </td>
             <td class="col-lg-3 col-xs-2 text-center">
-                @Html.ActionLink("Create", "Create", new { id = Model.First().ProjectId }, new { @class = "btn btn-link" })
+                @Html.ActionLink("New Building", "Create", new { id = Model.ProjectId }, new { @class = "btn btn-link" })
             </td>
             <td class="col-lg-6 col-xs-8 text-center">
                 &nbsp;

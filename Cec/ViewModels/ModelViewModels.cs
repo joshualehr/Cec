@@ -47,7 +47,7 @@ namespace Cec.ViewModels
         //Public Properties
         public Guid ProjectId { get; set; }
         public string ProjectName { get; set; }
-        public List<ModelIndexItemViewModel> Models { get; set; }
+        public ICollection<ModelIndexItemViewModel> Models { get; set; }
 
         //Constructors
         public ModelIndexViewModel() { }
@@ -58,9 +58,7 @@ namespace Cec.ViewModels
             this.ProjectId = projectData.ProjectID;
             this.ProjectName = projectData.Designation;
             this.Models = new List<ModelIndexItemViewModel>();
-            var modelsData = db.Models.Where(m => m.ProjectID == projectId)
-                                      .OrderBy(m => m.Designation);
-            foreach (var item in modelsData)
+            foreach (var item in projectData.Models.OrderBy(m => m.Designation))
             {
                 this.Models.Add(new ModelIndexItemViewModel(item.ModelID));
             }

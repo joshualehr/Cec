@@ -1,47 +1,58 @@
-﻿@model IEnumerable<Cec.ViewModels.BuildingsMaterialViewModel>
+﻿@model Cec.ViewModels.BuildingsMaterialViewModel
 
 @{
     ViewBag.Title = "Buildings Material";
-    var bmvm = Model.First();
 }
 
 <div class="breadcrumb">
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(bmvm.ProjectDesignation + " Project", "Details", "Project", new { id = bmvm.ProjectId }, null) >
-    @Html.ActionLink("Buildings", "Index", new { id = bmvm.ProjectId })
+    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId })
 </div>
-<h2>Building(s) Material</h2>
+@{
+    if (Model.Buildings.Count > 1)
+    {
+        <h2>Buildings @Html.Raw(String.Join(", ", Model.Buildings.Values))</h2>
+    }
+    else
+    {
+        <h2>Building @Html.Raw(Model.Buildings.Values.First())</h2>
+    }
+}
 
 @using (Html.BeginForm("BuildingsMaterial", "Building", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ProjectId)
+    @Html.HiddenFor(model => model.ProjectDesignation)
+    @Html.HiddenFor(model => model.Buildings)
     @Html.ValidationSummary()
 
     <div class="btn-group">
-        @Html.ActionLink("Buildings", "Index", new { id = Model.First().ProjectId }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
         <input type="submit" value="Download Data" class="btn btn-default" />
     </div>
     <br />
     <br />
-    <table class="table">
-        <tr>
-            <th>
+    <table class="table table-hover">
+        <tr class="row">
+            <th class="col-xs-1 text-left">
                 <input type="checkbox" onclick="checkAll(this)" /> All
             </th>
-            <th>
+            <th class="col-xs-1 text-center">
                 Image
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.First().MaterialDesignation)
+            <th class="col-xs-6 text-center">
+                Material
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Total)
+            <th class="col-xs-2 text-center">
+                Total
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnitOfMeasure)
+            <th class="col-xs-2 text-center">
+                U/M
             </th>
         </tr>
-        @Html.DisplayFor(model => model)
+        @Html.DisplayFor(model => model.Materials)
     </table>
 }
 

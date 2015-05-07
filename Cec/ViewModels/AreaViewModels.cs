@@ -473,15 +473,15 @@ namespace Cec.ViewModels
         {
             var area = new Area()
             {
-                Address = this.Address, 
                 AreaID = Guid.Empty, 
-                BuildingID = this.BuildingId, 
-                City = this.City, 
-                Description = this.Description, 
                 Designation = this.AreaDesignation, 
-                ModelID = this.ModelId, 
-                PostalCode = this.PostalCode, 
+                Description = this.Description, 
+                Address = this.Address, 
+                City = this.City, 
                 State = this.State, 
+                PostalCode = this.PostalCode, 
+                BuildingID = this.BuildingId, 
+                ModelID = this.ModelId, 
                 StatusId = this.StatusId
 
             };
