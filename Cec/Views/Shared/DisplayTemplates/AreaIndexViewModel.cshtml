@@ -1,9 +1,9 @@
 ﻿@model Cec.ViewModels.AreaIndexViewModel
-<tr>
-    <td width="10%">
+<tr class="row">
+    <td class="col-lg-3 col-xs-2 text-center">
         @Html.CheckBoxFor(model => model.Selected)
     </td>
-    <td>
+    <td class="col-lg-3 col-xs-2 text-center">
         @Html.ActionLink(Model.Area, "Details", new { id = Model.AreaId })
         @Html.HiddenFor(model => model.AreaId)
         @Html.HiddenFor(model => model.Area)
@@ -12,10 +12,12 @@
         @Html.HiddenFor(model => Model.ProjectId)
         @Html.HiddenFor(model => Model.Project)
     </td>
-    <td>
-        @Html.ActionLink("Material", "Index", "AreaMaterial", new { id = Model.AreaId }, null) |
-        @Html.ActionLink("Copy", "Copy", new { id = Model.AreaId }) |
-        @Html.ActionLink("Edit", "Edit", new { id = Model.AreaId }) |
-        @Html.ActionLink("Delete", "Delete", new { id = Model.AreaId })
+    <td class="col-lg-6 col-xs-8 text-center">
+        <div class="btn-group">
+            @Html.ActionLink("Material", "Index", "AreaMaterial", new { id = Model.AreaId }, new { @class = "btn btn-danger" })
+            @Html.ActionLink("Copy", "Copy", new { id = Model.AreaId }, new { @class = "btn btn-info" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Delete", "Delete", new { id = Model.AreaId }, new { @class = "btn btn-default" })
+        </div>
     </td>
 </tr>

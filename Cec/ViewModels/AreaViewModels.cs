@@ -129,6 +129,10 @@ namespace Cec.ViewModels
 
         public string Status { get; set; }
 
+        [Display(Name="Status Changed")]
+        [DataType(DataType.Date)]
+        public DateTime StatusChanged { get; set; }
+
         public Guid? ModelId { get; set; }
 
         [Display(Name = "Model")]

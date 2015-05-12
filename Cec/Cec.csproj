@@ -244,6 +244,10 @@
     <Compile Include="Migrations\201504020429000__006_AddUserIdToProject.Designer.cs">
       <DependentUpon>201504020429000__006_AddUserIdToProject.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505112115391__AddedStatusChangedToArea.cs" />
+    <Compile Include="Migrations\201505112115391__AddedStatusChangedToArea.Designer.cs">
+      <DependentUpon>201505112115391__AddedStatusChangedToArea.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -467,6 +471,7 @@
     <Content Include="Views\Shared\DisplayTemplates\BuildingStatusViewModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ProjectStatusViewModel.cshtml" />
     <Content Include="Views\Building\Copy.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ShortDate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -495,6 +500,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504020429000__006_AddUserIdToProject.resx">
       <DependentUpon>201504020429000__006_AddUserIdToProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505112115391__AddedStatusChangedToArea.resx">
+      <DependentUpon>201505112115391__AddedStatusChangedToArea.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

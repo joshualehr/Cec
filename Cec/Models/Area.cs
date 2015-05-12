@@ -38,6 +38,8 @@ namespace Cec.Models
         [Index(IsClustered = false, IsUnique = false)]
         public Guid StatusId { get; set; }
 
+        public DateTime StatusChanged { get; set; }
+
         public virtual Building Building { get; set; }
 
         public virtual Model Model { get; set; }
