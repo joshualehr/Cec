@@ -165,6 +165,7 @@ namespace Cec.Controllers
             {
                 return HttpNotFound();
             }
+            area.AreaDesignation += " Copy";
             return View(area);
         }
 
@@ -174,13 +175,13 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,StatusId")] AreaCopyViewModel area)
+        public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId")] AreaCopyViewModel area)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    return RedirectToAction("Details", new { id = area.Copy() });
+                    return RedirectToAction("Details", new { id = area.Copy(area.BuildingId) });
                 }
             }
             catch (RetryLimitExceededException /* dex */)

@@ -4,11 +4,10 @@
     ViewBag.Title = "Buildings";
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null)
-</div>
 <h2>Buildings</h2>
+@Html.ActionLink("Back to " + Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+<br />
+<br />
 
 @using (Html.BeginForm("Index", "Building", FormMethod.Post))
 {
@@ -32,7 +31,7 @@
         @Html.DisplayFor(model => model.Buildings)
         <tr class="row">
             <td class="col-lg-3 col-xs-2 text-center">
-                <input type="submit" value="Calculate" class="btn btn-primary" />
+                <input type="submit" value="Material" class="btn btn-primary" />
             </td>
             <td class="col-lg-3 col-xs-2 text-center">
                 @Html.ActionLink("New Building", "Create", new { id = Model.ProjectId }, new { @class = "btn btn-link" })
@@ -43,6 +42,10 @@
         </tr>
     </table>
 }
+<div class="breadcrumb text-center">
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null)
+</div>
 
 @section Scripts {
     <script>

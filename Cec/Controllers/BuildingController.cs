@@ -162,6 +162,7 @@ namespace Cec.Controllers
             {
                 return HttpNotFound();
             }
+            building.BuildingDesignation += " Copy";
             return View(building);
         }
 
@@ -171,7 +172,7 @@ namespace Cec.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,Description,Address,City,State,PostalCode,StatusId")] BuildingCopyViewModel building)
+        public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingCopyViewModel building)
         {
             try
             {

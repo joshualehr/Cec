@@ -1,24 +1,20 @@
 ﻿@model Cec.ViewModels.BuildingDetailsViewModel
 
 @{
-    ViewBag.Title = "Building";
+    ViewBag.Title = "Building " + Model.Building;
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.Project + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
-    @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId })
-</div>
 <div class="row">
     <div class="col-sm-6 col-xs-12">
         <h2>Building @Model.Building</h2>
         <div class="btn-group">
-            @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-danger" })
-            @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, new { @class = "btn btn-info" })
+            @Html.ActionLink("Back to Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, new { @class = "btn btn-danger" })
             @Html.ActionLink("Copy", "Copy", new { id = Model.BuildingId }, new { @class = "btn btn-success" })
             @Html.ActionLink("Edit", "Edit", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
             @Html.ActionLink("Delete", "Delete", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
         </div>
+        <h4>Total Areas: @Html.DisplayFor(model => model.AreaCount)</h4>
     </div>
     <div class="col-sm-6">
         <dl class="dl-horizontal list-group">
@@ -55,7 +51,6 @@
         </dl>
     </div>
 </div>
-<h4>Total @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, null): @Html.DisplayFor(model => model.AreaCount)</h4>
 <table class="table-bordered table-striped">
     <tr class="row">
         <th class="text-left col-xs-2">Status</th>
@@ -65,3 +60,8 @@
     </tr>
     @Html.DisplayFor(model => model.Statuses)
 </table>
+<div class="breadcrumb text-center">
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.Project + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId })
+</div>

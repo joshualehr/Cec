@@ -369,11 +369,6 @@ namespace Cec.ViewModels
         [Display(Name = "Postal Code", ShortName = "Zip")]
         public Nullable<int> PostalCode { get; set; }
 
-        [Required]
-        public Guid StatusId { get; set; }
-
-        public StatusSelectList Statuses { get; set; }
-
         //Constructors
         public BuildingCopyViewModel() { }
 
@@ -383,13 +378,12 @@ namespace Cec.ViewModels
             this.ProjectId = building.ProjectID;
             this.ProjectDesignation = building.Project.Designation;
             this.BuildingId = building.BuildingID;
-            this.BuildingDesignation = building.Designation += " Copy";
+            this.BuildingDesignation = building.Designation;
             this.Description = building.Description;
             this.Address = building.Address;
             this.City = building.City;
             this.State = building.State;
             this.PostalCode = building.PostalCode;
-            this.Statuses = new StatusSelectList();
         }
 
         //Methods
@@ -413,51 +407,13 @@ namespace Cec.ViewModels
 
         public Guid Copy(Guid includeAreasFromOriginal)
         {
-            var building = new Building()
-            {
-                ProjectID = this.ProjectId,
-                BuildingID = Guid.Empty,
-                Designation = this.BuildingDesignation,
-                Description = this.Description,
-                Address = this.Address,
-                City = this.City,
-                State = this.State,
-                PostalCode = this.PostalCode
-            };
-            db.Buildings.Add(building);
-            db.SaveChanges();
+            var buildingId = this.Copy();
             var areas = db.Buildings.Find(includeAreasFromOriginal).Areas;
             foreach (var item in areas)
             {
-                var area = new Area()
-                {
-                    AreaID = Guid.Empty,
-                    Designation = item.Designation,
-                    Description = item.Description,
-                    Address = item.Address,
-                    City = item.City,
-                    State = item.State,
-                    PostalCode = item.PostalCode,
-                    BuildingID = building.BuildingID,
-                    ModelID = item.ModelID, 
-                    StatusId = this.StatusId
-                };
-                db.Areas.Add(area);
-                db.SaveChanges();
-                var areaMaterials = db.AreaMaterials.Where(am => am.AreaID == item.AreaID);
-                foreach (var ar in areaMaterials)
-                {
-                    var areaMaterial = new AreaMaterial()
-                    {
-                        AreaID = area.AreaID,
-                        MaterialID = ar.MaterialID,
-                        Quantity = ar.Quantity
-                    };
-                    db.AreaMaterials.Add(areaMaterial);
-                }
-                db.SaveChanges();
+                var a = new AreaCopyViewModel(item.AreaID).Copy(buildingId);
             }
-            return building.BuildingID;
+            return buildingId;
         }
     }
 

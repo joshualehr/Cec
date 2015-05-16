@@ -5,13 +5,10 @@
     var amvm = Model.First();
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(amvm.Project + " Project", "Details", "Project", new { id = amvm.ProjectId }, null) >
-    @Html.ActionLink("Buildings", "Index", "Building", new { id = amvm.ProjectId }, null) >
-    @Html.ActionLink("Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, null)
-</div>
 <h2>Areas</h2>
+@Html.ActionLink("Back to Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, new { @class = "btn btn-default" })
+<br />
+<br />
 
 @using (Html.BeginForm("Index", "Area", FormMethod.Post))
 {
@@ -33,7 +30,7 @@
         @Html.DisplayFor(model => model)
         <tr class="row">
             <td class="col-lg-3 col-xs-2 text-center">
-                <input type="submit" value="Materials" class="btn btn-primary" />
+                <input type="submit" value="Material" class="btn btn-primary" />
             </td>
             <td class="col-lg-3 col-xs-2 text-center">
                 @Html.ActionLink("New Area", "Create", new { id = amvm.BuildingId }, new { @class = "btn btn-link" })
@@ -44,6 +41,12 @@
         </tr>
     </table>
 }
+<div class="breadcrumb text-center">
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(amvm.Project + " Project", "Details", "Project", new { id = amvm.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", "Building", new { id = amvm.ProjectId }, null) >
+    @Html.ActionLink("Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, null)
+</div>
 
 @section scripts {
     <script>

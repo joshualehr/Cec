@@ -84,6 +84,7 @@
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.StatusId, Model.Statuses, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.StatusId)
+                @Html.LabelFor(model => model.StatusChanged): @Html.DisplayFor(model => model.StatusChanged, "ShortDate")
             </div>
         </div>
         <div class="form-group">

@@ -4,40 +4,34 @@
     ViewBag.Title = "Project";
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Materials", "Index", "Material")
-</div>
 <h2>Projects</h2>
+@Html.ActionLink("Create a New Project", "Create", null, new { @class = "btn btn-default" })
+<br />
+<br />
 <table class="table table-hover">
     <tr class="row">
-        <th class="col-lg-6 col-xs-2 text-left">
+        <th class="col-xs-3 col-sm-6 text-left">
             @Html.DisplayNameFor(model => model.First().Project)
         </th>
-        <th class="col-lg-6 col-xs-10 text-center">
+        <th class="col-xs-9 col-sm-6 text-center">
             Actions
         </th>
     </tr>
     @foreach (var item in Model) {
         <tr class="row">
-            <td class="col-lg-6 col-xs-2 text-left">
-                @Html.ActionLink(item.Project, "Details", new { id = item.ProjectId }, new { @class = "" })
+            <td class="col-xs-3 col-sm-6 text-left">
+                @Html.ActionLink(item.Project, "Details", new { id = item.ProjectId }, null)
             </td>
-            <td class="col-lg-6 col-xs-10 text-center">
+            <td class="col-xs-9 col-sm-6 text-center">
                 <div class="btn-group">
                     @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectId }, new { @class = "btn btn-danger" })
                     @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectId }, new { @class = "btn btn-info" })
+                </div>
+                <div class="btn-group">
                     @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }, new { @class = "btn btn-primary" })
                     @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId }, new { @class = "btn btn-default" })
                 </div>
             </td>
         </tr>
     }
-    <tr class="row">
-        <td class="col-lg-6 col-xs-2 text-left">
-            @Html.ActionLink("Create a New Project", "Create")
-        </td>
-        <td class="col-lg-6 col-xs-10 text-center">
-            &nbsp;
-        </td>
-    </tr>
 </table>

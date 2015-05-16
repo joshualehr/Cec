@@ -4,10 +4,8 @@
     ViewBag.Title = "New Project";
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index")
-</div>
 <h2>New Project</h2>
+@Html.ActionLink("Back to Projects", "Index", null, new { @class = "btn btn-default" })
 <hr />
 
 @using (Html.BeginForm())

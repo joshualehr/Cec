@@ -1,4 +1,5 @@
-﻿using Cec.Models;
+﻿using Cec.Helpers;
+using Cec.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -130,7 +131,6 @@ namespace Cec.ViewModels
         public string Status { get; set; }
 
         [Display(Name="Status Changed")]
-        [DataType(DataType.Date)]
         public DateTime StatusChanged { get; set; }
 
         public Guid? ModelId { get; set; }
@@ -165,6 +165,7 @@ namespace Cec.ViewModels
             this.ProjectId = area.Building.ProjectID;
             this.State = area.State;
             this.Status = area.Status.Designation;
+            this.StatusChanged = area.StatusChanged;
         }
     }
 
@@ -249,7 +250,8 @@ namespace Cec.ViewModels
                 ModelID = this.ModelId, 
                 PostalCode = this.PostalCode, 
                 State = this.State, 
-                StatusId = this.StatusId
+                StatusId = this.StatusId, 
+                StatusChanged = DateTime.Now
             };
             db.Areas.Add(area);
             db.SaveChanges();
@@ -322,6 +324,9 @@ namespace Cec.ViewModels
         [Required]
         public Guid StatusId { get; set; }
 
+        [Display(Name = "Status Changed")]
+        public DateTime StatusChanged { get; set; }
+
         public Guid? ModelId { get; set; }
 
         public ModelSelectList Models { get; set; }
@@ -347,6 +352,7 @@ namespace Cec.ViewModels
             this.ProjectId = area.Building.ProjectID;
             this.State = area.State;
             this.StatusId = area.StatusId;
+            this.StatusChanged = area.StatusChanged;
             this.Models = new ModelSelectList(this.ProjectId, this.ModelId);
             this.Statuses = new StatusSelectList(this.StatusId);
         }
@@ -365,7 +371,8 @@ namespace Cec.ViewModels
                 ModelID = this.ModelId, 
                 PostalCode = this.PostalCode, 
                 State = this.State, 
-                StatusId = this.StatusId
+                StatusId = this.StatusId, 
+                StatusChanged = DateTime.Now
             };
             db.Entry(area).State = EntityState.Modified;
             if (originalModel != this.ModelId)
@@ -440,14 +447,9 @@ namespace Cec.ViewModels
         [Display(Name = "Postal Code", ShortName = "Zip", Prompt = "Enter postal code")]
         public Nullable<int> PostalCode { get; set; }
 
-        [Required]
-        public Guid StatusId { get; set; }
-
         public Guid? ModelId { get; set; }
 
         public BuildingSelectList Buildings { get; set; }
-
-        public StatusSelectList Statuses { get; set; }
 
         //Constructors
         public AreaCopyViewModel(){ }
@@ -456,7 +458,7 @@ namespace Cec.ViewModels
         {
             var area = db.Areas.Find(areaId);
             this.Address = area.Address;
-            this.AreaDesignation = area.Designation += " Copy";
+            this.AreaDesignation = area.Designation;
             this.AreaId = area.AreaID;
             this.BuildingDesignation = area.Building.Designation;
             this.BuildingId = area.BuildingID;
@@ -467,13 +469,11 @@ namespace Cec.ViewModels
             this.ProjectDesignation = area.Building.Project.Designation;
             this.ProjectId = area.Building.ProjectID;
             this.State = area.State;
-            this.StatusId = area.StatusId;
             this.Buildings = new BuildingSelectList(this.ProjectId);
-            this.Statuses = new StatusSelectList(this.StatusId);
         }
 
         //Methods
-        public Guid Copy()
+        public Guid Copy(Guid buildingId)
         {
             var area = new Area()
             {
@@ -483,11 +483,11 @@ namespace Cec.ViewModels
                 Address = this.Address, 
                 City = this.City, 
                 State = this.State, 
-                PostalCode = this.PostalCode, 
-                BuildingID = this.BuildingId, 
+                PostalCode = this.PostalCode,
+                BuildingID = buildingId, 
                 ModelID = this.ModelId, 
-                StatusId = this.StatusId
-
+                StatusId = new DefaultStatus().GetDefault(), 
+                StatusChanged = DateTime.Now
             };
             db.Areas.Add(area);
             db.SaveChanges();

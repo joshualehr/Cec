@@ -4,10 +4,13 @@
     ViewBag.Title = "Project";
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index")
-</div>
 <h2 class="text-danger">Are you sure you want to delete the @Model.Designation Project?</h2>
+<div class="btn-group">
+    @Html.ActionLink("Back to " + Model.Designation + " Project", "Details", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to Projects", "Index", null, new { @class = "btn btn-default" })
+</div>
+<br />
+<br />
 <div>
     @using (Html.BeginForm())
     {
@@ -16,7 +19,7 @@
         @Html.HiddenFor(model => model.ProjectId)
         @Html.HiddenFor(model => model.Designation)
 
-        <div class="btn-group pull-right">
+        <div class="btn-group">
             @Html.ActionLink("Cancel", "Details", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
             <input type="submit" value="Delete" class="btn btn-default" />
         </div>

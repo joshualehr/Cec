@@ -219,6 +219,7 @@
     <Compile Include="Helpers\Enumerations.cs" />
     <Compile Include="Helpers\CsvActionResult.cs" />
     <Compile Include="Helpers\ImageHandler.cs" />
+    <Compile Include="Helpers\AreaStatusDefault.cs" />
     <Compile Include="Helpers\SelectedTabAttribute.cs" />
     <Compile Include="Migrations\201503070003218_001_First.cs" />
     <Compile Include="Migrations\201503070003218_001_First.Designer.cs">

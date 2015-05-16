@@ -5,53 +5,61 @@
     var area = Model.First().Area;
 }
 
+<h2>Material for @area.Designation</h2>
+<div class="btn-group">
+    @Html.ActionLink("Back to Area " + area.Designation, "Details", "Area", new { id = area.AreaID }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Add Item", "Create", new { id = area.AreaID }, new { @class = "btn btn-primary" })
+</div>
 <br />
-<p>
+<br />
+<table class="table table-hover">
+    <tr class="row">
+        <th class="col-xs-1 text-center">
+            Image
+        </th>
+        <th class="col-xs-4 text-center">
+            @Html.DisplayNameFor(model => model.Material.Designation)
+        </th>
+        <th class="col-xs-2 text-center">
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th class="col-xs-2 text-center">
+            @Html.DisplayNameFor(model => model.Material.UnitOfMeasure.Designation)
+        </th>
+        <th class="col-xs-3 text-center">
+            Actions
+        </th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr class="row">
+        <td class="col-xs-1 text-center">
+            <img src="@item.Material.ImagePath" height="100" width="100" title="@item.Material.Designation" alt="@item.Material.Designation" class="img-responsive" />
+        </td>
+        <td class="col-xs-4 text-center">
+            @Html.ActionLink(item.Material.Designation, "Details", "Material", new { id = item.MaterialID }, null)
+        </td>
+        <td class="col-xs-2 text-center">
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td class="col-xs-2 text-center">
+            @Html.DisplayFor(modelItem => item.Material.UnitOfMeasure.Designation)
+        </td>
+        <td class="col-xs-3 text-center">
+            <div class="btn-group">
+                @Html.ActionLink("Edit", "Edit", new { id = item.AreaID, materialId = item.MaterialID }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.AreaID, materialId = item.MaterialID }, new { @class = "btn btn-default" })
+            </div>
+        </td>
+    </tr>
+}
+</table>
+<div class="breadcrumb text-center">
     @Html.ActionLink("Projects", "Index", "Project") >
     @Html.ActionLink(area.Building.Project.Designation + " Project", "Details", "Project", new { id = area.Building.Project.ProjectID }, null) >
     @Html.ActionLink("Buildings", "Index", "Building", new { id = area.Building.ProjectID }, null) >
     @Html.ActionLink("Building " + area.Building.Designation, "Details", "Building", new { id = area.BuildingID }, null) >
     @Html.ActionLink("Areas", "Index", "Area", new { id = area.BuildingID }, null) >
     @Html.ActionLink(area.Designation, "Details", "Area", new { id = area.AreaID }, null)
-</p>
-<h2>Material for @area.Designation</h2>
-<p>
-    @Html.ActionLink("Add Item", "Create", new { id = area.AreaID })
-</p>
-<table class="table">
-    <tr>
-        <th colspan="2">
-            @Html.DisplayNameFor(model => model.Material.Designation)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Quantity)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Material.UnitOfMeasure.Designation)
-        </th>
-        <th>
-            Actions
-        </th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            <img src="@item.Material.ImagePath" height="100" width="100" title="@item.Material.Designation" alt="@item.Material.Designation" class="img-responsive" />
-        </td>
-        <td>
-            @Html.ActionLink(item.Material.Designation, "Details", "Material", new { id = item.MaterialID }, null)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Quantity)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Material.UnitOfMeasure.Designation)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.AreaID, materialId = item.MaterialID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.AreaID, materialId = item.MaterialID })
-        </td>
-    </tr>
-}
-</table>
+</div>

@@ -4,10 +4,11 @@
     ViewBag.Title = "Edit " + Model.Designation + " Project";
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index")
-</div>
 <h2>Edit @Model.Designation Project</h2>
+<div class="btn-group">
+    @Html.ActionLink("Back to " + Model.Designation + " Project", "Details", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to Projects", "Index", null, new { @class = "btn btn-default" })
+</div>
 <hr />
 
 @using (Html.BeginForm())
