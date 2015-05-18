@@ -6,15 +6,27 @@
 
 <div class="row">
     <div class="col-sm-6 col-xs-12">
-        <h2>@Model.Project Project</h2>
-        @Html.ActionLink("Back to Projects", "Index", null, new { @class = "btn btn-default" })
-        <div class="btn-group">
-            @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, new { @class = "btn btn-danger" })
-            @Html.ActionLink("Models", "Index", "Model", new { id = Model.ProjectId }, new { @class = "btn btn-info" })
+        <div class="row">
+            <div class="col-xs-12">
+                <h2>@Model.Project Project</h2>
+            </div>
         </div>
-        <div class="btn-group">
-            @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
-            @Html.ActionLink("Delete", "Delete", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+        <div class="row">
+            <div class="col-xs-5">
+                @Html.ActionLink("Back to Projects", "Index", null, new { @class = "btn btn-default" })
+            </div>
+            <div class="col-xs-3">
+                <div class="btn-group btn-group-vertical">
+                    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("Models", "Index", "Model", new { id = Model.ProjectId }, new { @class = "btn btn-info" })
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="btn-group btn-group-vertical">
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Delete", "Delete", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-sm-6 col-xs-12">

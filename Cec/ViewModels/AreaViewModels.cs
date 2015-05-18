@@ -232,6 +232,10 @@ namespace Cec.ViewModels
             this.ProjectDesignation = building.Project.Designation;
             this.BuildingId = building.BuildingID;
             this.BuildingDesignation = building.Designation;
+            this.Address = building.Address;
+            this.City = building.City;
+            this.State = building.State;
+            this.PostalCode = building.PostalCode;
             this.Models = new ModelSelectList(this.ProjectId);
             this.Statuses = new StatusSelectList();
         }

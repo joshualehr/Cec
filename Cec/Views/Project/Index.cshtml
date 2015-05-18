@@ -23,13 +23,25 @@
                 @Html.ActionLink(item.Project, "Details", new { id = item.ProjectId }, null)
             </td>
             <td class="col-xs-9 col-sm-6 text-center">
-                <div class="btn-group">
-                    @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectId }, new { @class = "btn btn-danger" })
-                    @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectId }, new { @class = "btn btn-info" })
+                <div class="hidden-xs">
+                    <div class="btn-group">
+                        @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectId }, new { @class = "btn btn-danger" })
+                        @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectId }, new { @class = "btn btn-info" })
+                    </div>
+                    <div class="btn-group">
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }, new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId }, new { @class = "btn btn-default" })
+                    </div>
                 </div>
-                <div class="btn-group">
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }, new { @class = "btn btn-primary" })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId }, new { @class = "btn btn-default" })
+                <div class="hidden-sm hidden-md hidden-lg">
+                    <div class="btn-group btn-group-vertical">
+                        @Html.ActionLink("Buildings", "Index", "Building", new { id = item.ProjectId }, new { @class = "btn btn-danger" })
+                        @Html.ActionLink("Models", "Index", "Model", new { id = item.ProjectId }, new { @class = "btn btn-info" })
+                    </div>
+                    <div class="btn-group btn-group-vertical">
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }, new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId }, new { @class = "btn btn-default" })
+                    </div>
                 </div>
             </td>
         </tr>

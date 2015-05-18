@@ -230,6 +230,10 @@ namespace Cec.ViewModels
             var project = db.Projects.Find(projectId);
             this.ProjectId = project.ProjectID;
             this.ProjectDesignation = project.Designation;
+            this.Address = project.Address;
+            this.City = project.City;
+            this.State = project.State;
+            this.PostalCode = project.PostalCode;
         }
 
         //Methods
