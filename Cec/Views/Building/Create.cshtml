@@ -4,11 +4,8 @@
     ViewBag.Title = "New Building";
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null)
-</div>
 <h2>New Building</h2>
+@Html.ActionLink("Back to Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
 <hr />
 
 @using (Html.BeginForm()) 
@@ -74,9 +71,12 @@
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
-
     </div>
 }
+<div class="breadcrumb text-center">
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null)
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

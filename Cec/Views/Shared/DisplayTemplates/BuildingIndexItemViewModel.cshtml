@@ -1,19 +1,33 @@
 ﻿@model Cec.ViewModels.BuildingIndexItemViewModel
 <tr class="row">
-    <td class="col-lg-3 col-xs-2 text-center">
+    <td class="col-xs-1 col-lg-3 text-center">
         @Html.CheckBoxFor(model => model.Selected)
     </td>
-    <td class="col-lg-3 col-xs-2 text-center">
+    <td class="col-xs-2 col-lg-3 text-center">
         @Html.ActionLink(Model.Building, "Details", new { id = Model.BuildingId })
         @Html.HiddenFor(model => model.BuildingId)
         @Html.HiddenFor(model => model.Building)
     </td>
-    <td class="col-lg-6 col-xs-8 text-center">
-        <div class="btn-group">
-            @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, new { @class = "btn btn-danger" })
-            @Html.ActionLink("Copy", "Copy", new { id = Model.BuildingId }, new { @class = "btn btn-success" })
-            @Html.ActionLink("Edit", "Edit", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
-            @Html.ActionLink("Delete", "Delete", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+    <td class="col-xs-9 col-lg-6 text-center">
+        <div class="hidden-xs">
+            <div class="btn-group">
+                @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, new { @class = "btn btn-danger" })
+                @Html.ActionLink("Copy", "Copy", new { id = Model.BuildingId }, new { @class = "btn btn-success" })
+            </div>
+            <div class="btn-group">
+                @Html.ActionLink("Edit", "Edit", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Delete", "Delete", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+            </div>
+        </div>
+        <div class="hidden-sm hidden-md hidden-lg">
+            <div class="btn-group-vertical">
+                @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, new { @class = "btn btn-danger" })
+                @Html.ActionLink("Copy", "Copy", new { id = Model.BuildingId }, new { @class = "btn btn-success" })
+            </div>
+            <div class="btn-group-vertical">
+                @Html.ActionLink("Edit", "Edit", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Delete", "Delete", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+            </div>
         </div>
     </td>
 </tr>

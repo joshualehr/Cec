@@ -5,7 +5,10 @@
 }
 
 <h2>Buildings</h2>
-@Html.ActionLink("Back to " + Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+<div class="btn-group-vertical">
+    @Html.ActionLink("Back to " + Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Create a New Building", "Create", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
+</div>
 <br />
 <br />
 
@@ -18,13 +21,13 @@
 
     <table class="table table-hover">
         <tr class="row">
-            <th class="col-lg-3 col-xs-2 text-center">
+            <th class="col-xs-1 col-lg-3 text-center">
                 <input type="checkbox" onclick="checkAll(this)" /> All
             </th>
-            <th class="col-lg-3 col-xs-2 text-center">
+            <th class="col-xs-2 col-lg-3 text-center">
                 Building
             </th>
-            <th class="col-lg-6 col-xs-8 text-center">
+            <th class="col-xs-9 col-lg-6 text-center">
                 Actions
             </th>
         </tr>
@@ -34,7 +37,7 @@
                 <input type="submit" value="Material" class="btn btn-primary" />
             </td>
             <td class="col-lg-3 col-xs-2 text-center">
-                @Html.ActionLink("New Building", "Create", new { id = Model.ProjectId }, new { @class = "btn btn-link" })
+                &nbsp;
             </td>
             <td class="col-lg-6 col-xs-8 text-center">
                 &nbsp;
