@@ -6,13 +6,27 @@
 
 <div class="row">
     <div class="col-sm-6 col-xs-12">
-        <h2>Area @Model.AreaDesignation</h2>
-        <div class="btn-group">
-            @Html.ActionLink("Back to Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
-            @Html.ActionLink("Area's Material", "Index", "AreaMaterial", new { id = Model.AreaId }, new { @class = "btn btn-danger" })
-            @Html.ActionLink("Copy", "Copy", new { id = Model.AreaId }, new { @class = "btn btn-success" })
-            @Html.ActionLink("Edit", "Edit", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
-            @Html.ActionLink("Delete", "Delete", new { id = Model.AreaId }, new { @class = "btn btn-default" })
+        <div class="row">
+            <div class="col-xs-12">
+                <h2>Area @Model.AreaDesignation</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+                @Html.ActionLink("Back to Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+            </div>
+            <div class="col-xs-4">
+                <div class="btn-group btn-group-vertical">
+                    @Html.ActionLink("Area's Material", "Index", "AreaMaterial", new { id = Model.AreaId }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("Copy", "Copy", new { id = Model.AreaId }, new { @class = "btn btn-success" })
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="btn-group btn-group-vertical">
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Delete", "Delete", new { id = Model.AreaId }, new { @class = "btn btn-default" })
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-sm-6">
@@ -75,9 +89,9 @@
     </div>
 </div>
 <div class="breadcrumb text-center">
-    @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
-    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null) >
-    @Html.ActionLink("Building " + Model.BuildingDesignation, "Details", "Building", new { id = Model.BuildingId }, null) >
-    @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId })
+@Html.ActionLink("Projects", "Index", "Project") >
+@Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+@Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null) >
+@Html.ActionLink("Building " + Model.BuildingDesignation, "Details", "Building", new { id = Model.BuildingId }, null) >
+@Html.ActionLink("Areas", "Index", new { id = Model.BuildingId })
 </div>

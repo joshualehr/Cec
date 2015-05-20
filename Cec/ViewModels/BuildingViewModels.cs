@@ -116,7 +116,7 @@ namespace Cec.ViewModels
             this.Areas = new Dictionary<Guid, string>();
             foreach (var area in building.Areas.Where(a => a.StatusId == this.StatusId))
             {
-                this.Areas.Add(area.AreaID, area.Designation);
+                this.Areas.Add(area.AreaID, area.Designation + " (" + area.StatusChanged.ToShortDateString() + ")");
             }
         }
     }

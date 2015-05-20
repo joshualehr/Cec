@@ -3,32 +3,26 @@
 @{
     ViewBag.Title = "Copy Area";
 }
-<br />
-<p>
-    @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
-    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null) >
-    @Html.ActionLink("Building " + Model.BuildingDesignation, "Details", "Building", new { id = Model.BuildingId }, null) >
-    @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId })
-</p>
+
 <h2>Area @Model.AreaDesignation</h2>
-<p>
-    @Html.ActionLink("Cancel", "Details", new { id = Model.AreaId })
-</p>
+<div class="btn-group btn-group-vertical">
+    @Html.ActionLink("Back to Area " + Model.AreaDesignation, "Details", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+</div>
 <hr />
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.AreaId)
+    @Html.HiddenFor(model => model.BuildingDesignation)
+    @Html.HiddenFor(model => model.ProjectId)
+    @Html.HiddenFor(model => model.ProjectDesignation)
+    @Html.HiddenFor(model => model.ModelId)
 
     <div class="form-horizontal">
 
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.AreaId)
-        @Html.HiddenFor(model => model.BuildingDesignation)
-        @Html.HiddenFor(model => model.ProjectId)
-        @Html.HiddenFor(model => model.ProjectDesignation)
-        @Html.HiddenFor(model => model.ModelId)
 
         <div class="form-group">
             @Html.LabelFor(model => model.AreaDesignation, new { @class = "control-label col-md-2" })
@@ -80,12 +74,20 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-sm btn-default" />
+            <div class="col-md-offset-2 col-md-10 btn-group">
+                @Html.ActionLink("Cancel", "Details", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
+<div class="breadcrumb text-center">
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Building " + Model.BuildingDesignation, "Details", "Building", new { id = Model.BuildingId }, null) >
+    @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId })
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

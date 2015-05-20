@@ -1,17 +1,10 @@
 ﻿@model IEnumerable<Cec.ViewModels.AreasMaterialViewModel>
 
 @{
-    ViewBag.Title = "AreasMaterial";
+    ViewBag.Title = "Areas' Material";
     var amvm = Model.First();
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(amvm.Project + " Project", "Details", "Project", new { id = amvm.ProjectId }, null) >
-    @Html.ActionLink("Buildings", "Index", "Building", new { id = amvm.ProjectId }, null) >
-    @Html.ActionLink("Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, null) >
-    @Html.ActionLink("Areas", "Index", new { id = amvm.BuildingId })
-</div>
 <h2>Area(s) @TempData["areasString"].ToString()</h2>
 
 @using (Html.BeginForm("AreasMaterial", "Area", FormMethod.Post))
@@ -19,28 +12,40 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
     
-    <table class="table">
-        <tr>
-            <th>
+    <div class="btn-group">
+        @Html.ActionLink("Back to Areas", "Index", new { id = amvm.BuildingId }, new { @class = "btn btn-default" })
+        <input type="submit" value="Download Data" class="btn btn-primary" />
+    </div>
+    <br />
+    <br />
+    <table class="table table-hover">
+        <tr class="row">
+            <th class="col-xs-1 text-left">
                 <input type="checkbox" onclick="checkAll(this)" /> Select All
             </th>
-            <th>
+            <th class="col-xs-1 text-center">
                 Image
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Material)
+            <th class="col-xs-6 text-center">
+                Material
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Total)
+            <th class="col-xs-2 text-center">
+                Total
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnitOfMeasure)
+            <th class="col-xs-2 text-center">
+                U/M
             </th>
         </tr>
         @Html.DisplayFor(model => model)
     </table>
-    <input type="submit" value="Download Data" class="btn btn-primary" />
 }
+<div class="breadcrumb text-center">
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(amvm.Project + " Project", "Details", "Project", new { id = amvm.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", "Building", new { id = amvm.ProjectId }, null) >
+    @Html.ActionLink("Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, null) >
+    @Html.ActionLink("Areas", "Index", new { id = amvm.BuildingId })
+</div>
 
 @section Scripts {
     <script>

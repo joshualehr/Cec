@@ -1,12 +1,12 @@
 ﻿@model Cec.ViewModels.AreasMaterialViewModel
-<tr>
-    <td>
+<tr class="row">
+    <td class="col-xs-1 text-left">
         @Html.CheckBox("Selected")
     </td>
-    <td>
-        <img title="@Model.Material" alt="@Model.Material" src="@Model.ImagePath" height="50" />
+    <td class="col-xs-1 text-center">
+        <img title="@Model.Material" alt="@Model.Material" src="@Model.ImagePath" class="img-responsive" />
     </td>
-    <td>
+    <td class="col-xs-6 text-center">
         @Html.ActionLink(Model.Material, "Details", "Material", new { id = Model.MaterialId }, null)
         @Html.HiddenFor(model => model.ProjectId)
         @Html.HiddenFor(model => model.Project)
@@ -20,10 +20,10 @@
         @Html.HiddenFor(model => model.Total)
         @Html.HiddenFor(model => model.UnitOfMeasure)
     </td>
-    <td>
+    <td class="col-xs-2 text-center">
         @Html.DisplayFor(model => model.Total)
     </td>
-    <td>
+    <td class="col-xs-2 text-center">
         @Html.DisplayFor(model => model.UnitOfMeasure)
     </td>
 </tr>

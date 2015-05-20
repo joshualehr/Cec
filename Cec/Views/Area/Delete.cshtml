@@ -1,17 +1,17 @@
 ﻿@model Cec.ViewModels.AreaDeleteViewModel
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Delete Area";
 }
 
-<div class="breadcrumb">
-    @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
-    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null) >
-    @Html.ActionLink("Building " + Model.BuildingDesignation, "Details", "Building", new { id = Model.BuildingId }, null) >
-    @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId })
-</div>
 <h2 class="text-danger">Are you sure you want to delete Area @Model.AreaDesignation?</h2>
+<div class="btn-group btn-group-vertical">
+    @Html.ActionLink("Back to Area " + Model.AreaDesignation, "Details", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+</div>
+<br />
+<br />
+
 <div>
     @using (Html.BeginForm())
     {
@@ -24,11 +24,18 @@
         @Html.HiddenFor(model => model.AreaDesignation)
         @Html.ValidationSummary(true)
 
-        <div class="btn-group pull-right">
+        <div class="btn-group">
             @Html.ActionLink("Cancel", "Details", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
             <input type="submit" value="Delete" class="btn btn-default" />
         </div>
         <br />
         <br />
     }
+</div>
+<div class="breadcrumb text-center">
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Building " + Model.BuildingDesignation, "Details", "Building", new { id = Model.BuildingId }, null) >
+    @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId })
 </div>
