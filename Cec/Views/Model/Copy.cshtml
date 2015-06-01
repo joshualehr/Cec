@@ -1,18 +1,14 @@
 ﻿@model Cec.ViewModels.ModelCopyViewModel
 
 @{
-    ViewBag.Title = "Copy Model";
+    ViewBag.Title = "Duplicate Model";
 }
-<br />
-<p>
-    @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.ProjectName + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
-    @Html.ActionLink("Models", "Index", new { id = Model.ProjectId })
-</p>
-<h2>Model @Model.ModelName</h2>
-<p>
-    @Html.ActionLink("Cancel", "Details", new { id = Model.ModelId })
-</p>
+
+<h2>Duplicate Model</h2>
+<div class="btn-group">
+    @Html.ActionLink("Models", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Model " + Model.OriginalModel, "Details", new { id = Model.ModelId }, new { @class = "btn btn-primary" })
+</div>
 <hr />
 
 @using (Html.BeginForm())
@@ -39,12 +35,18 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-sm btn-default" />
+            <div class="col-md-offset-2 col-md-10 btn-group">
+                @Html.ActionLink("Cancel", "Details", new { id = Model.ModelId }, new { @class = "btn btn-primary" })
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
+<div class="breadcrumb text-center">
+    @Html.ActionLink("Projects", "Index", "Project") >
+    @Html.ActionLink(Model.ProjectName + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Models", "Index", new { id = Model.ProjectId })
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

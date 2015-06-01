@@ -15,17 +15,17 @@
     <td class="col-xs-9 col-lg-6 text-center">
         <div class="hidden-xs">
             <div class="btn-group">
-                @Html.ActionLink("Area's Material", "Index", "AreaMaterial", new { id = Model.AreaId }, new { @class = "btn btn-danger" })
-                @Html.ActionLink("Copy", "Copy", new { id = Model.AreaId }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Material", "Index", "AreaMaterial", new { id = Model.AreaId }, new { @class = "btn btn-danger" })
             </div>
             <div class="btn-group">
+                @Html.ActionLink("Copy", "Copy", new { id = Model.AreaId }, new { @class = "btn btn-success" })
                 @Html.ActionLink("Edit", "Edit", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
                 @Html.ActionLink("Delete", "Delete", new { id = Model.AreaId }, new { @class = "btn btn-default" })
             </div>
         </div>
         <div class="hidden-sm hidden-md hidden-lg">
             <div class="btn-group-vertical">
-                @Html.ActionLink("Area's Material", "Index", "AreaMaterial", new { id = Model.AreaId }, new { @class = "btn btn-danger" })
+                @Html.ActionLink("Material", "Index", "AreaMaterial", new { id = Model.AreaId }, new { @class = "btn btn-danger" })
                 @Html.ActionLink("Copy", "Copy", new { id = Model.AreaId }, new { @class = "btn btn-success" })
             </div>
             <div class="btn-group-vertical">

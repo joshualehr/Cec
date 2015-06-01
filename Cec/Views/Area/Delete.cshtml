@@ -4,11 +4,12 @@
     ViewBag.Title = "Delete Area";
 }
 
-<h2 class="text-danger">Are you sure you want to delete Area @Model.AreaDesignation?</h2>
-<div class="btn-group btn-group-vertical">
-    @Html.ActionLink("Back to Area " + Model.AreaDesignation, "Details", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+<h2>Delete Area</h2>
+<div class="btn-group">
+    @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Area " + Model.AreaDesignation, "Details", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
 </div>
+<h3 class="text-danger">Are you sure you want to delete Area @Model.AreaDesignation?</h3>
 <br />
 <br />
 

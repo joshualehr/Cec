@@ -1,14 +1,15 @@
 ﻿@model Cec.ViewModels.BuildingDeleteViewModel
 
 @{
-    ViewBag.Title = "Building";
+    ViewBag.Title = "Delete Building";
 }
 
-<h2 class="text-danger">Are you sure you want to delete Building @Model.BuildingDesignation?</h2>
-<div class="btn-group btn-group-vertical">
-    @Html.ActionLink("Back to Building " + Model.BuildingDesignation, "Details", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+<h2>Delete Building</h2>
+<div class="btn-group">
+    @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Building " + Model.BuildingDesignation, "Details", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
 </div>
+<h3 class="text-danger">Are you sure you want to delete Building @Model.BuildingDesignation?</h3>
 <br />
 <br />
 

@@ -346,6 +346,8 @@ namespace Cec.ViewModels
 
         public Guid BuildingId { get; set; }
 
+        public string OriginalBuilding { get; set; }
+
         [Required()]
         [DataType(DataType.Text)]
         [Display(Name = "Building")]
@@ -382,7 +384,7 @@ namespace Cec.ViewModels
             this.ProjectId = building.ProjectID;
             this.ProjectDesignation = building.Project.Designation;
             this.BuildingId = building.BuildingID;
-            this.BuildingDesignation = building.Designation;
+            this.OriginalBuilding = building.Designation;
             this.Description = building.Description;
             this.Address = building.Address;
             this.City = building.City;

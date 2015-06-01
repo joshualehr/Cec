@@ -5,8 +5,18 @@
 }
 
 <h2>Projects</h2>
-@Html.ActionLink("Create a New Project", "Create", null, new { @class = "btn btn-default" })
-<br />
+<div class="row">
+    <div class="text-left col-xs-6 col-sm-3">
+        <div class="btn-group btn-group-vertical">
+            @Html.ActionLink("Material", "Index", "Material", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+    <div class="text-right col-xs-6 col-sm-3 col-sm-push-6">
+        <div class="btn-group btn-group-vertical">
+            @Html.ActionLink("New Project", "Create", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>
 <br />
 <table class="table table-hover">
     <tr class="row">
@@ -17,7 +27,8 @@
             Actions
         </th>
     </tr>
-    @foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr class="row">
             <td class="col-xs-3 col-sm-6 text-left">
                 @Html.ActionLink(item.Project, "Details", new { id = item.ProjectId }, null)

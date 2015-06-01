@@ -424,6 +424,8 @@ namespace Cec.ViewModels
         [Required]
         public Guid AreaId { get; set; }
 
+        public string OriginalArea { get; set; }
+
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Area")]
@@ -462,7 +464,7 @@ namespace Cec.ViewModels
         {
             var area = db.Areas.Find(areaId);
             this.Address = area.Address;
-            this.AreaDesignation = area.Designation;
+            this.OriginalArea = area.Designation;
             this.AreaId = area.AreaID;
             this.BuildingDesignation = area.Building.Designation;
             this.BuildingId = area.BuildingID;

@@ -4,11 +4,12 @@
     ViewBag.Title = "Project";
 }
 
-<h2 class="text-danger">Are you sure you want to delete the @Model.Designation Project?</h2>
-<div class="btn-group btn-group-vertical">
-    @Html.ActionLink("Back to " + Model.Designation + " Project", "Details", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to Projects", "Index", null, new { @class = "btn btn-default" })
+<h2>Delete Project</h2>
+<div class="btn-group btn-group">
+    @Html.ActionLink("Projects", "Index", null, new { @class = "btn btn-default" })
+    @Html.ActionLink(Model.Designation + " Project", "Details", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
 </div>
+<h3 class="text-danger">Are you sure you want to delete the @Model.Designation Project?</h3>
 <br />
 <br />
 <div>

@@ -209,6 +209,7 @@ namespace Cec.ViewModels
         public Guid ProjectId { get; set; }
         public string ProjectName { get; set; }
         public Guid ModelId { get; set; }
+        public string OriginalModel { get; set; }
         [Required()]
         [DataType(DataType.Text)]
         [Display(Name = "Model")]
@@ -228,7 +229,7 @@ namespace Cec.ViewModels
             this.ProjectId = modelData.ProjectID;
             this.ProjectName = modelData.Project.Designation;
             this.ModelId = modelData.ModelID;
-            this.ModelName = modelData.Designation + " Copy";
+            this.OriginalModel = modelData.Designation;
             this.Description = modelData.Description;
         }
 

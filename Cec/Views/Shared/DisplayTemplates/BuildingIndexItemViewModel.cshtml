@@ -12,9 +12,9 @@
         <div class="hidden-xs">
             <div class="btn-group">
                 @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, new { @class = "btn btn-danger" })
-                @Html.ActionLink("Copy", "Copy", new { id = Model.BuildingId }, new { @class = "btn btn-success" })
             </div>
             <div class="btn-group">
+                @Html.ActionLink("Copy", "Copy", new { id = Model.BuildingId }, new { @class = "btn btn-success" })
                 @Html.ActionLink("Edit", "Edit", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
                 @Html.ActionLink("Delete", "Delete", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
             </div>

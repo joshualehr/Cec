@@ -165,7 +165,6 @@ namespace Cec.Controllers
             {
                 return HttpNotFound();
             }
-            area.AreaDesignation += " Copy";
             return View(area);
         }
 

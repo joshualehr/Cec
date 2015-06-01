@@ -162,7 +162,6 @@ namespace Cec.Controllers
             {
                 return HttpNotFound();
             }
-            building.BuildingDesignation += " Copy";
             return View(building);
         }
 

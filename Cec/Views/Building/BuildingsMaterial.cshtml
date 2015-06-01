@@ -24,8 +24,8 @@
     @Html.ValidationSummary()
 
     <div class="btn-group">
-        @Html.ActionLink("Back to Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
-        <input type="submit" value="Download Data" class="btn btn-default" />
+        @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+        <input type="submit" value="Download Data" class="btn btn-primary" />
     </div>
     <br />
     <br />

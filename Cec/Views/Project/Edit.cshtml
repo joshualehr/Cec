@@ -5,9 +5,9 @@
 }
 
 <h2>Edit @Model.Designation Project</h2>
-<div class="btn-group btn-group-vertical">
-    @Html.ActionLink("Back to " + Model.Designation + " Project", "Details", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to Projects", "Index", null, new { @class = "btn btn-default" })
+<div class="btn-group btn-group">
+    @Html.ActionLink("Projects", "Index", null, new { @class = "btn btn-default" })
+    @Html.ActionLink(Model.Designation + " Project", "Details", new { id = Model.ProjectId }, new { @class = "btn btn-primary" })
 </div>
 <br />
 <hr />

@@ -4,10 +4,10 @@
     ViewBag.Title = "Duplicate Building";
 }
 
-<h2>Building @Model.BuildingDesignation</h2>
-<div class="btn-group btn-group-vertical">
-    @Html.ActionLink("Back to Building " + Model.BuildingDesignation, "Details", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+<h2>Duplicate Building</h2>
+<div class="btn-group">
+    @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Building " + Model.OriginalBuilding, "Details", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
 </div>
 <hr />
 

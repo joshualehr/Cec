@@ -4,9 +4,8 @@
     ViewBag.Title = "New Area";
 }
 
-<br />
 <h2>New Area</h2>
-@Html.ActionLink("Back to Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+@Html.ActionLink("Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
 <hr />
 
 @using (Html.BeginForm()) 
