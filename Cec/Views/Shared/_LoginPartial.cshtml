@@ -6,11 +6,19 @@
     @Html.AntiForgeryToken()
 
     <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink(" Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage", @class = "glyphicon glyphicon-cog" })
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()" class="glyphicon glyphicon-log-out"> Log off</a></li>
-    </ul>
+    <li class="dropdown">
+        <a href=" #" class="dropdown-toggle glyphicon" data-toggle="dropdown">
+            Hello @User.Identity.GetUserName() <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <li>@Html.ActionLink(" Profile", "Details", "Profile", null, new { @class = "glyphicon glyphicon-pencil" })</li>
+            <li>
+                @Html.ActionLink(" Manage Account", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage", @class = "glyphicon glyphicon-cog" })
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()" class="glyphicon glyphicon-log-out"> Log off</a></li>
+        </ul>
+    </li>
+</ul>
     }
 }
 else
