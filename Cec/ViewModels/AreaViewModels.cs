@@ -667,4 +667,33 @@ namespace Cec.ViewModels
             this.UnitOfMeasure = areasMaterialViewModel.UnitOfMeasure;
         }
     }
+
+    public class AreaStatusViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        public Guid AreaId { get; set; }
+
+        [Display(Name = "Area")]
+        public string AreaDesignation { get; set; }
+
+        [Display(Name = "Status Changed")]
+        public DateTime StatusChanged { get; set; }
+
+        //Constructors
+        public AreaStatusViewModel()
+        {
+
+        }
+
+        public AreaStatusViewModel(Guid areaId)
+        {
+            var area = db.Areas.Find(areaId);
+            this.AreaId = area.AreaID;
+            this.AreaDesignation = area.Designation;
+            this.StatusChanged = area.StatusChanged;
+        }
+    }
 }
+

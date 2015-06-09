@@ -484,6 +484,7 @@
     <Content Include="Views\Shared\DisplayTemplates\ProjectStatusViewModel.cshtml" />
     <Content Include="Views\Building\Copy.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ShortDate.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\AreaStatusViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

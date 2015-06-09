@@ -7,6 +7,16 @@
     </td>
     <td class="text-center col-xs-3 col-sm-2">@Html.DisplayFor(model => model.Percent)%</td>
     <td class="text-center col-xs-5 col-sm-8">
-        @Html.Raw(String.Join(", ", Model.Areas.OrderBy(p => p.Value).Select(p => Html.ActionLink(p.Value, "Edit", "Area", new { id = p.Key }, null).ToHtmlString()).ToArray()))
+        @foreach (var area in Model.Areas.GroupBy(a => a.StatusChanged))
+        {
+            <ul class="list-group list-unstyled">
+                <li class="list-group-item-heading">
+                    @area.First().StatusChanged.ToShortDateString()
+                </li>
+                <li class="list-group-item-text">
+                    @Html.Raw(String.Join(", ", area.OrderBy(p => p.AreaDesignation).Select(p => Html.ActionLink(p.AreaDesignation, "Edit", "Area", new { id = p.AreaId }, null).ToHtmlString()).ToArray()))
+                </li>
+            </ul>
+        }
     </td>
 </tr>
