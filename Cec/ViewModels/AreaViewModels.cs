@@ -670,29 +670,17 @@ namespace Cec.ViewModels
 
     public class AreaStatusViewModel
     {
-        //Private Properties
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        public Guid AreaId { get; set; }
-
-        [Display(Name = "Area")]
-        public string AreaDesignation { get; set; }
-
-        [Display(Name = "Status Changed")]
-        public DateTime StatusChanged { get; set; }
+        public IGrouping<string, Area> areaGroup { get; set; }
 
         //Constructors
         public AreaStatusViewModel()
         {
-
+            
         }
 
-        public AreaStatusViewModel(Guid areaId)
+        public AreaStatusViewModel(IGrouping<string, Area> group)
         {
-            var area = db.Areas.Find(areaId);
-            this.AreaId = area.AreaID;
-            this.AreaDesignation = area.Designation;
-            this.StatusChanged = area.StatusChanged;
+            this.areaGroup = group;
         }
     }
 }

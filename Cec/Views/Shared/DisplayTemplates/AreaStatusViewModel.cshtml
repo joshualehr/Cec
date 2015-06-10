@@ -1,5 +1,10 @@
 ﻿@model Cec.ViewModels.AreaStatusViewModel
 
-@Model.AreaId
-@Model.AreaDesignation
-@Model.StatusChanged
+<ul class="list-group list-unstyled">
+    <li class="list-group-item-heading">
+        @Model.areaGroup.Key
+    </li>
+    <li class="list-group-item-text">
+        @Html.Raw(String.Join(", ", Model.areaGroup.OrderBy(p => p.Designation).Select(p => Html.ActionLink(p.Designation, "Edit", "Area", new { id = p.AreaID }, null).ToHtmlString()).ToArray()))
+    </li>
+</ul>

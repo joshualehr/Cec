@@ -99,11 +99,11 @@ namespace Cec.ViewModels
         public string Status { get; set; }
         public int AreaCount { get; set; }
         public double Percent { get; set; }
-        public IList<AreaStatusViewModel> Areas { get; set; }
+        public ICollection<AreaStatusViewModel> AreaStatuses { get; set; }
 
         public BuildingStatusViewModel()
         {
-            this.Areas = new List<AreaStatusViewModel>();
+            this.AreaStatuses = new List<AreaStatusViewModel>();
         }
 
         public BuildingStatusViewModel(Status status, Guid buildingId)
@@ -113,10 +113,10 @@ namespace Cec.ViewModels
             this.Status = status.Designation;
             this.AreaCount = status.Area.Where(a => a.BuildingID == buildingId).Count();
             this.Percent = (100 * this.AreaCount) / building.Areas.Count;
-            this.Areas = new List<AreaStatusViewModel>();
-            foreach (var area in building.Areas.Where(a => a.StatusId == this.StatusId))
+            this.AreaStatuses = new List<AreaStatusViewModel>();
+            foreach (var item in building.Areas.Where(a => a.StatusId == this.StatusId).OrderBy(a => a.StatusChanged).GroupBy(a => a.StatusChanged.ToShortDateString()))
             {
-                this.Areas.Add(new AreaStatusViewModel(area.AreaID));
+                this.AreaStatuses.Add(new AreaStatusViewModel(item));
             }
         }
     }

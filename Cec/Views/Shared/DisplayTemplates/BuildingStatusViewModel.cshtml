@@ -5,18 +5,10 @@
         @Html.DisplayFor(model => model.Status) 
         (@Html.DisplayFor(model => model.AreaCount))
     </td>
-    <td class="text-center col-xs-3 col-sm-2">@Html.DisplayFor(model => model.Percent)%</td>
+    <td class="text-center col-xs-3 col-sm-2">
+        @Html.DisplayFor(model => model.Percent)%
+    </td>
     <td class="text-center col-xs-5 col-sm-8">
-        @foreach (var area in Model.Areas.GroupBy(a => a.StatusChanged))
-        {
-            <ul class="list-group list-unstyled">
-                <li class="list-group-item-heading">
-                    @area.First().StatusChanged.ToShortDateString()
-                </li>
-                <li class="list-group-item-text">
-                    @Html.Raw(String.Join(", ", area.OrderBy(p => p.AreaDesignation).Select(p => Html.ActionLink(p.AreaDesignation, "Edit", "Area", new { id = p.AreaId }, null).ToHtmlString()).ToArray()))
-                </li>
-            </ul>
-        }
+        @Html.DisplayFor(model => model.AreaStatuses)
     </td>
 </tr>
