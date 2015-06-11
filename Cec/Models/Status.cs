@@ -13,9 +13,10 @@ namespace Cec.Models
         public Guid StatusId { get; set; }
 
         [Required()]
-        [DataType(DataType.Text)]
         [StringLength(20)]
         public string Designation { get; set; }
+
+        public Int16 ListOrder { get; set; }
 
         public virtual ICollection<Area> Area { get; set; }
     }
