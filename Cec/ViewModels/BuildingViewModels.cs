@@ -177,7 +177,7 @@ namespace Cec.ViewModels
             this.PostalCode = building.PostalCode;
             this.AreaCount = building.Areas.Count;
             this.Statuses = new List<BuildingStatusViewModel>();
-            foreach (var status in building.Areas.Select(a => a.Status).Distinct().OrderBy(s => s.Designation))
+            foreach (var status in building.Areas.Select(a => a.Status).Distinct().OrderBy(s => s.ListOrder))
             {
                 this.Statuses.Add(new BuildingStatusViewModel(status, this.BuildingId));
             }

@@ -80,7 +80,7 @@ namespace Cec.ViewModels
             this.Building = building.Designation;
             this.AreaCount = building.Areas.Count;
             this.Statuses = new Dictionary<string, double>();
-            foreach (var status in building.Areas.Select(a => a.Status).Distinct())
+            foreach (var status in building.Areas.Select(a => a.Status).OrderBy(a => a.ListOrder).Distinct())
             {
                 var AreasWithStatusByBuilding = status.Area.Where(a => a.BuildingID == building.BuildingID).Count();
                 this.Statuses.Add(status.Designation, (100 * AreasWithStatusByBuilding) / this.AreaCount);

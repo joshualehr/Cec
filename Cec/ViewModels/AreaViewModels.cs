@@ -23,7 +23,7 @@ namespace Cec.ViewModels
         {
             var db = new ApplicationDbContext();
             var selectListItems = new List<SelectListItem>();
-            var models = db.Statuses.OrderBy(s => s.Designation);
+            var models = db.Statuses.OrderBy(s => s.ListOrder);
             foreach (var item in models)
             {
                 var model = new SelectListItem()
