@@ -1,25 +1,21 @@
-﻿using System;
+﻿using Cec.Helpers;
+using Cec.Models;
+using Cec.ViewModels;
+using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Cec.Models;
-using Cec.ViewModels;
-using System.Text;
-using Cec.Helpers;
 
 namespace Cec.Controllers
 {
+    [Authorize(Roles = "canAdminister")]
     public class BuildingController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: /Building/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Index(Guid? id)
         {
             if (id == null)
@@ -38,15 +34,13 @@ namespace Cec.Controllers
         }
 
         // POST: /Building/5
-        [HttpPost, ActionName("Index")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [HttpPost, ActionName("Index"), ValidateAntiForgeryToken]
         public ActionResult Index([Bind(Include = "ProjectId,ProjectDesignation,Buildings")] BuildingIndexViewModel buildingIndexViewModel)
         {
             var buildings = new List<BuildingIndexItemViewModel>();
             foreach (var building in buildingIndexViewModel.Buildings)
             {
-                if (building.Selected == true)
+                if (building.Selected)
                 {
                     buildings.Add(building);
                 }
@@ -61,7 +55,6 @@ namespace Cec.Controllers
         }
 
         // GET: /Building/Details/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -77,7 +70,6 @@ namespace Cec.Controllers
         }
 
         // GET: /Building/Create/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Create(Guid? id)
         {
             if (id == null)
@@ -90,9 +82,7 @@ namespace Cec.Controllers
         // POST: /Building/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ProjectId,ProjectDesignation,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingCreateViewModel building)
         {
             try
@@ -111,7 +101,6 @@ namespace Cec.Controllers
         }
 
         // GET: /Building/Edit/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -129,9 +118,7 @@ namespace Cec.Controllers
         // POST: /Building/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingEditViewModel building)
         {
             try
@@ -150,7 +137,6 @@ namespace Cec.Controllers
         }
 
         // GET: /Building/Copy/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Copy(Guid? id)
         {
             if (id == null)
@@ -168,9 +154,7 @@ namespace Cec.Controllers
         // POST: /Building/Copy/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingCopyViewModel building)
         {
             try
@@ -189,7 +173,6 @@ namespace Cec.Controllers
         }
 
         // GET: /Building/Delete/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -205,9 +188,7 @@ namespace Cec.Controllers
         }
 
         // POST: /Building/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation")] BuildingDeleteViewModel building)
         {
             try
@@ -235,18 +216,16 @@ namespace Cec.Controllers
         }
 
         // POST: /Building/BuildingsMaterial
-        [HttpPost, ActionName("BuildingsMaterial")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
-        public ActionResult DownloadData([Bind(Include = "ProjectId,ProjectDesignation,Buildings,Materials")] BuildingsMaterialViewModel buildingsMaterialViewModel)
+        [HttpPost, ActionName("BuildingsMaterial"), ValidateAntiForgeryToken]
+        public ActionResult DownloadData([Bind(Include = "ProjectId,Project,Buildings,Materials")] BuildingsMaterialViewModel buildingsMaterialViewModel)
         {
             try
             {
-                var model = new BuildingsMaterialCsvViewModel().List(buildingsMaterialViewModel);
-                if (model.Count() > 0)
+                var model = new BuildingsMaterialCsvViewModel(buildingsMaterialViewModel);
+                if (model.Materials.Count() > 0)
                 {
-                    var fileName = model.First().Project + "-Material Requisition-" + DateTime.Now.Year.ToString() + DateTime.Now.DayOfYear.ToString() + ".csv";
-                    return new CsvActionResult<BuildingsMaterialCsvViewModel>(model, fileName);
+                    var fileName = model.Project + "-Material Requisition-" + DateTime.Now.Year.ToString() + DateTime.Now.DayOfYear.ToString() + ".csv";
+                    return new CsvActionResult<BuildingsMaterialCsvItemViewModel>(model.Materials.ToList(), fileName);
                 }
                 else
                 {

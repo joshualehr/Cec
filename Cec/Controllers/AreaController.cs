@@ -10,22 +10,20 @@ using System.Web.Mvc;
 
 namespace Cec.Controllers
 {
+    [Authorize(Roles = "canAdminister")]
     public class AreaController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
         // GET: /Area/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Index(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var areas = new AreaIndexViewModel().ListByBuilding(id);
-            if (areas != null)
+            var areaIndexViewModel = new AreaIndexViewModel(id);
+            if (areaIndexViewModel.Areas != null)
             {
-                return View(areas);
+                return View(areaIndexViewModel);
             }
             else
             {
@@ -34,34 +32,27 @@ namespace Cec.Controllers
         }
 
         // POST: /Area/5
-        [HttpPost, ActionName("Index")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
-        public ActionResult Index(AreaIndexViewModel[] areas)
+        [HttpPost, ActionName("Index"), ValidateAntiForgeryToken]
+        public ActionResult Index([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,Building,Areas")] AreaIndexViewModel areaIndexViewModel)
         {
-            var areaList = new List<AreaIndexViewModel>();
-            var areasStr = new System.Text.StringBuilder();
-            foreach (var area in areas)
+            var areas = new List<AreaIndexItemViewModel>();
+            foreach (var area in areaIndexViewModel.Areas)
             {
-                if (area.Selected == true)
+                if (area.Selected)
                 {
-                    areaList.Add(area);
-                    areasStr.Append(area.Area);
-                    areasStr.Append("-");
+                    areas.Add(area);
                 }
             }
-            if (areaList.Count() < 1)
+            if (areas.Count() < 1)
             {
                 ModelState.AddModelError("noneSelected", "No areas selected. Please select at least one area.");
-                return View(areas.ToList());
+                return View(areaIndexViewModel);
             }
-            TempData["aivm"] = areaList;
-            TempData["areasString"] = areasStr.Remove(areasStr.Length - 1, 1).ToString();
+            TempData["areaIndexViewModel"] = areaIndexViewModel;
             return RedirectToAction("AreasMaterial");
         }
 
         // GET: /Area/Details/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -77,7 +68,6 @@ namespace Cec.Controllers
         }
 
         // GET: /Area/Create/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Create(Guid? id)
         {
             if (id == null)
@@ -90,9 +80,7 @@ namespace Cec.Controllers
         // POST: /Area/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaDesignation,Description,Address,City,State,PostalCode,StatusId,ModelId")] AreaCreateViewModel area)
         {
             try
@@ -111,7 +99,6 @@ namespace Cec.Controllers
         }
 
         // GET: /Area/Edit/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -130,9 +117,7 @@ namespace Cec.Controllers
         // POST: /Area/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,StatusId")] AreaEditViewModel area)
         {
             try
@@ -153,7 +138,6 @@ namespace Cec.Controllers
         }
 
         // GET: /Area/Copy/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Copy(Guid? id)
         {
             if (id == null)
@@ -171,9 +155,7 @@ namespace Cec.Controllers
         // POST: /Area/Copy/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId")] AreaCopyViewModel area)
         {
             try
@@ -192,7 +174,6 @@ namespace Cec.Controllers
         }
 
         // GET: /Area/Delete/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -208,9 +189,7 @@ namespace Cec.Controllers
         }
 
         // POST: /Area/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation")] AreaDeleteViewModel area)
         {
             try
@@ -228,51 +207,37 @@ namespace Cec.Controllers
         //GET: /Area/AreasMaterial
         public ActionResult AreasMaterial()
         {
-            var areaIndexViewModels = TempData["areaList"] as List<AreaIndexViewModel>;
-            var areasStr = TempData["areasString"];
-            if (areaIndexViewModels == null)
+            var areaIndexViewModel = TempData["areaIndexViewModel"] as AreaIndexViewModel;
+            if (areaIndexViewModel == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TempData["areasStr"] = areasStr;
-            return View(new AreasMaterialViewModel().ListByAreas(areaIndexViewModels));
+            return View(new AreasMaterialViewModel(areaIndexViewModel));
         }
 
         //POST: /Area/AreasMaterial
-        [HttpPost, ActionName("AreasMaterial")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
-        public ActionResult DownloadData(AreasMaterialViewModel[] areasMaterialViewModels)
+        [HttpPost, ActionName("AreasMaterial"), ValidateAntiForgeryToken]
+        public ActionResult DownloadData([Bind(Include = "ProjectId,Project,BuildingId,Building,Areas,Materials")] AreasMaterialViewModel areasMaterialViewModel)
         {
             try
             {
-                var lamcvm = new List<AreasMaterialCsvViewModel>();
-                var areasStr = TempData["areasStr"].ToString();
-                foreach (var item in areasMaterialViewModels)
+                var model = new AreasMaterialCsvViewModel(areasMaterialViewModel);
+                if (model.Materials.Count() > 0)
                 {
-                    if (item.Selected)
-                    {
-                        var amcvm = new AreasMaterialCsvViewModel(item);
-                        amcvm.Areas = areasStr;
-                        lamcvm.Add(amcvm);
-                    }
-                }
-                if (lamcvm.Count() > 0)
-                {
-                    var fileName = "Areas-" + areasStr + "-Material-" + DateTime.Now.Year.ToString() + DateTime.Now.DayOfYear.ToString() + ".csv";
-                    return new CsvActionResult<AreasMaterialCsvViewModel>(lamcvm, fileName);
+                    var fileName = "Areas-Material-" + DateTime.Now.Year.ToString() + DateTime.Now.DayOfYear.ToString() + ".csv";
+                    return new CsvActionResult<AreasMaterialCsvItemViewModel>(model.Materials.ToList(), fileName);
                 }
                 else
                 {
                     ModelState.AddModelError("", "No items selected. Please select items to download.");
-                    return View(areasMaterialViewModels.ToList());
+                    return View(areasMaterialViewModel);
                 }
             }
             catch (RetryLimitExceededException/* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to download at this time. Try again, and if the problem persists see your system administrator.");
-                return View(areasMaterialViewModels.ToList());
+                return View(areasMaterialViewModel);
             }
         }
 
@@ -280,6 +245,7 @@ namespace Cec.Controllers
         {
             if (disposing)
             {
+                var  db = new ApplicationDbContext();
                 db.Dispose();
             }
             base.Dispose(disposing);

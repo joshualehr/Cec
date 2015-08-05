@@ -44,6 +44,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="BCrypt.Net, Version=0.1.4141.31969, Culture=neutral, PublicKeyToken=f3bc8f8c31beeb49, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt.Net.0.1.0\lib\net35\BCrypt.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -198,9 +202,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
-    <Compile Include="Areas\Admin\Controllers\RoleController.cs" />
-    <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AreaController.cs" />
     <Compile Include="Controllers\AreaMaterialController.cs" />
@@ -253,7 +254,19 @@
     <Compile Include="Migrations\201506110040409_007_addedListOrderToStatus.Designer.cs">
       <DependentUpon>201506110040409_007_addedListOrderToStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508031931557__008.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Migrations\201508031931557__008.Designer.cs">
+      <DependentUpon>201508031931557__008.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AspNetRole.cs" />
+    <Compile Include="Models\AspNetUser.cs" />
+    <Compile Include="Models\AspNetUserClaim.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\AspNetUserLogin.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Area.cs" />
@@ -286,21 +299,15 @@
     <Content Include="Content\Styles\bootstrap.css" />
     <Content Include="Content\Images\CEC Logo.png" />
     <Content Include="Content\Styles\PagedList.css" />
-    <Content Include="Content\Styles\Admin.css" />
     <Content Include="favicon.ico" />
     <Content Include="Content\Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Styles\Site.css" />
-    <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Content\Fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Content\Fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\Fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\Fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Admin\Views\User\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Role\Index.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -479,8 +486,8 @@
     <Content Include="Views\Model\Copy.cshtml" />
     <Content Include="Views\Material\Copy.cshtml" />
     <Content Include="Views\AreasMaterial.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\AreaIndexViewModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\AreasMaterialViewModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\AreaIndexItemViewModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\AreasMaterialItemViewModel.cshtml" />
     <Content Include="Views\Area\AreasMaterial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ModelMaterialCreateItemViewModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ModelIndexItemViewModel.cshtml" />
@@ -496,7 +503,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\" />
     <Folder Include="Content\Documents\" />
   </ItemGroup>
   <ItemGroup>
@@ -523,6 +530,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506110040409_007_addedListOrderToStatus.resx">
       <DependentUpon>201506110040409_007_addedListOrderToStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508031931557__008.resx">
+      <DependentUpon>201508031931557__008.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

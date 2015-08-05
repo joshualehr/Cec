@@ -47,47 +47,48 @@ namespace Cec.ViewModels
         public string Project { get; set; }
         public Guid BuildingId { get; set; }
         public string Building { get; set; }
-        public Guid AreaId { get; set; }
-        public string Area { get; set; }
-        public bool Selected { get; set; }
-
+        public ICollection<AreaIndexItemViewModel> Areas { get; set; }
 
         //Constructors
         public AreaIndexViewModel()
         {
-
+            this.Areas = new List<AreaIndexItemViewModel>();
         }
 
-        public AreaIndexViewModel(Area area)
+        public AreaIndexViewModel(Guid buildingId)
         {
-            this.ProjectId = area.Building.ProjectID;
-            this.Project = area.Building.Project.Designation;
-            this.BuildingId = area.BuildingID;
-            this.Building = area.Building.Designation;
-            this.AreaId = area.AreaID;
-            this.Area = area.Designation;
-        }
+            var buildingData = db.Buildings.Find(buildingId);
+            this.ProjectId = buildingData.ProjectID;
+            this.Project = buildingData.Project.Designation;
+            this.BuildingId = buildingData.BuildingID;
+            this.Building = buildingData.Designation;
+            this.Areas = new List<AreaIndexItemViewModel>();
 
-        //Methods
-        public List<AreaIndexViewModel> ListByBuilding(Guid buildingId)
+            foreach (var area in buildingData.Areas.OrderBy(a => a.Designation))
+            {
+                this.Areas.Add(new AreaIndexItemViewModel(area.AreaID));
+            }
+        }
+    }
+
+    public class AreaIndexItemViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        //Public Properties
+        public Guid AreaId { get; set; }
+        public string Area { get; set; }
+        public bool Selected { get; set; }
+
+        //Constructors
+        public AreaIndexItemViewModel() { }
+
+        public AreaIndexItemViewModel(Guid areaId)
         {
-            var areas = db.Areas.Where(a => a.BuildingID == buildingId)
-                                .OrderBy(a => a.Designation)
-                                .ToList();
-            if (areas.Count() > 0)
-            {
-                var areaIndexViewModels = new List<AreaIndexViewModel>();
-                foreach (var item in areas)
-                {
-                    var areaIndexViewModel = new AreaIndexViewModel(item);
-                    areaIndexViewModels.Add(areaIndexViewModel);
-                }
-                return areaIndexViewModels;
-            }
-            else
-            {
-                return null;
-            }
+            var areaData = db.Areas.Find(areaId);
+            this.AreaId = areaData.AreaID;
+            this.Area = areaData.Designation;
         }
     }
 
@@ -565,106 +566,117 @@ namespace Cec.ViewModels
         private ApplicationDbContext db = new ApplicationDbContext();
 
         //Public Properties
-        public bool Selected { get; set; }
-
         public Guid ProjectId { get; set; }
-
         public string Project { get; set; }
-
         public Guid BuildingId { get; set; }
-
         public string Building { get; set; }
-
-        public Guid AreaId { get; set; }
-
-        public string Area { get; set; }
-
-        [Display(Name = "Image")]
-        public string ImagePath { get; set; }
-
-        public Guid MaterialId { get; set; }
-
-        [Display(Name = "Material")]
-        public string Material { get; set; }
-
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F2}", HtmlEncode = false)]
-        public double Total { get; set; }
-
-        [Display(Name = "Unit of Measure", ShortName = "U/M")]
-        public string UnitOfMeasure { get; set; }
+        public IDictionary<Guid, string> Areas { get; set; }
+        public ICollection<AreasMaterialItemViewModel> Materials { get; set; }
 
         //Constructors
         public AreasMaterialViewModel()
         {
-
+            this.Materials = new List<AreasMaterialItemViewModel>();
         }
 
-        public AreasMaterialViewModel(AreaIndexViewModel area)
+        public AreasMaterialViewModel(AreaIndexViewModel aivm)
         {
-            this.ProjectId = area.ProjectId;
-            this.Project = area.Project;
-            this.BuildingId = area.BuildingId;
-            this.Building = area.Building;
-            this.AreaId = area.AreaId;
-            this.Area = area.Area;
-        }
+            this.ProjectId = aivm.ProjectId;
+            this.Project = aivm.Project;
+            this.BuildingId = aivm.BuildingId;
+            this.Building = aivm.Building;
+            this.Areas = new Dictionary<Guid, string>();
+            this.Materials = new List<AreasMaterialItemViewModel>();
 
-        //Methods
-        public List<AreasMaterialViewModel> ListByAreas(List<AreaIndexViewModel> areas)
-        {
-            var areasMaterialViewModels = new List<AreasMaterialViewModel>();
             var areaMaterials = new List<AreaMaterial>();
-            foreach (var area in areas)
+            foreach (var area in aivm.Areas)
             {
-                areaMaterials.AddRange(db.AreaMaterials.Include(a => a.Material)
-                                                       .Include(a => a.Material.UnitOfMeasure)
-                                                       .Where(a => a.AreaID == area.AreaId)
-                                                       .OrderBy(a => a.Material.Designation));
-            }
-            var materials = areaMaterials.GroupBy(m => m.MaterialID);
-            foreach (var material in materials)
-            {
-                var areasMaterialViewModel = new AreasMaterialViewModel()
+                if (area.Selected)
                 {
-                    ProjectId = material.First().Area.Building.ProjectID,
-                    Project = material.First().Area.Building.Project.Designation,
-                    BuildingId = material.First().Area.BuildingID,
-                    Building = material.First().Area.Building.Designation,
-                    AreaId = material.First().AreaID,
-                    Area = material.First().Area.Designation,
-                    MaterialId = material.First().MaterialID,
-                    Material = material.First().Material.Designation,
-                    ImagePath = material.First().Material.ImagePath,
-                    UnitOfMeasure = material.First().Material.UnitOfMeasure.Designation,
-                    Total = material.Sum(i => i.Quantity)
-                };
-                areasMaterialViewModels.Add(areasMaterialViewModel);
+                    this.Areas.Add(area.AreaId, area.Area);
+
+                    areaMaterials.AddRange(db.AreaMaterials.Include(a => a.Material)
+                                                           .Include(a => a.Material.UnitOfMeasure)
+                                                           .Where(a => a.AreaID == area.AreaId)
+                                                           .OrderBy(a => a.Material.Designation));
+                }
             }
-            return areasMaterialViewModels;
+
+            foreach (var material in areaMaterials.GroupBy(m => m.MaterialID))
+            {
+                this.Materials.Add(new AreasMaterialItemViewModel(material.First(), material.Sum(t => t.Quantity)));
+            }
+        }
+    }
+
+    public class AreasMaterialItemViewModel
+    {
+        //Private Properties
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        //Public Properties
+        public bool Selected { get; set; }
+        [Display(Name = "Image")]
+        public string ImagePath { get; set; }
+        public Guid MaterialId { get; set; }
+        public string Material { get; set; }
+        [DisplayFormat(DataFormatString = "{0:F2}", HtmlEncode = false)]
+        public double Total { get; set; }
+        [Display(Name = "Unit of Measure", ShortName = "U/M")]
+        public string UnitOfMeasure { get; set; }
+
+        //Constructors
+        public AreasMaterialItemViewModel() { }
+
+        public AreasMaterialItemViewModel(AreaMaterial areaMaterial, double totalQuantity)
+        {
+            this.ImagePath = areaMaterial.Material.ImagePath;
+            this.MaterialId = areaMaterial.MaterialID;
+            this.Material = areaMaterial.Material.Designation;
+            this.Total = totalQuantity;
+            this.UnitOfMeasure = areaMaterial.Material.UnitOfMeasure.Designation;
         }
     }
 
     public class AreasMaterialCsvViewModel
     {
         //Public Properties
-        public string Areas { get; set; }
+        public ICollection<AreasMaterialCsvItemViewModel> Materials { get; set; }
+
+        //Constructors
+        public AreasMaterialCsvViewModel()
+        {
+            this.Materials = new List<AreasMaterialCsvItemViewModel>();
+        }
+
+        public AreasMaterialCsvViewModel(AreasMaterialViewModel amvm)
+        {
+            this.Materials = new List<AreasMaterialCsvItemViewModel>();
+
+            foreach (var material in amvm.Materials)
+            {
+                this.Materials.Add(new AreasMaterialCsvItemViewModel(material));
+            }
+        }
+    }
+
+    public class AreasMaterialCsvItemViewModel
+    {
+        //Public Properties
         public string Material { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F2}", HtmlEncode = false)]
+        [DisplayFormat(DataFormatString = "{0:F2}", HtmlEncode = false)]
         public double Total { get; set; }
         [Display(Name = "U/M")]
         public string UnitOfMeasure { get; set; }
 
         //Constructors
-        public AreasMaterialCsvViewModel()
-        {
+        public AreasMaterialCsvItemViewModel() { }
 
-        }
-
-        public AreasMaterialCsvViewModel(AreasMaterialViewModel areasMaterialViewModel)
+        public AreasMaterialCsvItemViewModel(AreasMaterialItemViewModel amivm)
         {
-            this.Material = areasMaterialViewModel.Material;
-            this.Total = areasMaterialViewModel.Total;
-            this.UnitOfMeasure = areasMaterialViewModel.UnitOfMeasure;
+            this.Material = amivm.Material;
+            this.Total = amivm.Total;
+            this.UnitOfMeasure = amivm.UnitOfMeasure;
         }
     }
 
@@ -673,10 +685,7 @@ namespace Cec.ViewModels
         public IGrouping<string, Area> areaGroup { get; set; }
 
         //Constructors
-        public AreaStatusViewModel()
-        {
-            
-        }
+        public AreaStatusViewModel() { }
 
         public AreaStatusViewModel(IGrouping<string, Area> group)
         {

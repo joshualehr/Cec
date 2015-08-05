@@ -1,0 +1,13 @@
+﻿@model Cec.ViewModels.ProjectStatusViewModel
+
+<div class="col-xs-6 col-sm-4 col-md-3" style="height: 200px">
+    <div class="list-group text-center">
+        <a href="@Url.Action("Details", "Building", new { id = Model.BuildingId })" class="list-group-item list-group-item-danger">
+            <h4 class="list-group-item-heading">Building @Model.Building</h4>
+            @foreach (var status in Model.Statuses)
+            {
+                <p class="list-group-item-text text-primary">@status.Key @status.Value%</p>
+            }
+        </a>
+    </div>
+</div>

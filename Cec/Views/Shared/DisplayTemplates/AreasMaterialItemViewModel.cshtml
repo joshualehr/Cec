@@ -1,4 +1,4 @@
-﻿@model Cec.ViewModels.AreasMaterialViewModel
+﻿@model Cec.ViewModels.AreasMaterialItemViewModel
 <tr class="row">
     <td class="col-xs-1 text-left">
         @Html.CheckBox("Selected")
@@ -8,12 +8,6 @@
     </td>
     <td class="col-xs-6 text-center">
         @Html.ActionLink(Model.Material, "Details", "Material", new { id = Model.MaterialId }, null)
-        @Html.HiddenFor(model => model.ProjectId)
-        @Html.HiddenFor(model => model.Project)
-        @Html.HiddenFor(model => model.BuildingId)
-        @Html.HiddenFor(model => model.Building)
-        @Html.HiddenFor(model => model.AreaId)
-        @Html.HiddenFor(model => model.Area)
         @Html.HiddenFor(model => model.MaterialId)
         @Html.HiddenFor(model => model.Material)
         @Html.HiddenFor(model => model.ImagePath)

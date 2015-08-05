@@ -44,15 +44,13 @@ namespace Cec.ViewModels
 
         //Public Properties
         public Guid ProjectId { get; set; }
-
         public string ProjectDesignation { get; set; }
-
         public ICollection<BuildingIndexItemViewModel> Buildings { get; set; }
 
         //Constructors
         public BuildingIndexViewModel()
-        { 
-            
+        {
+            this.Buildings = new List<BuildingIndexItemViewModel>();
         }
 
         public BuildingIndexViewModel(Guid projectId)
@@ -61,9 +59,10 @@ namespace Cec.ViewModels
             this.ProjectId = projectData.ProjectID;
             this.ProjectDesignation = projectData.Designation;
             this.Buildings = new List<BuildingIndexItemViewModel>();
-            foreach (var item in projectData.Buildings.OrderBy(b => b.Designation))
+
+            foreach (var building in projectData.Buildings.OrderBy(b => b.Designation))
             {
-                this.Buildings.Add(new BuildingIndexItemViewModel(item.BuildingID));
+                this.Buildings.Add(new BuildingIndexItemViewModel(building.BuildingID));
             }
         }
     }
@@ -467,31 +466,42 @@ namespace Cec.ViewModels
         private ApplicationDbContext db = new ApplicationDbContext();
 
         //Public Properties
-
         public Guid ProjectId { get; set; }
-
-        public string ProjectDesignation { get; set; }
-
-        public IDictionary<Guid, string > Buildings { get; set; }
-
+        public string Project { get; set; }
+        public IDictionary<Guid, string> Buildings { get; set; }
         public ICollection<BuildingsMaterialItemViewModel> Materials { get; set; }
 
         //Constructors
-        public BuildingsMaterialViewModel() { }
+        public BuildingsMaterialViewModel()
+        {
+            this.Materials = new List<BuildingsMaterialItemViewModel>();
+        }
 
         public BuildingsMaterialViewModel(BuildingIndexViewModel bivm)
         {
             this.ProjectId = bivm.ProjectId;
-            this.ProjectDesignation = bivm.ProjectDesignation;
+            this.Project = bivm.ProjectDesignation;
             this.Buildings = new Dictionary<Guid, string>();
-            foreach (var item in bivm.Buildings)
+            this.Materials = new List<BuildingsMaterialItemViewModel>();
+
+            var buildingsMaterial = new List<AreaMaterial>();
+            foreach (var building in bivm.Buildings)
             {
-                if (item.Selected)
+                if (building.Selected)
                 {
-                    this.Buildings.Add(item.BuildingId, item.Building);
+                    this.Buildings.Add(building.BuildingId, building.Building);
+
+                    buildingsMaterial.AddRange(db.AreaMaterials.Include(a => a.Material)
+                                                               .Include(a => a.Material.UnitOfMeasure)
+                                                               .Where(a => a.Area.BuildingID == building.BuildingId)
+                                                               .OrderBy(a => a.Material.Designation));
                 }
             }
-            this.Materials = new BuildingsMaterialItemViewModel().ListByBuildings(this.Buildings);
+
+            foreach (var material in buildingsMaterial.GroupBy(m => m.MaterialID))
+            {
+                this.Materials.Add(new BuildingsMaterialItemViewModel(material.First(), material.Sum(t => t.Quantity)));
+            }
         }
     }
 
@@ -502,57 +512,26 @@ namespace Cec.ViewModels
 
         //Public Properties
         public bool Selected { get; set; }
-
         [Display(Name = "Image")]
         public string ImagePath { get; set; }
-
         public Guid MaterialId { get; set; }
-
         [Display(Name = "Material")]
-        public string MaterialDesignation { get; set; }
-
+        public string Material { get; set; }
         [DisplayFormat(DataFormatString = "{0:F2}", HtmlEncode = false)]
         public double Total { get; set; }
-
         [Display(Name = "Unit of Measure", ShortName = "U/M")]
         public string UnitOfMeasure { get; set; }
 
         //Constructors
         public BuildingsMaterialItemViewModel() { }
 
-        //Methods
-        public ICollection<BuildingsMaterialItemViewModel> ListByBuildings(IDictionary<Guid, string> buildings)
+        public BuildingsMaterialItemViewModel(AreaMaterial areaMaterial, double totalQuantity)
         {
-            if (buildings != null)
-            {
-                var buildingsMaterialList = new List<BuildingsMaterialItemViewModel>();
-                var areaMaterialList = new List<AreaMaterial>();
-                foreach (var building in buildings)
-                {
-                    areaMaterialList.AddRange(db.AreaMaterials.Include(a => a.Material)
-                                                              .Include(a => a.Material.UnitOfMeasure)
-                                                              .Where(a => a.Area.BuildingID == building.Key)
-                                                              .OrderBy(a => a.Material.Designation));
-                }
-                var materials = areaMaterialList.GroupBy(m => m.MaterialID);
-                foreach (var item in materials)
-                {
-                    var m = new BuildingsMaterialItemViewModel()
-                    {
-                        MaterialId = item.First().MaterialID,
-                        MaterialDesignation = item.First().Material.Designation,
-                        ImagePath = item.First().Material.ImagePath,
-                        Total = item.Sum(i => i.Quantity),
-                        UnitOfMeasure = item.First().Material.UnitOfMeasure.Designation
-                    };
-                    buildingsMaterialList.Add(m);
-                }
-                return buildingsMaterialList;
-            }
-            else
-            {
-                return null;
-            }
+            this.ImagePath = areaMaterial.Material.ImagePath;
+            this.MaterialId = areaMaterial.MaterialID;
+            this.Material = areaMaterial.Material.Designation;
+            this.Total = totalQuantity;
+            this.UnitOfMeasure = areaMaterial.Material.UnitOfMeasure.Designation;
         }
     }
 
@@ -560,42 +539,45 @@ namespace Cec.ViewModels
     {
         //Public Properties
         public string Project { get; set; }
-
-        public string Material { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:F2}", HtmlEncode = false)]
-        public double Total { get; set; }
-
-        [Display(Name = "U/M")]
-        public string UnitOfMeasure { get; set; }
+        public string Buildings { get; set; }
+        public ICollection<BuildingsMaterialCsvItemViewModel> Materials { get; set; }
 
         //Constructors
         public BuildingsMaterialCsvViewModel()
         {
-
+            this.Materials = new List<BuildingsMaterialCsvItemViewModel>();
         }
 
-        public BuildingsMaterialCsvViewModel(BuildingsMaterialItemViewModel buildingsMaterialItemViewModel)
+        public BuildingsMaterialCsvViewModel(BuildingsMaterialViewModel bmvm)
         {
-            this.Material = buildingsMaterialItemViewModel.MaterialDesignation;
-            this.Total = buildingsMaterialItemViewModel.Total;
-            this.UnitOfMeasure = buildingsMaterialItemViewModel.UnitOfMeasure;
-        }
+            this.Project = bmvm.Project;
+            this.Buildings = String.Join(", ", bmvm.Buildings.Values);
+            this.Materials = new List<BuildingsMaterialCsvItemViewModel>();
 
-        //Methods
-        public List<BuildingsMaterialCsvViewModel> List(BuildingsMaterialViewModel buildingsMaterialViewModel)
-        {
-            var model = new List<BuildingsMaterialCsvViewModel>();
-            foreach (var item in buildingsMaterialViewModel.Materials)
+            foreach (var material in bmvm.Materials)
             {
-                if (item.Selected)
-                {
-                    var bmcvm = new BuildingsMaterialCsvViewModel(item);
-                    bmcvm.Project = buildingsMaterialViewModel.ProjectDesignation;
-                    model.Add(bmcvm);
-                }
+                this.Materials.Add(new BuildingsMaterialCsvItemViewModel(material));
             }
-            return model;
+        }
+    }
+
+    public class BuildingsMaterialCsvItemViewModel
+    {
+        //Public Properties
+        public string Material { get; set; }
+        [DisplayFormat(DataFormatString = "{0:F2}", HtmlEncode = false)]
+        public double Total { get; set; }
+        [Display(Name = "U/M")]
+        public string UnitOfMeasure { get; set; }
+
+        //Constructors
+        public BuildingsMaterialCsvItemViewModel() { }
+
+        public BuildingsMaterialCsvItemViewModel(BuildingsMaterialItemViewModel bmivm)
+        {
+            this.Material = bmivm.Material;
+            this.Total = bmivm.Total;
+            this.UnitOfMeasure = bmivm.UnitOfMeasure;
         }
     }
 }

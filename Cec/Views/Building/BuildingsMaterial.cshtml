@@ -19,7 +19,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.ProjectId)
-    @Html.HiddenFor(model => model.ProjectDesignation)
+    @Html.HiddenFor(model => model.Project)
     @Html.HiddenFor(model => model.Buildings)
     @Html.ValidationSummary()
 
@@ -52,7 +52,7 @@
 }
 <div class="breadcrumb text-center">
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(Model.ProjectDesignation + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink(Model.Project + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
     @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId })
 </div>
 

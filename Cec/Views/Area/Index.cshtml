@@ -1,20 +1,19 @@
-﻿@model IEnumerable<Cec.ViewModels.AreaIndexViewModel>
+﻿@model Cec.ViewModels.AreaIndexViewModel
 
 @{
     ViewBag.Title = "Areas";
-    var amvm = Model.First();
 }
 
 <h2>Areas</h2>
 <div class="row">
     <div class="text-left col-xs-6 col-sm-3">
         <div class="btn-group btn-group-vertical">
-            @Html.ActionLink("Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Building " + Model.Building, "Details", "Building", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
         </div>
     </div>
     <div class="text-right col-xs-6 col-sm-3 col-sm-push-6">
         <div class="btn-group btn-group-vertical">
-            @Html.ActionLink("New Area", "Create", new { id = amvm.BuildingId }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("New Area", "Create", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
         </div>
     </div>
 </div>
@@ -24,6 +23,10 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
+    @Html.HiddenFor(x => x.ProjectId)
+    @Html.HiddenFor(x => x.Project)
+    @Html.HiddenFor(x => x.BuildingId)
+    @Html.HiddenFor(x => x.Building)
 
     <table class="table table-hover">
         <tr class="row">
@@ -31,13 +34,13 @@
                 <input type="checkbox" onclick="checkAll(this)" /> All
             </th>
             <th class="col-xs-2 col-lg-3 text-center">
-                @Html.DisplayNameFor(model => model.Area)
+                @Html.DisplayName("Area")
             </th>
             <th class="col-xs-9 col-lg-6 text-center">
                 Actions
             </th>
         </tr>
-        @Html.DisplayFor(model => model)
+        @Html.DisplayFor(model => model.Areas)
         <tr class="row">
             <td colspan="2" class="col-xs-6 text-center">
                 <input type="submit" value="Calculate Material" class="btn btn-primary" />
@@ -50,9 +53,9 @@
 }
 <div class="breadcrumb text-center">
     @Html.ActionLink("Projects", "Index", "Project") >
-    @Html.ActionLink(amvm.Project + " Project", "Details", "Project", new { id = amvm.ProjectId }, null) >
-    @Html.ActionLink("Buildings", "Index", "Building", new { id = amvm.ProjectId }, null) >
-    @Html.ActionLink("Building " + amvm.Building, "Details", "Building", new { id = amvm.BuildingId }, null)
+    @Html.ActionLink(Model.Project + " Project", "Details", "Project", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Buildings", "Index", "Building", new { id = Model.ProjectId }, null) >
+    @Html.ActionLink("Building " + Model.Building, "Details", "Building", new { id = Model.BuildingId }, null)
 </div>
 
 @section scripts {

@@ -42,6 +42,10 @@ namespace Cec.Models
 
         public virtual DbSet<Area> Areas { get; set; }
         public virtual DbSet<AreaMaterial> AreaMaterials { get; set; }
+        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<AspNetUserClaim> AspNetClaims { get; set; }
+        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<Building> Buildings { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Document> Documents { get; set; }

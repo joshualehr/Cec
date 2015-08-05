@@ -4,12 +4,12 @@
         @Html.CheckBoxFor(model => model.Selected)
     </td>
     <td class="col-xs-1 text-center">
-        <img title="@Model.MaterialDesignation" alt="@Model.MaterialDesignation" src="@Model.ImagePath" class="img-responsive" />
+        <img title="@Model.Material" alt="@Model.Material" src="@Model.ImagePath" class="img-responsive" />
     </td>
     <td class="col-xs-6 text-center">
-        @Html.ActionLink(Model.MaterialDesignation, "Details", "Material", new { id = Model.MaterialId }, null)
+        @Html.ActionLink(Model.Material, "Details", "Material", new { id = Model.MaterialId }, null)
         @Html.HiddenFor(model => model.MaterialId)
-        @Html.HiddenFor(model => model.MaterialDesignation)
+        @Html.HiddenFor(model => model.Material)
         @Html.HiddenFor(model => model.ImagePath)
         @Html.HiddenFor(model => model.Total)
         @Html.HiddenFor(model => model.UnitOfMeasure)
