@@ -641,7 +641,7 @@ namespace Cec.ViewModels
     public class AreasMaterialCsvViewModel
     {
         //Public Properties
-        public ICollection<AreasMaterialCsvItemViewModel> Materials { get; set; }
+        public IList<AreasMaterialCsvItemViewModel> Materials { get; set; }
 
         //Constructors
         public AreasMaterialCsvViewModel()
@@ -653,7 +653,7 @@ namespace Cec.ViewModels
         {
             this.Materials = new List<AreasMaterialCsvItemViewModel>();
 
-            foreach (var material in amvm.Materials)
+            foreach (var material in amvm.Materials.Where(m => m.Selected))
             {
                 this.Materials.Add(new AreasMaterialCsvItemViewModel(material));
             }

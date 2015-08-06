@@ -212,7 +212,10 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-           return View(new BuildingsMaterialViewModel(buildingIndexViewModel));
+            else
+            {
+                return View(new BuildingsMaterialViewModel(buildingIndexViewModel));
+            }
         }
 
         // POST: /Building/BuildingsMaterial
@@ -221,11 +224,10 @@ namespace Cec.Controllers
         {
             try
             {
-                var model = new BuildingsMaterialCsvViewModel(buildingsMaterialViewModel);
-                if (model.Materials.Count() > 0)
+                if (buildingsMaterialViewModel.Materials.Any(m => m.Selected))
                 {
-                    var fileName = model.Project + "-Material Requisition-" + DateTime.Now.Year.ToString() + DateTime.Now.DayOfYear.ToString() + ".csv";
-                    return new CsvActionResult<BuildingsMaterialCsvItemViewModel>(model.Materials.ToList(), fileName);
+                    var fileName = buildingsMaterialViewModel.Project + "-Material Requisition-" + DateTime.Now.Year.ToString() + DateTime.Now.DayOfYear.ToString() + ".csv";
+                    return new CsvActionResult<BuildingsMaterialCsvItemViewModel>(new BuildingsMaterialCsvViewModel(buildingsMaterialViewModel).Materials, fileName);
                 }
                 else
                 {

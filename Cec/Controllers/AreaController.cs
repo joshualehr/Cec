@@ -35,21 +35,16 @@ namespace Cec.Controllers
         [HttpPost, ActionName("Index"), ValidateAntiForgeryToken]
         public ActionResult Index([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,Building,Areas")] AreaIndexViewModel areaIndexViewModel)
         {
-            var areas = new List<AreaIndexItemViewModel>();
-            foreach (var area in areaIndexViewModel.Areas)
+            if (areaIndexViewModel.Areas.Any(a => a.Selected))
             {
-                if (area.Selected)
-                {
-                    areas.Add(area);
-                }
+                TempData["areaIndexViewModel"] = areaIndexViewModel;
+                return RedirectToAction("AreasMaterial");
             }
-            if (areas.Count() < 1)
+            else
             {
                 ModelState.AddModelError("noneSelected", "No areas selected. Please select at least one area.");
                 return View(areaIndexViewModel);
             }
-            TempData["areaIndexViewModel"] = areaIndexViewModel;
-            return RedirectToAction("AreasMaterial");
         }
 
         // GET: /Area/Details/5
@@ -212,7 +207,10 @@ namespace Cec.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            return View(new AreasMaterialViewModel(areaIndexViewModel));
+            else
+            {
+                return View(new AreasMaterialViewModel(areaIndexViewModel));
+            }
         }
 
         //POST: /Area/AreasMaterial
@@ -221,11 +219,10 @@ namespace Cec.Controllers
         {
             try
             {
-                var model = new AreasMaterialCsvViewModel(areasMaterialViewModel);
-                if (model.Materials.Count() > 0)
+                if (areasMaterialViewModel.Materials.Any(m => m.Selected))
                 {
                     var fileName = "Areas-Material-" + DateTime.Now.Year.ToString() + DateTime.Now.DayOfYear.ToString() + ".csv";
-                    return new CsvActionResult<AreasMaterialCsvItemViewModel>(model.Materials.ToList(), fileName);
+                    return new CsvActionResult<AreasMaterialCsvItemViewModel>(new AreasMaterialCsvViewModel(areasMaterialViewModel).Materials, fileName);
                 }
                 else
                 {

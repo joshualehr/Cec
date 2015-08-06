@@ -539,8 +539,7 @@ namespace Cec.ViewModels
     {
         //Public Properties
         public string Project { get; set; }
-        public string Buildings { get; set; }
-        public ICollection<BuildingsMaterialCsvItemViewModel> Materials { get; set; }
+        public IList<BuildingsMaterialCsvItemViewModel> Materials { get; set; }
 
         //Constructors
         public BuildingsMaterialCsvViewModel()
@@ -551,10 +550,9 @@ namespace Cec.ViewModels
         public BuildingsMaterialCsvViewModel(BuildingsMaterialViewModel bmvm)
         {
             this.Project = bmvm.Project;
-            this.Buildings = String.Join(", ", bmvm.Buildings.Values);
             this.Materials = new List<BuildingsMaterialCsvItemViewModel>();
 
-            foreach (var material in bmvm.Materials)
+            foreach (var material in bmvm.Materials.Where(m => m.Selected))
             {
                 this.Materials.Add(new BuildingsMaterialCsvItemViewModel(material));
             }

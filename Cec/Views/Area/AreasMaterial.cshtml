@@ -19,11 +19,19 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
-    @Html.HiddenFor(x => x.ProjectId)
-    @Html.HiddenFor(x => x.Project)
-    @Html.HiddenFor(x => x.BuildingId)
-    @Html.HiddenFor(x => x.Building)
-
+    @Html.HiddenFor(model => model.ProjectId)
+    @Html.HiddenFor(model => model.Project)
+    @Html.HiddenFor(model => model.BuildingId)
+    @Html.HiddenFor(model => model.Building)
+    
+    int i = 0;
+    foreach (var item in Model.Areas)
+    {
+        @Html.Hidden("Areas[" + i + "].Key", item.Key);
+        @Html.Hidden("Areas[" + i + "].Value", item.Value);
+        i++;
+    }
+    
     <div class="btn-group">
         @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
         <input type="submit" value="Download Data" class="btn btn-primary" />

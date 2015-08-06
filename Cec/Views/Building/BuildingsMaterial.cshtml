@@ -18,11 +18,18 @@
 @using (Html.BeginForm("BuildingsMaterial", "Building", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
     @Html.HiddenFor(model => model.ProjectId)
     @Html.HiddenFor(model => model.Project)
-    @Html.HiddenFor(model => model.Buildings)
-    @Html.ValidationSummary()
 
+    int i = 0;
+    foreach (var item in Model.Buildings)
+    {
+        @Html.Hidden("Buildings[" + i + "].Key", item.Key);
+        @Html.Hidden("Buildings[" + i + "].Value", item.Value);
+        i++;
+    }
+    
     <div class="btn-group">
         @Html.ActionLink("Buildings", "Index", new { id = Model.ProjectId }, new { @class = "btn btn-default" })
         <input type="submit" value="Download Data" class="btn btn-primary" />
