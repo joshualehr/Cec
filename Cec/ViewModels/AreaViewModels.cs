@@ -363,7 +363,7 @@ namespace Cec.ViewModels
         }
 
         //Methods
-        public Guid Edit(Guid? originalModel)
+        public Guid Edit(AreaEditViewModel originalModel)
         {
             var area = new Area()
             {
@@ -376,11 +376,11 @@ namespace Cec.ViewModels
                 ModelID = this.ModelId, 
                 PostalCode = this.PostalCode, 
                 State = this.State, 
-                StatusId = this.StatusId, 
-                StatusChanged = DateTime.Now
+                StatusId = this.StatusId,
+                StatusChanged = (originalModel.StatusId != this.StatusId) ? DateTime.Now : originalModel.StatusChanged
             };
             db.Entry(area).State = EntityState.Modified;
-            if (originalModel != this.ModelId)
+            if (originalModel.ModelId != this.ModelId)
             {
                 var areaMaterials = db.AreaMaterials.Where(am => am.AreaID == this.AreaId);
                 foreach (var item in areaMaterials)

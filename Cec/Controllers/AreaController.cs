@@ -105,7 +105,7 @@ namespace Cec.Controllers
             {
                 return HttpNotFound();
             }
-            Session["OriginalModelId"] = area.ModelId;
+            TempData["OriginalArea"] = area;
             return View(area);
         }
 
@@ -119,8 +119,8 @@ namespace Cec.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var originalModelId = (Guid?)Session["OriginalModelId"];
-                    return RedirectToAction("Details", new { id = area.Edit(originalModelId ?? null) });
+                    var originalArea = (AreaEditViewModel)TempData["OriginalArea"];
+                    return RedirectToAction("Details", new { id = area.Edit(originalArea) });
                 }
 
             }
