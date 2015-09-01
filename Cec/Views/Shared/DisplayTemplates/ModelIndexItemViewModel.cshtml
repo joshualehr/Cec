@@ -3,7 +3,7 @@
     <td class="col-xs-3 col-lg-6 text-left">
         @Html.ActionLink(Model.ModelName, "Details", new { id = Model.ModelId })
     </td>
-    <td class="col-xs-9 col-lg-6 text-center">
+    <td class="col-xs-9 col-lg-6 text-right">
         <div class="hidden-xs">
             <div class="btn-group">
                 @Html.ActionLink("Material", "Index", "ModelMaterial", new { id = Model.ModelId }, new { @class = "btn btn-danger" })

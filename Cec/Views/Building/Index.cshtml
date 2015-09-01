@@ -28,22 +28,22 @@
 
     <table class="table table-hover">
         <tr class="row">
-            <th class="col-xs-1 col-lg-3 text-center">
+            <th class="col-xs-1 col-lg-3 text-left">
                 <input type="checkbox" onclick="checkAll(this)" /> All
             </th>
             <th class="col-xs-2 col-lg-3 text-center">
                 Building
             </th>
-            <th class="col-xs-9 col-lg-6 text-center">
+            <th class="col-xs-9 col-lg-6 text-right">
                 Actions
             </th>
         </tr>
         @Html.DisplayFor(model => model.Buildings)
         <tr class="row">
-            <td colspan="2" class="col-xs-6 text-center">
+            <td colspan="2" class="col-xs-6 text-left">
                 <input type="submit" value="Calculate Material" class="btn btn-primary" />
             </td>
-            <td class="col-xs-6 text-center">
+            <td class="col-xs-6 text-right">
                 &nbsp;
             </td>
         </tr>

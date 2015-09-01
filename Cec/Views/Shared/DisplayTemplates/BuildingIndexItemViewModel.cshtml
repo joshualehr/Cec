@@ -1,6 +1,6 @@
 ﻿@model Cec.ViewModels.BuildingIndexItemViewModel
 <tr class="row">
-    <td class="col-xs-1 col-lg-3 text-center">
+    <td class="col-xs-1 col-lg-3 text-left">
         @Html.CheckBoxFor(model => model.Selected)
     </td>
     <td class="col-xs-2 col-lg-3 text-center">
@@ -8,7 +8,7 @@
         @Html.HiddenFor(model => model.BuildingId)
         @Html.HiddenFor(model => model.Building)
     </td>
-    <td class="col-xs-9 col-lg-6 text-center">
+    <td class="col-xs-9 col-lg-6 text-right">
         <div class="hidden-xs">
             <div class="btn-group">
                 @Html.ActionLink("Areas", "Index", "Area", new { id = Model.BuildingId }, new { @class = "btn btn-danger" })
