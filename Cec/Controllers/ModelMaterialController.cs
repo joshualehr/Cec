@@ -1,20 +1,18 @@
 ﻿using Cec.Models;
 using Cec.ViewModels;
 using System;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 
 namespace Cec.Controllers
 {
+    [Authorize(Roles = "canManageProjects")]
     public class ModelMaterialController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /ModelMaterial/5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /ModelMaterial/(ModelId)
         public ActionResult Index(Guid id)
         {
             if (id == null)
@@ -32,8 +30,7 @@ namespace Cec.Controllers
             }
         }
 
-        // GET: /ModelMaterial/Create/5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /ModelMaterial/Create/(ModelId)
         public ActionResult Create(Guid? id)
         {
             if (id == null)
@@ -44,11 +41,8 @@ namespace Cec.Controllers
         }
 
         // POST: /ModelMaterial/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Create([Bind(Include = "ProjectId,Project,ModelId,Model,ApplyToAllAreas,Materials")] ModelMaterialCreateViewModel model)
         {
             try
@@ -58,16 +52,14 @@ namespace Cec.Controllers
                     return RedirectToAction("Index", new { id = model.Create() });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(model);
         }
 
-        // GET: /ModelMaterial/Edit/5?materialId=5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /ModelMaterial/Edit/(ModelId)?materialId=(MaterialId)
         public ActionResult Edit(Guid? id, Guid? materialId)
         {
             if (id == null | materialId == null)
@@ -82,12 +74,9 @@ namespace Cec.Controllers
             return View(modelMaterialEditViewModel);
         }
 
-        // POST: /ModelMaterial/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /ModelMaterial/Edit/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Edit([Bind(Include = "ProjectId,Project,ModelID,MaterialID,Material,ImagePath,UnitOfMeasure,Quantity,ApplyToExisting")] ModelMaterialEditViewModel modelMaterial)
         {
             try
@@ -97,16 +86,14 @@ namespace Cec.Controllers
                     return RedirectToAction("Index", new { id = modelMaterial.Edit(modelMaterial.ApplyToExisting) });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(modelMaterial);
         }
 
         // GET: /ModelMaterial/Delete/5
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Delete(Guid? id, Guid? materialId)
         {
             if (id == null | materialId == null)
@@ -121,22 +108,21 @@ namespace Cec.Controllers
             return View(modelMaterialDeleteViewModel);
         }
 
-        // POST: /ModelMaterial/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: /ModelMaterial/Delete/
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
         public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,Project,ModelID,MaterialID,Material,ApplyToExisting")] ModelMaterialDeleteViewModel modelMaterialDeleteViewModel)
         {
             try
             {
                 return RedirectToAction("Index", new { id = modelMaterialDeleteViewModel.Delete() });
             }
-            catch (RetryLimitExceededException/* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Delete failed. Try again, and if the problem persists see your system administrator.");
-                return View(modelMaterialDeleteViewModel);
             }
+            return View(modelMaterialDeleteViewModel);
         }
 
         protected override void Dispose(bool disposing)

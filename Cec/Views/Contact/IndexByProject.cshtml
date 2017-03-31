@@ -1,0 +1,67 @@
+﻿@model Cec.ViewModels.ContactIndexByProjectViewModel
+
+@{
+    ViewBag.Title = "Contacts";
+}
+
+<div class="row">
+    <div class="text-left col-xs-6">
+        <h2>Contacts for @Html.ActionLink(Model.Project + " Project", "Details", "Project", new { id = Model.ProjectId }, null)</h2>
+    </div>
+    <div class="text-right col-xs-6">
+        <br />
+        @Html.ActionLink("New Contact", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+</div>
+<table class="table table-hover">
+    <tr class="row">
+        <th class="hidden-xs col-sm-4 text-left">
+            @Html.DisplayNameFor(model => model.Contacts.First().Company)
+        </th>
+        <th class="col-xs-6 col-sm-2 text-left">
+            @Html.DisplayNameFor(model => model.Contacts.First().FullName)
+        </th>
+        <th class="hidden-xs col-sm-3 text-left">
+            @Html.DisplayNameFor(model => model.Contacts.First().Title)
+        </th>
+        <th class="col-xs-6 col-sm-3 text-right">
+            Actions
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Contacts)
+    {
+        <tr class="row">
+            <td class="hidden-xs col-sm-4 text-left">
+                @Html.DisplayFor(modelItem => item.Company)
+            </td>
+            <td class="col-xs-6 col-sm-2 text-left">
+                @Html.ActionLink(item.FullName, "Details", new { id = item.ContactId })
+            </td>
+            <td class="hidden-xs col-sm-3 text-left">
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td class="col-xs-6 col-sm-3 text-right">
+                @Html.ActionLink("Remove", "DeleteProjectContact", new { id = Model.ProjectId, contactid = item.ContactId }, new { @class = "btn btn-default", data_post = "Are you sure you want to remove this contact?" })
+            </td>
+        </tr>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.ProjectId)
+        <tr class="row">
+            <td colspan="4" class="col-xs-12 text-right">
+                @Html.ValidationSummary(true)
+                <div class="form-group">
+                    <div>
+                        @Html.DropDownList("ContactId", "Choose...")
+                        <input type="submit" value="Add Contact" class="btn btn-primary" />
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ContactId)
+                </div>
+            </td>
+        </tr>
+    }
+</table>

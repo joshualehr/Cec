@@ -1,47 +1,50 @@
-﻿@model IEnumerable<Cec.ViewModels.ContactIndexViewModel>
+﻿@model Cec.ViewModels.ContactIndexViewModel
 
 @{
     ViewBag.Title = "Contacts";
 }
 
+<div class="row">
+    <div class="text-left col-xs-6">
+        <h2>Contacts</h2>
+    </div>
+    <div class="text-right col-xs-6">
+        <br />
+        @Html.ActionLink("New Contact", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+</div>
 <br />
-<p>
-    @Html.ActionLink("Home", "Index", "Home")
-</p>
-<h2>Contacts</h2>
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            Name
+<table class="table table-hover">
+    <tr class="row">
+        <th class="hidden-xs col-sm-4 text-left">
+            @Html.DisplayNameFor(model => model.Contacts.First().Company)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Company)
+        <th class="col-xs-6 col-sm-2 text-left">
+            @Html.DisplayNameFor(model => model.Contacts.First().FullName)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
+        <th class="hidden-xs col-sm-3 text-left">
+            @Html.DisplayNameFor(model => model.Contacts.First().Title)
         </th>
-        <th>
+        <th class="col-xs-6 col-sm-3 text-right">
             Actions
         </th>
     </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink(item.FullName, "Details", new { id = item.ContactId })
-        </td>
-        <td>
+@foreach (var item in Model.Contacts) {
+    <tr class="row">
+        <td class="hidden-xs col-sm-4 text-left">
             @Html.DisplayFor(modelItem => item.Company)
         </td>
-        <td>
+        <td class="col-xs-6 col-sm-2 text-left">
+            @Html.ActionLink(item.FullName, "Details", new { id = item.ContactId })
+        </td>
+        <td class="hidden-xs col-sm-3 text-left">
             @Html.DisplayFor(modelItem => item.Title)
         </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.ContactId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ContactId })
+        <td class="col-xs-6 col-sm-3 text-right">
+            <div class="btn-group">
+                @Html.ActionLink("Edit", "Edit", new { id = item.ContactId }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.ContactId }, new { @class = "btn btn-default", data_post = "Are you sure you want to delete this contact?" })
+            </div>
         </td>
     </tr>
 }

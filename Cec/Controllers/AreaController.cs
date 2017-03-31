@@ -2,7 +2,6 @@
 using Cec.Models;
 using Cec.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -10,10 +9,10 @@ using System.Web.Mvc;
 
 namespace Cec.Controllers
 {
-    [Authorize(Roles = "canAdminister")]
+    [Authorize(Roles = "isEmployee")]
     public class AreaController : Controller
     {
-        // GET: /Area/5
+        // GET: /Area/(BuildingId)
         public ActionResult Index(Guid id)
         {
             if (id == null)
@@ -31,8 +30,10 @@ namespace Cec.Controllers
             }
         }
 
-        // POST: /Area/5
-        [HttpPost, ActionName("Index"), ValidateAntiForgeryToken]
+        // POST: /Area/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Index([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,Building,Areas")] AreaIndexViewModel areaIndexViewModel)
         {
             if (areaIndexViewModel.Areas.Any(a => a.Selected))
@@ -47,7 +48,8 @@ namespace Cec.Controllers
             }
         }
 
-        // GET: /Area/Details/5
+        // GET: /Area/Details/(AreaId)
+        [Authorize(Roles = "canViewDetails")]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -62,7 +64,8 @@ namespace Cec.Controllers
             return View(area);
         }
 
-        // GET: /Area/Create/5
+        // GET: /Area/Create/(BuildingId)
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Create(Guid? id)
         {
             if (id == null)
@@ -73,9 +76,9 @@ namespace Cec.Controllers
         }
 
         // POST: /Area/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Create([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaDesignation,Description,Address,City,State,PostalCode,StatusId,ModelId")] AreaCreateViewModel area)
         {
             try
@@ -85,15 +88,15 @@ namespace Cec.Controllers
                     return RedirectToAction("Details", new { id = area.Create() });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(area);
         }
 
-        // GET: /Area/Edit/5
+        // GET: /Area/Edit/(AreaId)
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -109,10 +112,10 @@ namespace Cec.Controllers
             return View(area);
         }
 
-        // POST: /Area/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ValidateAntiForgeryToken]
+        // POST: /Area/Edit/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Edit([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId,StatusId")] AreaEditViewModel area)
         {
             try
@@ -124,15 +127,15 @@ namespace Cec.Controllers
                 }
 
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(area);
         }
 
-        // GET: /Area/Copy/5
+        // GET: /Area/Copy/(AreaId)
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Copy(Guid? id)
         {
             if (id == null)
@@ -147,10 +150,10 @@ namespace Cec.Controllers
             return View(area);
         }
 
-        // POST: /Area/Copy/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ValidateAntiForgeryToken]
+        // POST: /Area/Copy/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation,Description,Address,City,State,PostalCode,ModelId")] AreaCopyViewModel area)
         {
             try
@@ -160,15 +163,15 @@ namespace Cec.Controllers
                     return RedirectToAction("Details", new { id = area.Copy(area.BuildingId) });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(area);
         }
 
         // GET: /Area/Delete/5
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -183,23 +186,26 @@ namespace Cec.Controllers
             return View(area);
         }
 
-        // POST: /Area/Delete/5
-        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
+        // POST: /Area/Delete/(AreaId)
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,AreaId,AreaDesignation")] AreaDeleteViewModel area)
         {
             try
             {
                 return RedirectToAction("Index", new { id = area.Delete() });
             }
-            catch (RetryLimitExceededException/* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Delete failed. Try again, and if the problem persists see your system administrator.");
                 return View(area);
             }
         }
 
         //GET: /Area/AreasMaterial
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult AreasMaterial()
         {
             var areaIndexViewModel = TempData["areaIndexViewModel"] as AreaIndexViewModel;
@@ -214,7 +220,10 @@ namespace Cec.Controllers
         }
 
         //POST: /Area/AreasMaterial
-        [HttpPost, ActionName("AreasMaterial"), ValidateAntiForgeryToken]
+        [HttpPost]
+        [ActionName("AreasMaterial")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult DownloadData([Bind(Include = "ProjectId,Project,BuildingId,Building,Areas,Materials")] AreasMaterialViewModel areasMaterialViewModel)
         {
             try
@@ -230,9 +239,8 @@ namespace Cec.Controllers
                     return View(areasMaterialViewModel);
                 }
             }
-            catch (RetryLimitExceededException/* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to download at this time. Try again, and if the problem persists see your system administrator.");
                 return View(areasMaterialViewModel);
             }

@@ -1,0 +1,27 @@
+﻿@model Cec.Areas.Admin.ViewModels.UserEditViewModel
+
+<h1>Edit User</h1>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    @Html.HiddenFor(model => model.UserId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserName)
+        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Roles</div>
+        <div class="panel-body">
+            <ul class="list-group">
+                @Html.EditorFor(model => model.Roles)
+            </ul>
+        </div>
+    </div>
+
+    <input type="submit" name="submit" value="Update User" class="btn btn-primary" />
+    <a href="@Url.Action("index")">or cancel</a>
+}

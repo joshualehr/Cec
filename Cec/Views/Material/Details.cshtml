@@ -12,7 +12,7 @@
 <p>
     @Html.ActionLink("Copy", "Copy", new { id = Model.MaterialId, page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
     @Html.ActionLink("Edit", "Edit", new { id = Model.MaterialId, page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
-    @Html.ActionLink("Delete", "Delete", new { id = Model.MaterialId, page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })
+    @Html.ActionLink("Delete", "Delete", new { id = Model.MaterialId, page = ViewBag.Page, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { data_post = "Are you sure you want to delete " + Model.Material + "?" })
 </p>
 <img title="@Model.Material" width="150" src="@Model.ImagePath" />
 <hr />

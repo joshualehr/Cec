@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace Cec.Models
 {
@@ -27,7 +25,7 @@ namespace Cec.Models
         [StringLength(2)]
         public string State { get; set; }
 
-        public Nullable<int> PostalCode { get; set; }
+        public int? PostalCode { get; set; }
 
         [Index(IsClustered = false, IsUnique = false)]
         [Required()]

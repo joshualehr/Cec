@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace Cec.Models
 {
@@ -30,8 +28,11 @@ namespace Cec.Models
         public string FileLink { get; set; }
 
         public virtual ICollection<Area> Areas { get; set; }
+
         public virtual ICollection<Building> Buildings { get; set; }
+
         public virtual ICollection<Model> Models { get; set; }
+
         public virtual ICollection<Project> Projects { get; set; }
     }
 }

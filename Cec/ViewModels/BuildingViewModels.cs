@@ -20,20 +20,13 @@ namespace Cec.ViewModels
         //Static Metods
         public static System.Collections.IEnumerable items(Guid projectId)
         {
-            var db = new ApplicationDbContext();
-            var selectListItems = new List<SelectListItem>();
-            var buildings = db.Buildings.Where(b => b.ProjectID == projectId)
-                                        .OrderBy(b => b.Designation);
-            foreach (var item in buildings)
-            {
-                var building = new SelectListItem()
-                {
-                    Value = item.BuildingID.ToString(),
-                    Text = item.Designation
-                };
-                selectListItems.Add(building);
-            }
-            return selectListItems;
+            ApplicationDbContext db = new ApplicationDbContext();
+            return db.Buildings.Where(b => b.ProjectID == projectId)
+                               .OrderBy(b => b.Designation)
+                               .Select(b => new SelectListItem {
+                                   Value = b.BuildingID.ToString(),
+                                   Text = b.Designation
+                               });
         }
     }
 
@@ -85,8 +78,8 @@ namespace Cec.ViewModels
         public BuildingIndexItemViewModel(Guid buildingId)
         {
             var buildingData = db.Buildings.Find(buildingId);
-            this.BuildingId = buildingData.BuildingID;
-            this.Building = buildingData.Designation;
+            BuildingId = buildingData.BuildingID;
+            Building = buildingData.Designation;
         }
     }
 
@@ -95,27 +88,31 @@ namespace Cec.ViewModels
         private ApplicationDbContext db = new ApplicationDbContext();
 
         public Guid StatusId { get; set; }
+
         public string Status { get; set; }
+
         public int AreaCount { get; set; }
+
         public double Percent { get; set; }
+
         public ICollection<AreaStatusViewModel> AreaStatuses { get; set; }
 
         public BuildingStatusViewModel()
         {
-            this.AreaStatuses = new List<AreaStatusViewModel>();
+            AreaStatuses = new List<AreaStatusViewModel>();
         }
 
         public BuildingStatusViewModel(Status status, Guid buildingId)
         {
             var building = db.Buildings.Find(buildingId);
-            this.StatusId = status.StatusId;
-            this.Status = status.Designation;
-            this.AreaCount = status.Area.Where(a => a.BuildingID == buildingId).Count();
-            this.Percent = (100 * this.AreaCount) / building.Areas.Count;
-            this.AreaStatuses = new List<AreaStatusViewModel>();
+            StatusId = status.StatusId;
+            Status = status.Designation;
+            AreaCount = status.Area.Where(a => a.BuildingID == buildingId).Count();
+            Percent = (100 * AreaCount) / building.Areas.Count;
+            AreaStatuses = new List<AreaStatusViewModel>();
             foreach (var item in building.Areas.Where(a => a.StatusId == this.StatusId).OrderBy(a => a.StatusChanged).GroupBy(a => a.StatusChanged.ToShortDateString()))
             {
-                this.AreaStatuses.Add(new AreaStatusViewModel(item));
+                AreaStatuses.Add(new AreaStatusViewModel(item));
             }
         }
     }

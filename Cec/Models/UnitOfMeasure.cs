@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace Cec.Models
 {
@@ -20,6 +18,7 @@ namespace Cec.Models
         public string Designation { get; set; }
 
         public virtual ICollection<AreaMaterial> AreaMaterials { get; set; }
+
         public virtual ICollection<ModelMaterial> ModelMaterials { get; set; }
     }
 }

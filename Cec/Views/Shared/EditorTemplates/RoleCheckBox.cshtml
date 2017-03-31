@@ -1,0 +1,8 @@
+﻿@model Cec.Areas.Admin.ViewModels.RoleCheckBox
+
+<li class="list-group-item">
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Name)
+    @Html.CheckBoxFor(model => model.IsChecked)
+    @Html.DisplayFor(model => model.Name)
+</li>

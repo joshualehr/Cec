@@ -7,13 +7,14 @@
 <h2>Area @Model.AreaDesignation</h2>
 <div class="row">
     <div class="text-left col-xs-6 col-sm-3">
-        <div class="btn-group btn-group-vertical">
+        <div class="btn-group-vertical">
             @Html.ActionLink("Areas", "Index", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
+            @Html.ActionLink("To Dos", "Index", "ToDo", new { id = Model.AreaId }, new { @class = "btn btn-warning" })
             @Html.ActionLink("Material", "Index", "AreaMaterial", new { id = Model.AreaId }, new { @class = "btn btn-danger" })
         </div>
     </div>
     <div class="text-right col-xs-6 col-sm-3 col-sm-push-6">
-        <div class="btn-group btn-group-vertical">
+        <div class="btn-group-vertical">
             @Html.ActionLink("Copy", "Copy", new { id = Model.AreaId }, new { @class = "btn btn-success" })
             @Html.ActionLink("Edit", "Edit", new { id = Model.AreaId }, new { @class = "btn btn-primary" })
             @Html.ActionLink("Delete", "Delete", new { id = Model.AreaId }, new { @class = "btn btn-default" })

@@ -1,0 +1,82 @@
+﻿@model Cec.Models.ToDo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ToDo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Area.Designation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Area.Designation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ParentToDo.Heading)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ParentToDo.Heading)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Heading)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Heading)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Completed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Completed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompletedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CompletedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ListOrder)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ListOrder)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ToDoID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

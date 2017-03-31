@@ -8,11 +8,12 @@ using System.Web.Mvc;
 
 namespace Cec.Controllers
 {
+    [Authorize(Roles = "isEmployee")]
     public class AreaMaterialController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /AreaMaterial/5
+        // GET: /AreaMaterial/(AreaId)
         public ActionResult Index(Guid? id)
         {
             if (id == null)
@@ -34,8 +35,8 @@ namespace Cec.Controllers
             }
         }
 
-        // GET: /AreaMaterial/Create/5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /AreaMaterial/Create/(AreaId)
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Create(Guid? id)
         {
             if (id == null)
@@ -50,11 +51,9 @@ namespace Cec.Controllers
         }
 
         // POST: /AreaMaterial/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Create([Bind(Include = "AreaID,MaterialID,Quantity")] AreaMaterial areamaterial)
         {
             try
@@ -66,18 +65,17 @@ namespace Cec.Controllers
                     return RedirectToAction("Index", new { id = areamaterial.AreaID });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
                 
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             ViewBag.MaterialID = new SelectList(db.Materials, "MaterialID", "Designation", areamaterial.MaterialID);
             return View(areamaterial);
         }
 
-        // GET: /AreaMaterial/Edit/5?areaId=5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /AreaMaterial/Edit/(AreaId)?materialid=(MaterialId)
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Edit(Guid? id, Guid? materialId)
         {
             if (id == null | materialId == null)
@@ -92,12 +90,10 @@ namespace Cec.Controllers
             return View(areamaterial);
         }
 
-        // POST: /AreaMaterial/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /AreaMaterial/Edit/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Edit([Bind(Include = "AreaID,MaterialID,Quantity")] AreaMaterial areamaterial)
         {
             try
@@ -109,17 +105,16 @@ namespace Cec.Controllers
                     return RedirectToAction("Index", new { id = areamaterial.AreaID });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
 
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(areamaterial);
         }
 
         // GET: /AreaMaterial/Delete/5
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Delete(Guid? id, Guid? materialId, bool? saveChangesError = false)
         {
             if (id == null | materialId == null)
@@ -138,10 +133,11 @@ namespace Cec.Controllers
             return View(areamaterial);
         }
 
-        // POST: /AreaMaterial/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: /AreaMaterial/Delete/(AreaId)?materialid=(MaterialId)
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult DeleteConfirmed(Guid id, Guid materialId)
         {
             try
@@ -152,9 +148,8 @@ namespace Cec.Controllers
                 return RedirectToAction("Index", new { id = areamaterial.AreaID });
 
             }
-            catch (RetryLimitExceededException/* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 return RedirectToAction("Delete", new { id = id, saveChangesError = true });
             }
         }

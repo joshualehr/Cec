@@ -1,11 +1,13 @@
 ﻿using Cec.Areas.Admin.ViewModels;
 using Cec.Helpers;
 using Cec.Models;
-using System;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.DataProtection;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Cec.Areas.Admin.Controllers
@@ -14,115 +16,223 @@ namespace Cec.Areas.Admin.Controllers
     [SelectedTab("users")]
     public class UserController : Controller
     {
-        // GET: Admin/User
+        private static ApplicationDbContext db = new ApplicationDbContext();
+
+        public UserController() : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db)), new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db)), new DpapiDataProtectionProvider("CecWeb")) { }
+
+        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, DpapiDataProtectionProvider provider)
+        {
+            UserManager = userManager;
+            RoleManager = roleManager;
+            Provider = provider;
+        }
+
+        public UserManager<ApplicationUser> UserManager { get; private set; }
+        public RoleManager<IdentityRole> RoleManager { get; private set; }
+        public DpapiDataProtectionProvider Provider { get; private set; }
+
+        //
+        // GET: /Admin/User/Index
         public ActionResult Index()
         {
-            return View(new UserIndexViewModel());
+            foreach (ApplicationUser user in UserManager.Users.ToList())
+            {
+                user.AllRoles = string.Join(", ", UserManager.GetRoles(user.Id));
+            }
+            return View(new UserIndexViewModel() { Users = UserManager.Users });
         }
 
-        //Get: /Admin/Create
+        //Get: /Admin/User/Create
         public ActionResult Create()
         {
-            return View(new UserCreateViewModel());
-        }
-
-        //POST: /Admin/Create
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Create(UserCreateViewModel form)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    return RedirectToAction("Index", new { id = form.Create() });
-                }
-            }
-            catch (RetryLimitExceededException /* dex */)
-            {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-            }
-            return View(form);
-        }
-
-        public ActionResult Edit(string id)
-        {
-            var user = db.AspNetUsers.Find(id);
-            if (user == null)
-                return HttpNotFound();
-
-            return View(new UserEdit
-            {
-                UserName = user.UserName,
-                Roles = db.AspNetRoles.Select(role => new RoleCheckBox
-                {
+            return View(new UserCreateViewModel {
+                Roles = RoleManager.Roles.Select(role => new RoleCheckBox {
                     Id = role.Id,
-                    IsChecked = user.AspNetRoles.Contains(role),
+                    IsChecked = false,
                     Name = role.Name
                 }).ToList()
             });
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, UserEdit form)
+        //POST: /Admin/User/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "UserName, Password, Roles")] UserCreateViewModel model)
         {
-            var user = new User(id);
-            if (user == null)
-                return HttpNotFound();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Contact contact = new Contact {
+                        FirstName = model.UserName
+                    };
+                    db.Contacts.Add(contact);
+                    db.SaveChanges();
 
-            SyncRoles(form.Roles, user.Roles);
+                    ApplicationUser user = new ApplicationUser {
+                        UserName = model.UserName, 
+                        ContactID = contact.ContactID
+                    };
 
-            if (db.AspNetUsers.Any(u => u.UserName == form.UserName && u.Id != id))
-                ModelState.AddModelError("UserName", "UserName must be unique.");
-
-            if (!ModelState.IsValid)
-                return View(form);
-
-            user.UserName = form.UserName;
-
-            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
-
-            return RedirectToAction("index");
+                    IdentityResult userResult = UserManager.Create(user, model.Password);
+                    if (userResult.Succeeded)
+                    {
+                        foreach (var item in model.Roles.Where(r => r.IsChecked == true))
+                        {
+                            UserManager.AddToRole(user.Id, RoleManager.FindById(item.Id).Name);
+                        }
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        AddErrors(userResult);
+                        return View(model);
+                    }
+                }
+                catch (RetryLimitExceededException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                }
+            }
+            return View(model);
         }
 
-        public ActionResult ResetPassword(string id)
+        // GET: /Admin/User/Edit/(UserId)
+        public ActionResult Edit(string id)
         {
-            var user = new User(id);
-            if (user == null)
-                return HttpNotFound();
-
-            return View(new UserResetPasswordViewModel
+            ApplicationUser user = UserManager.FindById(id);
+            List<RoleCheckBox> roles = new List<RoleCheckBox>();
+            foreach (IdentityRole role in RoleManager.Roles.ToList())
             {
-                UserName = user.UserName
+                roles.Add(new RoleCheckBox {
+                    Id = role.Id,
+                    Name = role.Name,
+                    IsChecked = UserManager.IsInRole(user.Id, role.Name)
+                });
+            }
+
+            return View(new UserEditViewModel {
+                UserId = user.Id,
+                UserName = user.UserName,
+                Roles = roles
             });
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult ResetPassword(string id, UserResetPasswordViewModel form)
+        // POST: /Admin/User/Edit/(UserId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "UserId, UserName, Roles")]UserEditViewModel model)
         {
-            var user = new User(id);
-            if (user == null)
-                return HttpNotFound();
-            form.UserName = user.UserName;
-            if (!ModelState.IsValid)
-                return View(form);
-            user.SetPassword(form.Password);
-            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
-            
-            return RedirectToAction("index");
+            if (ModelState.IsValid)
+            {
+
+                try
+                {
+                    ApplicationUser user = UserManager.FindById(model.UserId);
+                    user.UserName = model.UserName;
+                    IdentityResult result = UserManager.Update(user);
+                    if (result.Succeeded)
+                    {
+                        foreach (var checkbox in model.Roles)
+                        {
+                            if (checkbox.IsChecked)
+                            {
+                                if (!UserManager.IsInRole(user.Id, checkbox.Name))
+                                {
+                                    UserManager.AddToRole(user.Id, checkbox.Name);
+                                }
+                            }
+                            else
+                            {
+                                if (UserManager.IsInRole(user.Id, checkbox.Name))
+                                {
+                                    UserManager.RemoveFromRole(user.Id, checkbox.Name);
+                                }
+                            }
+                        }
+                        return RedirectToAction("index");
+                    }
+                    else
+                    {
+                        AddErrors(result);
+                    }
+                }
+                catch (RetryLimitExceededException)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                }
+            }
+            return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        // GET: /Admin/User/ResetPassword/(UserId)
+        public ActionResult ResetPassword(string id)
+        {
+            var user = UserManager.FindById(id);
+            return View(new UserResetPasswordViewModel {
+                UserId = user.Id,
+                Username = user.UserName
+            });
+        }
+
+        // POST: /Admin/User/ResetPassword/(UserId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ResetPassword(UserResetPasswordViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    UserManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(Provider.Create("ResetPasswordConfirmation"));
+                    var user = UserManager.FindById(model.UserId);
+                    var token = UserManager.GeneratePasswordResetToken(user.Id);
+                    var result = UserManager.ResetPassword(user.Id, token, model.Password);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("index");
+                    }
+                    else
+                    {
+                        AddErrors(result);
+                    }
+                }
+            }
+            catch (RetryLimitExceededException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+            return View(model);
+        }
+
+        // POST: /Admin/User/Delete/(UserId)
+        [HttpPost]
         public ActionResult Delete(string id)
         {
-            var user = new AspNetUser(id);
-            if (user == null)
-                return HttpNotFound();
-            db.AspNetUsers.Remove(user);
-            db.SaveChanges();
-
+            try
+            {
+                ApplicationUser applicationUser = UserManager.FindById(id);
+                Contact contact = db.Contacts.SingleOrDefault(c => c.ContactID == applicationUser.ContactID);
+                IdentityResult result = UserManager.Delete(applicationUser);
+                if (result.Succeeded)
+                {
+                    if (contact != null)
+                    {
+                        db.Contacts.Remove(contact);
+                        db.SaveChanges();
+                    }
+                    return RedirectToAction("index");
+                }
+                else
+                {
+                    AddErrors(result);
+                }
+            }
+            catch (RetryLimitExceededException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
             return RedirectToAction("index");
         }
 
@@ -135,5 +245,17 @@ namespace Cec.Areas.Admin.Controllers
             }
             base.Dispose(disposing);
         }
+
+        #region Helpers
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+        }
+
+        #endregion
     }
 }

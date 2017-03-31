@@ -1,2 +1,40 @@
-﻿<h1>Roles Index View</h1>
+﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
 
+<div class="row">
+    <div class="col-xs-6">
+        <h1>Roles</h1>
+    </div>
+
+    <div class="col-xs-6 text-right btn-toolbar">
+        <br />
+        <a href="@Url.Action("create")" class="btn btn-primary">
+            <i class="glyphicon glyphicon-plus"></i>
+            Create Role
+        </a>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr class="row">
+            <th class="col-xs-8 text-left">Role Name</th>
+            <th class="col-xs-4 text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model)
+        {
+            <tr class="row">
+                <td class="col-xs-8 text-left">
+                    @role.Name
+                </td>
+                <td class="col-xs-4 text-right">
+                    <a href="@Url.Action("delete", new { id = role.Id })" title="Delete" class="btn btn-danger" data-post="Are you sure you want to delete @role.Name?">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,6 +1,7 @@
 ﻿using Cec.Helpers;
 using Cec.Models;
 using Cec.ViewModels;
+using Microsoft.Azure.Search;
 using PagedList;
 using System;
 using System.Data.Entity.Infrastructure;
@@ -11,6 +12,7 @@ using System.Web.Mvc;
 
 namespace Cec.Controllers
 {
+    [Authorize(Roles = "isEmployee")]
     public class MaterialController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -21,7 +23,7 @@ namespace Cec.Controllers
         // paging: https://github.com/TroyGoode/PagedList
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.SortOrder = sortOrder;
             if (searchString != null)
             {
@@ -45,7 +47,8 @@ namespace Cec.Controllers
             }
         }
 
-        // GET: /Material/Details/5
+        // GET: /Material/Details/(MaterialId)
+        [Authorize(Roles = "canViewDetails")]
         public ActionResult Details(Guid? id, string sortOrder, string currentFilter, int? page)
         {
             if (id == null)
@@ -65,7 +68,7 @@ namespace Cec.Controllers
         }
 
         // GET: /Material/Create
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canEdit")]
         public ActionResult Create(string sortOrder, string currentFilter, int? page)
         {
             var materialCreateViewModel = new MaterialCreateViewModel();
@@ -78,11 +81,9 @@ namespace Cec.Controllers
         }
 
         // POST: /Material/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canEdit")]
         public ActionResult Create([Bind(Include = "Material,Description,ImagePath,UnitOfMeasureId")] MaterialCreateViewModel materialCreateViewModel, HttpPostedFileBase photo, string sortOrder, string currentFilter, int? page)
         {
             ViewBag.Page = page;
@@ -117,8 +118,8 @@ namespace Cec.Controllers
             return View(materialCreateViewModel);
         }
 
-        // GET: /Material/Edit/5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /Material/Edit/(MaterialId)
+        [Authorize(Roles = "canEdit")]
         public ActionResult Edit(Guid? id, string sortOrder, string currentFilter, int? page)
         {
             if (id == null)
@@ -144,7 +145,7 @@ namespace Cec.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canEdit")]
         public ActionResult Edit([Bind(Include = "MaterialID,Material,Description,ImagePath,UnitOfMeasureId")] MaterialEditViewModel materialEditViewModel, HttpPostedFileBase photo, string sortOrder, string currentFilter, int? page)
         {
             ViewBag.Page = page;
@@ -183,8 +184,8 @@ namespace Cec.Controllers
             return View(materialEditViewModel);
         }
 
-        // GET: /Material/Copy/5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /Material/Copy/(MaterialId)
+        [Authorize(Roles = "canEdit")]
         public ActionResult Copy(Guid? id, string sortOrder, string currentFilter, int? page)
         {
             if (id == null)
@@ -205,12 +206,10 @@ namespace Cec.Controllers
             return View(materialCopyViewModel);
         }
 
-        // POST: /Material/Copy/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /Material/Copy/(MaterialId)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
+        [Authorize(Roles = "canEdit")]
         public ActionResult Copy([Bind(Include = "MaterialID,Material,Description,ImagePath,UnitOfMeasureId")] MaterialCopyViewModel materialCopyViewModel, HttpPostedFileBase photo, string sortOrder, string currentFilter, int? page)
         {
             ViewBag.Page = page;
@@ -249,52 +248,33 @@ namespace Cec.Controllers
             return View(materialCopyViewModel);
         }
 
-        // GET: /Material/Delete/5
-        [Authorize(Roles = "canAdminister")]
-        public ActionResult Delete(Guid? id, string sortOrder, string currentFilter, int? page)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var materialId = id ?? Guid.Empty;
-            var materialDeleteViewModel = new MaterialDeleteViewModel(materialId);
-            if (materialDeleteViewModel == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.Page = page;
-            ViewBag.SortOrder = sortOrder;
-            ViewBag.CurrentFilter = currentFilter;
-            return View(materialDeleteViewModel);
-        }
-
-        // POST: /Material/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
-        public ActionResult DeleteConfirmed([Bind(Include = "MaterialId,ImagePath")] MaterialDeleteViewModel materialDeleteViewModel, string sortOrder, string currentFilter, int? page)
+        // POST: /Material/Delete/(MaterialId)
+        [HttpPost]
+        [Authorize(Roles = "canDelete")]
+        public ActionResult Delete(Guid id, int? page, string sortOrder, string currentFilter)
         {
             ViewBag.Page = page;
             ViewBag.SortOrder = sortOrder;
             ViewBag.CurrentFilter = currentFilter;
             try
             {
-                if (!photoHandler.OtherMaterialUsesImage(materialDeleteViewModel.ImagePath)) //Image not used elsewhere
+                Material material = db.Materials.Single(m => m.MaterialID == id);
+                if (!photoHandler.OtherMaterialUsesImage(material.ImagePath)) //Image not used elsewhere
                 {
-                    photoHandler.DeleteImage(Server.MapPath(materialDeleteViewModel.ImagePath));
+                    photoHandler.DeleteImage(Server.MapPath(material.ImagePath));
                 }
                 ViewBag.Page = page;
                 ViewBag.SortOrder = sortOrder;
                 ViewBag.CurrentFilter = currentFilter;
-                materialDeleteViewModel.Delete();
-                return RedirectToAction("Index", new { sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter });
+                db.Materials.Remove(material);
+                db.SaveChanges();
+                return RedirectToAction("Index", new { page = page, sortOrder = sortOrder, currentFilter = currentFilter });
             }
             catch (RetryLimitExceededException/* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Delete failed. Try again, and if the problem persists see your system administrator.");
-                return View(materialDeleteViewModel);
+                return RedirectToAction("Details", new { id = id, page = page, sortOrder = sortOrder, currentFilter = currentFilter });
             }
         }
 

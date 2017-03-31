@@ -34,6 +34,6 @@ namespace Cec.Models
 
         public string Website { get; set; }
 
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<ProjectContact> Projects { get; set; }
     }
 }

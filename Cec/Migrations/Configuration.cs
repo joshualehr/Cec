@@ -2,14 +2,12 @@ using Cec.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 
 namespace Cec.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<Cec.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {
@@ -17,16 +15,16 @@ namespace Cec.Migrations
             ContextKey = "Cec.Models.ApplicationDbContext";
         }
 
-        bool AddUserAndRole(Cec.Models.ApplicationDbContext context)
+        bool AddUserAndRole(ApplicationDbContext context)
         {
             IdentityResult ir;
             var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             var rm = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            var user = new ApplicationUser() { UserName = "JoshuaLehr", Contact = new Contact() };
+            var user = new ApplicationUser() { UserName = "JoshuaLehr", Contact = new Contact() { FirstName = "Joshua", LastName = "Lehr" } };
             ir = um.Create(user, "j040375l");
             if (ir.Succeeded == false)
                 return ir.Succeeded;
-            string[] roles = { "canAdminister", "canManageUsers", "canEdit", "canDelete" };
+            string[] roles = { "canAdminister", "canViewDetails", "isEmployee" };
             foreach (var item in roles)
             {
                 if (!rm.RoleExists(item))
@@ -40,14 +38,14 @@ namespace Cec.Migrations
             return ir.Succeeded;
         }
 
-        protected override void Seed(Cec.Models.ApplicationDbContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.
 
             if (AddUserAndRole(context))
-            
+
             {
                 context.Projects.AddOrUpdate(p => p.Designation,
                   new Project
@@ -55,21 +53,21 @@ namespace Cec.Migrations
                       ProjectID = Guid.NewGuid(),
                       Designation = "Covered Bridge",
                       Description = "apartmant renovation",
-                      User = context.Users.First()
+                      User = context.Users.Single(u => u.UserName == "JoshuaLehr")
                   },
                   new Project
                   {
                       ProjectID = Guid.NewGuid(),
                       Designation = "Quail Run",
                       Description = "pool demolition",
-                      User = context.Users.First()
+                      User = context.Users.Single(u => u.UserName == "JoshuaLehr")
                   },
                   new Project
                   {
                       ProjectID = Guid.NewGuid(),
                       Designation = "Union Street Flats",
                       Description = "new apartment complex",
-                      User = context.Users.First()
+                      User = context.Users.Single(u => u.UserName == "JoshuaLehr")
                   }
                 );
             }

@@ -10,12 +10,12 @@ using System.Web.Mvc;
 
 namespace Cec.Controllers
 {
-    [Authorize(Roles = "canAdminister")]
+    [Authorize(Roles = "isEmployee")]
     public class BuildingController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /Building/5
+        // GET: /Building/(BuildingId)
         public ActionResult Index(Guid? id)
         {
             if (id == null)
@@ -33,8 +33,10 @@ namespace Cec.Controllers
             }
         }
 
-        // POST: /Building/5
-        [HttpPost, ActionName("Index"), ValidateAntiForgeryToken]
+        // POST: /Building/(BuildingId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Index([Bind(Include = "ProjectId,ProjectDesignation,Buildings")] BuildingIndexViewModel buildingIndexViewModel)
         {
             var buildings = new List<BuildingIndexItemViewModel>();
@@ -54,7 +56,8 @@ namespace Cec.Controllers
             return RedirectToAction("BuildingsMaterial");
         }
 
-        // GET: /Building/Details/5
+        // GET: /Building/Details/(BuildingId)
+        [Authorize(Roles = "canViewDetails")]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -69,7 +72,8 @@ namespace Cec.Controllers
             return View(building);
         }
 
-        // GET: /Building/Create/5
+        // GET: /Building/Create/(ProjectId)
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Create(Guid? id)
         {
             if (id == null)
@@ -80,9 +84,9 @@ namespace Cec.Controllers
         }
 
         // POST: /Building/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Create([Bind(Include = "ProjectId,ProjectDesignation,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingCreateViewModel building)
         {
             try
@@ -92,15 +96,15 @@ namespace Cec.Controllers
                     return RedirectToAction("Details", new { id = building.Create() });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(building);
         }
 
-        // GET: /Building/Edit/5
+        // GET: /Building/Edit/(BuildingId)
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -115,10 +119,10 @@ namespace Cec.Controllers
             return View(building);
         }
 
-        // POST: /Building/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ValidateAntiForgeryToken]
+        // POST: /Building/Edit/(BuildingId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Edit([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingEditViewModel building)
         {
             try
@@ -128,15 +132,15 @@ namespace Cec.Controllers
                     return RedirectToAction("Details", new { id = building.Edit() });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(building);
         }
 
-        // GET: /Building/Copy/5
+        // GET: /Building/Copy/(BuildingId)
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Copy(Guid? id)
         {
             if (id == null)
@@ -151,10 +155,10 @@ namespace Cec.Controllers
             return View(building);
         }
 
-        // POST: /Building/Copy/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ValidateAntiForgeryToken]
+        // POST: /Building/Copy/(BuildingId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Copy([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation,Description,Address,City,State,PostalCode")] BuildingCopyViewModel building)
         {
             try
@@ -164,15 +168,15 @@ namespace Cec.Controllers
                     return RedirectToAction("Details", new { id = building.Copy(building.BuildingId) });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(building);
         }
 
         // GET: /Building/Delete/5
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -187,8 +191,11 @@ namespace Cec.Controllers
             return View(building);
         }
 
-        // POST: /Building/Delete/5
-        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
+        // POST: /Building/Delete/(BuildingId)
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,ProjectDesignation,BuildingId,BuildingDesignation")] BuildingDeleteViewModel building)
         {
             try
@@ -196,15 +203,15 @@ namespace Cec.Controllers
                 return RedirectToAction("Index", new { id = building.Delete() });
 
             }
-            catch (RetryLimitExceededException/* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Delete failed. Try again, and if the problem persists see your system administrator.");
                 return View(building);
             }
         }
 
         // GET: /Building/BuildingsMaterial
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult BuildingsMaterial()
         {
             var buildingIndexViewModel = TempData["buildingIndexViewModel"] as BuildingIndexViewModel;
@@ -219,7 +226,10 @@ namespace Cec.Controllers
         }
 
         // POST: /Building/BuildingsMaterial
-        [HttpPost, ActionName("BuildingsMaterial"), ValidateAntiForgeryToken]
+        [HttpPost]
+        [ActionName("BuildingsMaterial")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canManageProjects")]
         public ActionResult DownloadData([Bind(Include = "ProjectId,Project,Buildings,Materials")] BuildingsMaterialViewModel buildingsMaterialViewModel)
         {
             try
@@ -235,12 +245,11 @@ namespace Cec.Controllers
                     return View(buildingsMaterialViewModel);
                 }
             }
-            catch (RetryLimitExceededException/* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to download at this time. Try again, and if the problem persists see your system administrator.");
-                return View(buildingsMaterialViewModel);
             }
+            return View(buildingsMaterialViewModel);
         }
 
         protected override void Dispose(bool disposing)

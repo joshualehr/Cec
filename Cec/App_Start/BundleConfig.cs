@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace Cec
 {
@@ -21,14 +20,16 @@ namespace Cec
                 .Include("~/scripts/jquery.validate.js")
                 .Include("~/scripts/jquery.validate.unobtrusive.js")
                 .Include("~/scripts/modernizr-2.8.3.js")
-                .Include("~/scripts/bootstrap.js"));
+                .Include("~/scripts/bootstrap.js")
+                .Include("~/scripts/deleteconfirmation.js"));
 
             bundles.Add(new ScriptBundle("~/javascripts")
                 .Include("~/scripts/jquery-2.1.4.js")
                 .Include("~/scripts/jquery.validate.js")
                 .Include("~/scripts/jquery.validate.unobtrusive.js")
                 .Include("~/scripts/modernizr-2.8.3.js")
-                .Include("~/scripts/bootstrap.js"));
+                .Include("~/scripts/bootstrap.js")
+                .Include("~/scripts/deleteconfirmation.js"));
         }
     }
 }

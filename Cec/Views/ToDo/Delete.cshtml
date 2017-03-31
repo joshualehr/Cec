@@ -1,0 +1,88 @@
+﻿@model Cec.Models.ToDo
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ToDo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Area.Designation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Area.Designation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ParentToDo.Heading)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ParentToDo.Heading)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Heading)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Heading)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Completed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Completed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompletedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CompletedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ListOrder)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ListOrder)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

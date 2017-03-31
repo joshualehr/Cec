@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace Cec.Models
 {
@@ -25,6 +22,7 @@ namespace Cec.Models
         public double Quantity { get; set; }
 
         public virtual Area Area { get; set; }
+
         public virtual Material Material { get; set; }
     }
 }

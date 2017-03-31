@@ -252,37 +252,4 @@ namespace Cec.ViewModels
             return material.MaterialID;
         }
     }
-
-    public class MaterialDeleteViewModel
-    {
-        //Private Properties
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        //Public Properties
-        public Guid MaterialId { get; set; }
-        public string Material { get; set; }
-        public string ImagePath { get; set; }
-
-        //Constructors
-        public MaterialDeleteViewModel()
-        {
-
-        }
-
-        public MaterialDeleteViewModel(Guid materialId)
-        {
-            var material = db.Materials.Find(materialId);
-            this.Material = material.Designation;
-            this.MaterialId = material.MaterialID;
-            this.ImagePath = material.ImagePath;
-        }
-
-        //Methods
-        public void Delete()
-        {
-            var material = db.Materials.Find(this.MaterialId);
-            db.Materials.Remove(material);
-            db.SaveChanges();
-        }
-    }
 }

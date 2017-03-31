@@ -75,7 +75,27 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Azure.Search, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Search.1.1.1\lib\net45\Microsoft.Azure.Search.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.4\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.4\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.IdentityModel.Protocol.Extensions, Version=1.0.2.33, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Protocol.Extensions.1.0.2.206221351\lib\net45\Microsoft.IdentityModel.Protocol.Extensions.dll</HintPath>
       <Private>True</Private>
@@ -119,6 +139,22 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Rest.ClientRuntime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.1.8.1\lib\net45\Microsoft.Rest.ClientRuntime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Rest.ClientRuntime.Azure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.Azure.2.5.2\lib\net45\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Spatial, Version=6.13.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Spatial.6.13.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=6.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.6.2.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -138,7 +174,12 @@
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -203,6 +244,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\RoleController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\User.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AreaController.cs" />
     <Compile Include="Controllers\AreaMaterialController.cs" />
@@ -214,61 +259,34 @@
     <Compile Include="Controllers\ModelMaterialController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Controllers\ToDoController.cs" />
     <Compile Include="Controllers\UnitOfMeasureController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BlobHelper.cs" />
     <Compile Include="Helpers\Enumerations.cs" />
     <Compile Include="Helpers\CsvActionResult.cs" />
     <Compile Include="Helpers\ImageHandler.cs" />
     <Compile Include="Helpers\AreaStatusDefault.cs" />
+    <Compile Include="Helpers\SearchHelper.cs" />
     <Compile Include="Helpers\SelectedTabAttribute.cs" />
-    <Compile Include="Migrations\201503070003218_001_First.cs" />
-    <Compile Include="Migrations\201503070003218_001_First.Designer.cs">
-      <DependentUpon>201503070003218_001_First.cs</DependentUpon>
+    <Compile Include="Migrations\201601262132209_AddedProjectContact.cs" />
+    <Compile Include="Migrations\201601262132209_AddedProjectContact.Designer.cs">
+      <DependentUpon>201601262132209_AddedProjectContact.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201503102059123__002_UpdatedIdentity.cs" />
-    <Compile Include="Migrations\201503102059123__002_UpdatedIdentity.Designer.cs">
-      <DependentUpon>201503102059123__002_UpdatedIdentity.cs</DependentUpon>
+    <Compile Include="Migrations\201601262210323_AddedProjectContactRelations.cs" />
+    <Compile Include="Migrations\201601262210323_AddedProjectContactRelations.Designer.cs">
+      <DependentUpon>201601262210323_AddedProjectContactRelations.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201503122028169__003_DeletedModelMaterialCreateViewModel.cs" />
-    <Compile Include="Migrations\201503122028169__003_DeletedModelMaterialCreateViewModel.Designer.cs">
-      <DependentUpon>201503122028169__003_DeletedModelMaterialCreateViewModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503160401037__004_AddedStatusTable.cs" />
-    <Compile Include="Migrations\201503160401037__004_AddedStatusTable.Designer.cs">
-      <DependentUpon>201503160401037__004_AddedStatusTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503160436171__005_AddedAreaRequireStatusId.cs" />
-    <Compile Include="Migrations\201503160436171__005_AddedAreaRequireStatusId.Designer.cs">
-      <DependentUpon>201503160436171__005_AddedAreaRequireStatusId.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504020429000__006_AddUserIdToProject.cs" />
-    <Compile Include="Migrations\201504020429000__006_AddUserIdToProject.Designer.cs">
-      <DependentUpon>201504020429000__006_AddUserIdToProject.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505112115391__AddedStatusChangedToArea.cs" />
-    <Compile Include="Migrations\201505112115391__AddedStatusChangedToArea.Designer.cs">
-      <DependentUpon>201505112115391__AddedStatusChangedToArea.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201506110040409_007_addedListOrderToStatus.cs" />
-    <Compile Include="Migrations\201506110040409_007_addedListOrderToStatus.Designer.cs">
-      <DependentUpon>201506110040409_007_addedListOrderToStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508031931557__008.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Migrations\201508031931557__008.Designer.cs">
-      <DependentUpon>201508031931557__008.cs</DependentUpon>
+    <Compile Include="Migrations\201602082236425_AddedToDos.cs" />
+    <Compile Include="Migrations\201602082236425_AddedToDos.Designer.cs">
+      <DependentUpon>201602082236425_AddedToDos.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AspNetRole.cs" />
-    <Compile Include="Models\AspNetUser.cs" />
-    <Compile Include="Models\AspNetUserClaim.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Models\AspNetUserLogin.cs" />
+    <Compile Include="Models\ProjectContact.cs" />
     <Compile Include="Models\Status.cs" />
+    <Compile Include="Models\ToDo.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Area.cs" />
     <Compile Include="Models\AreaMaterial.cs" />
@@ -315,10 +333,26 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Areas\Admin\Views\Role\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\User\ResetPassword.cshtml" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Shared\EditorTemplates\RoleCheckBox.cshtml" />
+    <Content Include="Areas\Admin\Views\Role\Create.cshtml" />
+    <None Include="Properties\PublishProfiles\CecWeb - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\CecWeb - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\CecWeb - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\CecWeb.pubxml" />
     <Content Include="Icon.png" />
     <Content Include="Scripts\bootstrap.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\deleteconfirmation.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
@@ -391,9 +425,6 @@
     <Content Include="Views\Material\Create.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Material\Delete.cshtml">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="Views\Material\Details.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -453,16 +484,15 @@
     <Content Include="Views\UnitOfMeasure\Create.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\UnitOfMeasure\Delete.cshtml">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="Views\UnitOfMeasure\Edit.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Views\UnitOfMeasure\Index.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -474,7 +504,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Contact\Create.cshtml" />
-    <Content Include="Views\Contact\Delete.cshtml" />
     <Content Include="Views\Contact\Details.cshtml" />
     <Content Include="Views\Contact\Edit.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
@@ -486,7 +515,7 @@
     <Content Include="Views\Area\Copy.cshtml" />
     <Content Include="Views\Model\Copy.cshtml" />
     <Content Include="Views\Material\Copy.cshtml" />
-    <Content Include="Views\AreasMaterial.cshtml" />
+    <Content Include="Views\AreaMaterial\AreasMaterial.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\AreaIndexItemViewModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\AreasMaterialItemViewModel.cshtml" />
     <Content Include="Views\Area\AreasMaterial.cshtml" />
@@ -497,43 +526,30 @@
     <Content Include="Views\Building\Copy.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ShortDate.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\AreaStatusViewModel.cshtml" />
+    <Content Include="Views\Contact\IndexByProject.cshtml" />
+    <Content Include="Views\ToDo\Create.cshtml" />
+    <Content Include="Views\ToDo\Delete.cshtml" />
+    <Content Include="Views\ToDo\Details.cshtml" />
+    <Content Include="Views\ToDo\Edit.cshtml" />
+    <Content Include="Views\ToDo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\" />
+    <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Content\Documents\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201503070003218_001_First.resx">
-      <DependentUpon>201503070003218_001_First.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201601262132209_AddedProjectContact.resx">
+      <DependentUpon>201601262132209_AddedProjectContact.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503102059123__002_UpdatedIdentity.resx">
-      <DependentUpon>201503102059123__002_UpdatedIdentity.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201601262210323_AddedProjectContactRelations.resx">
+      <DependentUpon>201601262210323_AddedProjectContactRelations.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503122028169__003_DeletedModelMaterialCreateViewModel.resx">
-      <DependentUpon>201503122028169__003_DeletedModelMaterialCreateViewModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503160401037__004_AddedStatusTable.resx">
-      <DependentUpon>201503160401037__004_AddedStatusTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503160436171__005_AddedAreaRequireStatusId.resx">
-      <DependentUpon>201503160436171__005_AddedAreaRequireStatusId.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504020429000__006_AddUserIdToProject.resx">
-      <DependentUpon>201504020429000__006_AddUserIdToProject.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505112115391__AddedStatusChangedToArea.resx">
-      <DependentUpon>201505112115391__AddedStatusChangedToArea.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506110040409_007_addedListOrderToStatus.resx">
-      <DependentUpon>201506110040409_007_addedListOrderToStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508031931557__008.resx">
-      <DependentUpon>201508031931557__008.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201602082236425_AddedToDos.resx">
+      <DependentUpon>201602082236425_AddedToDos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

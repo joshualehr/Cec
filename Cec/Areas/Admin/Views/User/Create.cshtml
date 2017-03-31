@@ -1,0 +1,31 @@
+﻿@model Cec.Areas.Admin.ViewModels.UserCreateViewModel
+
+<h1>New User</h1>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserName)
+        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Password)
+        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", type = "password" })
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Roles</div>
+        <div class="panel-body">
+            <ul class="list-group">
+                @Html.EditorFor(model => model.Roles)
+            </ul>
+        </div>
+    </div>
+
+    <input type="submit" name="submit" value="Create User" class="btn btn-primary" />
+    <a href="@Url.Action("index")">or cancel</a>
+}

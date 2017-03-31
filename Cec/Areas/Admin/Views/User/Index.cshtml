@@ -1,2 +1,54 @@
-﻿<h1>Users Index View</h1>
+﻿@model Cec.Areas.Admin.ViewModels.UserIndexViewModel
 
+<div class="row">
+    <div class="col-xs-6">
+        <h1>Users</h1>
+    </div>
+
+    <div class="col-xs-6 text-right btn-toolbar">
+        <br />
+        <a href="@Url.Action("create")" class="btn btn-primary">
+            <i class="glyphicon glyphicon-plus"></i>
+            Create User
+        </a>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr class="row">
+            <th class="col-xs-8 text-left">Username</th>
+            <th class="col-xs-4 text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr class="row">
+                <td class="col-xs-8 text-left">
+                    @user.UserName
+                    <br />
+                    <b>Roles:</b>
+                    <br />
+                    @user.AllRoles
+                </td>
+                <td class="col-xs-4 text-right">
+                    <div class="btn-group-vertical">
+                        <a href="@Url.Action("edit", new { id = user.Id })" title="Edit" class="btn btn-primary">
+                            <i class="glyphicon glyphicon-edit"></i>
+                            Edit
+                        </a>
+                        <a href="@Url.Action("resetpassword", new { id = user.Id })" title="Reset Password" class="btn btn-default">
+                            <i class="glyphicon glyphicon-lock"></i>
+                            Reset
+                        </a>
+                        <a href="@Url.Action("delete", new { id = user.Id })" title="Delete" class="btn btn-danger" data-post="Are you sure you want to delete @user.UserName?">
+                            <i class="glyphicon glyphicon-remove"></i>
+                            Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

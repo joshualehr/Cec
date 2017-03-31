@@ -21,19 +21,12 @@ namespace Cec.ViewModels
         //Static Methods
         public static System.Collections.IEnumerable items()
         {
-            var db = new ApplicationDbContext();
-            var selectListItems = new List<SelectListItem>();
-            var models = db.Statuses.OrderBy(s => s.ListOrder);
-            foreach (var item in models)
-            {
-                var model = new SelectListItem()
-                {
-                    Value = item.StatusId.ToString(),
-                    Text = item.Designation
-                };
-                selectListItems.Add(model);
-            }
-            return selectListItems;
+            ApplicationDbContext db = new ApplicationDbContext();
+            return db.Statuses.OrderBy(s => s.ListOrder)
+                              .Select(s => new SelectListItem {
+                                  Value = s.StatusId.ToString(),
+                                  Text = s.Designation
+                              });
         }
     }
 

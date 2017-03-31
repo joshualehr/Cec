@@ -2,12 +2,12 @@
 using Cec.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Web.Mvc;
 
 namespace Cec.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private ApplicationDbContext db;

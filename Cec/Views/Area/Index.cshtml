@@ -7,12 +7,12 @@
 <h2>Areas</h2>
 <div class="row">
     <div class="text-left col-xs-6 col-sm-3">
-        <div class="btn-group btn-group-vertical">
+        <div class="btn-group-vertical">
             @Html.ActionLink("Building " + Model.Building, "Details", "Building", new { id = Model.BuildingId }, new { @class = "btn btn-default" })
         </div>
     </div>
     <div class="text-right col-xs-6 col-sm-3 col-sm-push-6">
-        <div class="btn-group btn-group-vertical">
+        <div class="btn-group-vertical">
             @Html.ActionLink("New Area", "Create", new { id = Model.BuildingId }, new { @class = "btn btn-primary" })
         </div>
     </div>
@@ -30,13 +30,13 @@
 
     <table class="table table-hover">
         <tr class="row">
-            <th class="col-xs-1 col-lg-3 text-left">
+            <th class="col-xs-2 text-left">
                 <input type="checkbox" onclick="checkAll(this)" /> All
             </th>
-            <th class="col-xs-2 col-lg-3 text-center">
+            <th class="col-xs-3 text-center">
                 @Html.DisplayName("Area")
             </th>
-            <th class="col-xs-9 col-lg-6 text-right">
+            <th class="col-xs-7 text-right">
                 Actions
             </th>
         </tr>

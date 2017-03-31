@@ -1,51 +1,28 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace Cec.Models
 {
-    // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
-    // When the User Logs in, you can display the profile information by doing the following:
-    // Get the current logged in UserId, so you can look the user up in ASP.NET Identity system 
-    //    var currentUserId = User.Identity.GetUserId(); 
-    // Instantiate the UserManager in ASP.Identity system so you can look up the user in the system 
-    //    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())); 
-    // Get the User object 
-    //    var currentUser = manager.FindById(User.Identity.GetUserId()); 
-    // Get the profile information about the user 
-    //    currentUser.Contact.FirstName 
     public class ApplicationUser : IdentityUser
     {
         public Guid ContactID { get; set; }
 
+        public string AllRoles { get; set; }
+
         public virtual Contact Contact { get; set; }
 
         public virtual ICollection<Project> Projects { get; set; }
+
+        public virtual ICollection<ToDo> ToDos { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema:false)
-        {
-        }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-        }
-
         public virtual DbSet<Area> Areas { get; set; }
         public virtual DbSet<AreaMaterial> AreaMaterials { get; set; }
-        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-        public virtual DbSet<AspNetUserClaim> AspNetClaims { get; set; }
-        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<Building> Buildings { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
@@ -55,9 +32,21 @@ namespace Cec.Models
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Status> Statuses { get; set; }
         public virtual DbSet<UnitOfMeasure> UnitOfMeasures { get; set; }
+        public virtual DbSet<ProjectContact> ProjectContacts { get; set; }
+        public virtual DbSet<ToDo> ToDos { get; set; }
+
+        public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema:false) { }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ToDo>()
+                .HasOptional(e => e.ParentToDo)
+                .WithMany(e => e.ChildToDos)
+                .HasForeignKey(e => e.ParentToDoID);
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+        }
     }
 
-    public class CecInitializer : System.Data.Entity.CreateDatabaseIfNotExists<ApplicationDbContext>
-    {
-    }
+    public class CecInitializer : CreateDatabaseIfNotExists<ApplicationDbContext> { }
 }

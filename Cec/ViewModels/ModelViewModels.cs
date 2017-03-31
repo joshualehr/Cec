@@ -1,7 +1,6 @@
 ﻿using Cec.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -22,20 +21,13 @@ namespace Cec.ViewModels
         //Static Methods
         public static System.Collections.IEnumerable items(Guid projectId)
         {
-            var db = new ApplicationDbContext();
-            var selectListItems = new List<SelectListItem>();
-            var models = db.Models.Where(p => p.ProjectID == projectId)
-                                  .OrderBy(p => p.Designation);
-            foreach (var item in models)
-            {
-                var model = new SelectListItem()
-                {
-                    Value = item.ModelID.ToString(),
-                    Text = item.Designation
-                };
-                selectListItems.Add(model);
-            }
-            return selectListItems;
+            ApplicationDbContext db = new ApplicationDbContext();
+            return db.Models.Where(m => m.ProjectID == projectId)
+                            .OrderBy(m => m.Designation)
+                            .Select(m => new SelectListItem {
+                                Value = m.ModelID.ToString(),
+                                Text = m.Designation
+                            });
         }
     }
 

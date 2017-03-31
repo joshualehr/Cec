@@ -32,13 +32,13 @@ namespace Cec.Models
         [StringLength(2)]
         public string State { get; set; }
 
-        public Nullable<int> PostalCode { get; set; }
+        public int? PostalCode { get; set; }
 
         public virtual ICollection<Building> Buildings { get; set; }
 
         public virtual ICollection<Model> Models { get; set; }
 
-        public virtual ICollection<Contact> Contacts { get; set; }
+        public virtual ICollection<ProjectContact> Contacts { get; set; }
 
         public virtual ICollection<Document> Documents { get; set; }
 

@@ -1,8 +1,12 @@
 ﻿using Cec.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace Cec.ViewModels
 {
@@ -17,46 +21,36 @@ namespace Cec.ViewModels
         public string Project { get; set; }
 
         //Constructors
-        public ProjectIndexViewModel()
-        { 
-            
-        }
+        public ProjectIndexViewModel() { }
 
         //Methods
         public List<ProjectIndexViewModel> ListAll()
         {
-            var projects = db.Projects.OrderBy(p => p.Designation);
-            if (projects.Count() > 0)
-            {
-                var projectIndexViewModels = new List<ProjectIndexViewModel>();
-                foreach (var project in projects)
-                {
-                    projectIndexViewModels.Add(new ProjectIndexViewModel() { ProjectId = project.ProjectID, Project = project.Designation });
-                }
-                return projectIndexViewModels;
-            }
-            else
-            {
-                return null;
-            }
+            List<ProjectIndexViewModel> projects = db.Projects.OrderBy(p => p.Designation)
+                .OrderBy(p => p.Designation)
+                .Select(p => new ProjectIndexViewModel { ProjectId = p.ProjectID, Project = p.Designation })
+                .ToList();
+            return projects;
         }
 
-        public List<ProjectIndexViewModel> ListByUser(string userId)
+        public List<ProjectIndexViewModel> ListByManager(string userId)
         {
-            var projects = db.Projects.Where(p => p.User.Id == userId).OrderBy(p => p.Designation);
-            if (projects.Count() > 0)
-            {
-                var projectIndexViewModels = new List<ProjectIndexViewModel>();
-                foreach (var project in projects)
-                {
-                    projectIndexViewModels.Add(new ProjectIndexViewModel() { ProjectId = project.ProjectID, Project = project.Designation });
-                }
-                return projectIndexViewModels;
-            }
-            else
-            {
-                return null;
-            }
+            List<ProjectIndexViewModel> projects = db.Projects.Where(p => p.User.Id == userId)
+                .OrderBy(p => p.Designation)
+                .Select(p => new ProjectIndexViewModel { ProjectId = p.ProjectID, Project = p.Designation })
+                .ToList();
+            return projects;
+        }
+
+        public List<ProjectIndexViewModel> ListByEmployee(string userId)
+        {
+            Guid contactId = db.Users.Single(u => u.Id == userId).Contact.ContactID;
+            List<ProjectIndexViewModel> projects = db.ProjectContacts.Where(p => p.ContactID == contactId)
+                .Select(p => p.Project)
+                .OrderBy(p => p.Designation)
+                .Select(p => new ProjectIndexViewModel { ProjectId = p.ProjectID, Project = p.Designation })
+                .ToList();
+            return projects;
         }
     }
 
@@ -71,19 +65,19 @@ namespace Cec.ViewModels
 
         public ProjectStatusViewModel()
         {
-            this.Statuses = new Dictionary<string, double>();
+            Statuses = new Dictionary<string, double>();
         }
 
         public ProjectStatusViewModel(Building building)
         {
-            this.BuildingId = building.BuildingID;
-            this.Building = building.Designation;
-            this.AreaCount = building.Areas.Count;
-            this.Statuses = new Dictionary<string, double>();
+            BuildingId = building.BuildingID;
+            Building = building.Designation;
+            AreaCount = building.Areas.Count;
+            Statuses = new Dictionary<string, double>();
             foreach (var status in building.Areas.Select(a => a.Status).OrderBy(a => a.ListOrder).Distinct())
             {
                 var AreasWithStatusByBuilding = status.Area.Where(a => a.BuildingID == building.BuildingID).Count();
-                this.Statuses.Add(status.Designation, (100 * AreasWithStatusByBuilding) / this.AreaCount);
+                Statuses.Add(status.Designation, (100 * AreasWithStatusByBuilding) / AreaCount);
             }
         }
     }
@@ -101,7 +95,7 @@ namespace Cec.ViewModels
         [DisplayFormat(NullDisplayText = "-")]
         public string Description { get; set; }
 
-        [Display(Name = "Purchase Order", ShortName = "PO")]
+        [Display(Name = "Job Code")]
         [DisplayFormat(NullDisplayText = "-")]
         public string PurchaseOrder { get; set; }
 
@@ -114,9 +108,12 @@ namespace Cec.ViewModels
         [DisplayFormat(NullDisplayText = "-")]
         public string State { get; set; }
 
-        [Display(Name = "Postal Code", ShortName = "Zip")]
+        [Display(Name = "Postal Code")]
         [DisplayFormat(NullDisplayText = "-")]
-        public Nullable<int> PostalCode { get; set; }
+        public int? PostalCode { get; set; }
+
+        [Display(Name = "Assigned To")]
+        public string AssignedTo { get; private set; }
 
         public int BuildingCount { get; set; }
 
@@ -128,21 +125,24 @@ namespace Cec.ViewModels
 
         public ProjectDetailsViewModel(Guid projectId)
         {
-            var project = db.Projects.Find(projectId);
-            this.ProjectId = project.ProjectID;
-            this.Project = project.Designation;
-            this.PurchaseOrder = project.PurchaseOrder;
-            this.Description = project.Description;
-            this.Address = project.Address;
-            this.City = project.City;
-            this.State = project.State;
-            this.PostalCode = project.PostalCode;
-            this.BuildingCount = project.Buildings.Count;
-            this.AreaCount = project.Buildings.Select(b => b.Areas).Count();
-            this.Buildings = new List<ProjectStatusViewModel>();
+            var project = db.Projects.Include(p => p.Buildings)
+                .Include(p => p.User.Contact)
+                .Single(p => p.ProjectID == projectId);
+            ProjectId = project.ProjectID;
+            Project = project.Designation;
+            PurchaseOrder = project.PurchaseOrder;
+            Description = project.Description;
+            Address = project.Address;
+            City = project.City;
+            State = project.State;
+            PostalCode = project.PostalCode;
+            AssignedTo = project.User.Contact.FirstName + " " + project.User.Contact.LastName;
+            BuildingCount = project.Buildings.Count;
+            AreaCount = project.Buildings.Select(b => b.Areas).Count();
+            Buildings = new List<ProjectStatusViewModel>();
             foreach (var building in project.Buildings.OrderBy(b => b.Designation))
             {
-                this.Buildings.Add(new ProjectStatusViewModel(building));
+                Buildings.Add(new ProjectStatusViewModel(building));
             }
         }
     }
@@ -163,7 +163,7 @@ namespace Cec.ViewModels
         [Display(ShortName = "Desc.")]
         public string Description { get; set; }
 
-        [Display(Name = "Purchase Order", ShortName = "PO")]
+        [Display(Name = "Job Code", ShortName = "PO")]
         public string PurchaseOrder { get; set; }
 
         [DataType(DataType.Text)]
@@ -181,24 +181,41 @@ namespace Cec.ViewModels
         [DataType(DataType.PostalCode)]
         [RegularExpression(@"^\d{5}$", ErrorMessage = "Please enter a 5 digit code.")]
         [Display(Name = "Postal Code", ShortName = "Zip", Prompt = "Enter postal code")]
-        public Nullable<int> PostalCode { get; set; }
+        public int? PostalCode { get; set; }
+
+        [Display(Name = "Assigned To")]
+        [StringLength(128, ErrorMessage = "128 characters max")]
+        public string UserId { get; set; }
+
+        public IEnumerable<SelectListItem> Users { get; set; }
 
         //Constructors
-        public ProjectCreateViewModel(){ }
+        public ProjectCreateViewModel()
+        {
+            string role = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db)).FindByName("isEmployee").Id;
+            Users = db.Users.Include(u => u.Contact).Include(u => u.Roles)
+                .Where(u => u.Roles.Any(r => r.RoleId == role))
+                .OrderBy(u => u.Contact.LastName + u.Contact.FirstName)
+                .Select(u => new SelectListItem {
+                    Value = u.Id,
+                    Text = u.Contact.FirstName + " " + u.Contact.LastName
+                });
+        }
 
         //Methods
-        public Guid Create(string userId)
+        public Guid Create()
         {
-            var project = new Project();
-            project.ProjectID = Guid.Empty;
-            project.Designation = this.Designation;
-            project.Description = this.Description;
-            project.PurchaseOrder = this.PurchaseOrder;
-            project.Address = this.Address;
-            project.City = this.City;
-            project.State = this.State;
-            project.PostalCode = this.PostalCode;
-            project.UserId = userId;
+            var project = new Project {
+                ProjectID = Guid.Empty, 
+                Designation = Designation, 
+                Description = Description, 
+                PurchaseOrder = PurchaseOrder, 
+                Address = Address, 
+                City = City, 
+                State = State, 
+                PostalCode = PostalCode, 
+                UserId = UserId
+            };
             db.Projects.Add(project);
             db.SaveChanges();
             return project.ProjectID;
@@ -214,98 +231,80 @@ namespace Cec.ViewModels
         public Guid ProjectId { get; set; }
 
         [Required]
+        [StringLength(50, ErrorMessage = "50 characters max")]
         public string Designation { get; set; }
 
         [DataType(DataType.MultilineText)]
-        [Display(ShortName = "Desc.")]
         public string Description { get; set; }
 
-        [Display(Name = "Purchase Order", ShortName = "PO")]
+        [Display(Name = "Job Code")]
+        [StringLength(20, ErrorMessage = "20 characters max")]
         public string PurchaseOrder { get; set; }
 
         [DataType(DataType.Text)]
-        [StringLength(100, ErrorMessage = "Cannot be longer than 100 characters.")]
+        [StringLength(100, ErrorMessage = "100 characters max")]
         public string Address { get; set; }
 
         [DataType(DataType.Text)]
-        [StringLength(50, ErrorMessage = "Cannot be longer than 50 characters.")]
+        [StringLength(50, ErrorMessage = "50 characters max")]
         public string City { get; set; }
 
         [DataType(DataType.Text)]
-        [StringLength(2, ErrorMessage = "Cannot be longer than 2 characters.")]
+        [StringLength(2, ErrorMessage = "2 letter abbreviation")]
         public string State { get; set; }
 
         [DataType(DataType.PostalCode)]
         [RegularExpression(@"^\d{5}$", ErrorMessage = "Please enter a 5 digit code.")]
-        [Display(Name = "Postal Code", ShortName = "Zip", Prompt = "Enter postal code")]
-        public Nullable<int> PostalCode { get; set; }
+        public int? PostalCode { get; set; }
+
+        [Required]
+        [Display(Name = "Assigned To")]
+        [StringLength(128, ErrorMessage = "128 characters max")]
+        public string UserId { get; set; }
+
+        public IEnumerable<SelectListItem> Users { get; set; }
 
         //Constructors
-        public ProjectEditViewModel()
-        {
-
-        }
+        public ProjectEditViewModel() { }
 
         public ProjectEditViewModel(Guid projectId)
         {
-            var project = db.Projects.Find(projectId);
-            this.ProjectId = project.ProjectID;
-            this.Designation = project.Designation;
-            this.Description = project.Description;
-            this.PurchaseOrder = project.PurchaseOrder;
-            this.Address = project.Address;
-            this.City = project.City;
-            this.State = project.State;
-            this.PostalCode = project.PostalCode;
+            string role = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db)).FindByName("isEmployee").Id;
+            Project project = db.Projects.Single(p => p.ProjectID == projectId);
+            ProjectId = project.ProjectID;
+            Designation = project.Designation;
+            Description = project.Description;
+            PurchaseOrder = project.PurchaseOrder;
+            Address = project.Address;
+            City = project.City;
+            State = project.State;
+            PostalCode = project.PostalCode;
+            UserId = project.UserId;
+            Users = db.Users.Include(u => u.Contact).Include(u => u.Roles)
+                            .Where(u => u.Roles.Any(r => r.RoleId == role))
+                            .OrderBy(u => u.Contact.LastName + u.Contact.FirstName)
+                            .Select(u => new SelectListItem
+                            {
+                                Value = u.Id,
+                                Text = u.Contact.FirstName + " " + u.Contact.LastName
+                            });
         }
 
         //Methods
         public Guid Edit()
         {
-            var project = db.Projects.Find(this.ProjectId);
-            project.Designation = this.Designation;
-            project.Description = this.Description;
-            project.PurchaseOrder = this.PurchaseOrder;
-            project.Address = this.Address;
-            project.City = this.City;
-            project.State = this.State;
-            project.PostalCode = this.PostalCode;
-            db.Entry(project).State = System.Data.Entity.EntityState.Modified;
+            Project project = db.Projects.Find(ProjectId);
+            project.Designation = Designation;
+            project.Description = Description;
+            project.PurchaseOrder = PurchaseOrder;
+            project.Address = Address;
+            project.City = City;
+            project.State = State;
+            project.PostalCode = PostalCode;
+            project.UserId = UserId;
+            db.Entry(project).State = EntityState.Modified;
             db.SaveChanges();
-            return this.ProjectId;
-        }
-    }
-
-    public class ProjectDeleteViewModel
-    {
-        //Private Properties
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        //Public Properties
-        public Guid ProjectId { get; set; }
-
-        public string Designation { get; set; }
-
-        //Constructors
-        public ProjectDeleteViewModel()
-        {
-
-        }
-
-        public ProjectDeleteViewModel(Guid projectId)
-        {
-            var project = db.Projects.Find(projectId);
-            this.ProjectId = project.ProjectID;
-            this.Designation = project.Designation;
-        }
-
-        //Methods
-        public Guid Delete()
-        {
-            var project = db.Projects.Find(this.ProjectId);
-            db.Projects.Remove(project);
-            db.SaveChanges();
-            return project.ProjectID;
+            return ProjectId;
         }
     }
 }

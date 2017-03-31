@@ -1,8 +1,6 @@
 ﻿using Cec.Models;
 using Cec.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -10,11 +8,12 @@ using System.Web.Mvc;
 
 namespace Cec.Controllers
 {
+    [Authorize(Roles = "canManageProjects")]
     public class ModelController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /Model/5
+        // GET: /Model/(ProjectId)
         public ActionResult Index(Guid? id)
         {
             if (id == null)
@@ -32,7 +31,7 @@ namespace Cec.Controllers
             }
         }
 
-        // GET: /Model/Details/5
+        // GET: /Model/Details/(ModelId)
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -42,8 +41,7 @@ namespace Cec.Controllers
             return View(new ModelDetailsViewModel(id ?? Guid.Empty));
         }
 
-        // GET: /Model/Create/5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /Model/Create/(ProjectId)
         public ActionResult Create(Guid? id)
         {
             if (id == null)
@@ -54,11 +52,8 @@ namespace Cec.Controllers
         }
 
         // POST: /Model/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Create([Bind(Include = "ModelName,Description,ProjectId")] ModelCreateViewModel model)
         {
             try
@@ -68,16 +63,14 @@ namespace Cec.Controllers
                     return RedirectToAction("Details", new { id = model.Create() });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(model);
         }
 
-        // GET: /Model/Edit/5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /Model/Edit/(ModelId)
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -87,12 +80,9 @@ namespace Cec.Controllers
             return View(new ModelEditViewModel(id ?? Guid.Empty));
         }
 
-        // POST: /Model/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /Model/Edit/(ModelId)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Edit([Bind(Include = "ModelId,ModelName,Description,ProjectId")] ModelEditViewModel model)
         {
             try
@@ -102,16 +92,14 @@ namespace Cec.Controllers
                     return RedirectToAction("Details", new { id = model.Edit() });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(model);
         }
 
-        // GET: /Model/Copy/5
-        [Authorize(Roles = "canAdminister")]
+        // GET: /Model/Copy/(ModelId)
         public ActionResult Copy(Guid? id)
         {
             if (id == null)
@@ -121,12 +109,9 @@ namespace Cec.Controllers
             return View(new ModelCopyViewModel(id ?? Guid.Empty));
         }
 
-        // POST: /Model/Copy/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /Model/Copy/(ModelId)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
         public ActionResult Copy([Bind(Include = "ModelId,ModelName,Description,ProjectId")] ModelCopyViewModel model)
         {
             try
@@ -136,9 +121,8 @@ namespace Cec.Controllers
                     return RedirectToAction("Details", new { id = model.Copy() });
                 }
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             return View(model);
@@ -159,19 +143,18 @@ namespace Cec.Controllers
             return View(new ModelDeleteViewModel(id ?? Guid.Empty));
         }
 
-        // POST: /Model/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: /Model/Delete/(ModelId)
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
         public ActionResult DeleteConfirmed([Bind(Include = "ModelId, ProjectId")] ModelDeleteViewModel model)
         {
             try
             {
                 return RedirectToAction("Index", new { id = model.Delete() });
             }
-            catch (RetryLimitExceededException/* dex */)
+            catch (RetryLimitExceededException)
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
                 return RedirectToAction("Delete", new { id = model.ModelId, saveChangesError = true });
             }
         }

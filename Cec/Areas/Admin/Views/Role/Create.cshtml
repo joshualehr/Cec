@@ -1,0 +1,18 @@
+﻿@model Microsoft.AspNet.Identity.EntityFramework.IdentityRole
+
+<h1>New Role</h1>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name)
+        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+    </div>
+
+
+    <input type="submit" name="submit" value="Create Role" class="btn btn-primary" />
+    <a href="@Url.Action("index")">or cancel</a>
+}

@@ -6,34 +6,39 @@
     ViewBag.Title = "Materials";
 }
 
+<div class="row">
+    <div class="text-left col-xs-12 col-sm-4">
+        <h2>Material</h2>
+    </div>
+    <div class="text-center col-xs-12 col-sm-4">
+        @using (Html.BeginForm("Index", "Material", FormMethod.Get))
+        {
+            <br />
+            @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" class="btn btn-info" />
+        }
+    </div>
+    <div class="text-right col-xs-12 col-sm-4">
+        <br />
+        <div class="btn-group">
+            @Html.ActionLink("New Material", "Create", new { page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Units of Measure", "Index", "UnitOfMeasure", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+</div>
 <br />
-<p>
-    @Html.ActionLink("Projects", "Index", "Project")
-</p>
-<h2>Materials</h2>
-<p>
-    @Html.ActionLink("Create New", "Create", new { page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }) |
-    @Html.ActionLink("Units of Measure", "Index", "UnitOfMeasure")
-</p>
-@using (Html.BeginForm("Index", "Material", FormMethod.Get))
-{
-    <p>
-        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
-        <input type="submit" value="Description Search" class="btn btn-sm btn-info" />
-    </p>
-}
 <table class="table table-hover">
     <tr class="row">
-        <th class="col-lg-2">
+        <th class="hidden-xs col-sm-2 text-left">
             Image
         </th>
-        <th class="col-lg-1 text-center">
-            @Html.ActionLink("Material", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter }) &uarr;&darr;
+        <th class="col-xs-6 col-sm-1 text-left">
+            @Html.ActionLink("Material", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })<i class="glyphicon glyphicon-sort"></i>
         </th>
-        <th class="col-lg-6 text-left">
+        <th class="hidden-xs col-sm-6 text-left">
             @Html.DisplayNameFor(model => model.First().Description)
         </th>
-        <th class="col-lg-3 text-center">
+        <th class="col-xs-6 col-sm-3 text-right">
             Actions
         </th>
     </tr>
@@ -41,22 +46,22 @@
 @foreach (var item in Model)
 {
     <tr class="row">
-        <td class="col-lg-2">
+        <td class="hidden-xs col-sm-2 text-left">
             <a href="~/Material/Details/@item.MaterialID?page=@Model.PageNumber&sortOrder=@ViewBag.SortOrder&currentFilter=@ViewBag.CurrentFilter">
                 <img title="@item.Material" src="@item.ImagePath" alt="@item.Material" class="img-responsive" style="max-height: 100px;" />
             </a>
         </td>
-        <td class="col-lg-1 text-center">
+        <td class="col-xs-6 col-sm-1 text-left">
             @Html.ActionLink(item.Material, "Details", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter })
         </td>
-        <td class="col-lg-6 text-left">
+        <td class="hidden-xs col-sm-6 text-left">
             <pre class="pre-scrollable" style="max-height: 100px;">@item.Description</pre>
         </td>
-        <td class="col-lg-3 text-center">
+        <td class="col-xs-6 col-sm-3 text-right">
             <div class="btn-group">
-                @Html.ActionLink("Copy", "Copy", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-sm btn-danger" })
-                @Html.ActionLink("Edit", "Edit", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-sm btn-primary" })
-                @Html.ActionLink("Delete", "Delete", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-sm btn-default" })
+                @Html.ActionLink("Copy", "Copy", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-danger" })
+                @Html.ActionLink("Edit", "Edit", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-primary hidden-xs" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.MaterialID, page = Model.PageNumber, sortOrder = ViewBag.SortOrder, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-default", data_post = "Are you sure you want to delete " + item.Material + "?" })
             </div>
         </td>
     </tr>

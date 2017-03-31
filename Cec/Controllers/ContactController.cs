@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Cec.Controllers
 {
+    [Authorize(Roles = "isEmployee")]
     public class ContactController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -15,19 +16,46 @@ namespace Cec.Controllers
         // GET: /Contact/
         public ActionResult Index()
         {
-            var contacts = new ContactIndexViewModel().ListAll();
-            if (contacts.Count() > 0)
+            ContactIndexViewModel contactIndexViewModel = new ContactIndexViewModel();
+            if (contactIndexViewModel.Contacts.Count > 0)
             {
-                return View(contacts);
+                return View(contactIndexViewModel);
             }
-            else
-            {
-                return RedirectToAction("Create");
-            }
+            return RedirectToAction("Create");
         }
 
-        // GET: /Contact/Details/5
-        [Authorize(Roles = "canAdminister, isEmployee")]
+        // GET: /Contact/(ProjectId)
+        public ActionResult IndexByProject(Guid id)
+        {
+            ViewBag.ContactId = new ContactSelectList(id);
+            ContactIndexByProjectViewModel contactIndexByProjectViewModel = new ContactIndexByProjectViewModel(id);
+            return View(contactIndexByProjectViewModel);
+        }
+
+        //POST: /Contact/IndexByProject(ProjectId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "canEdit")]
+        public ActionResult IndexByProject([Bind(Include = "Contacts,ProjectId,Project,ContactId")] ContactIndexByProjectViewModel contact)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                    {
+                        return RedirectToAction("IndexByProject", new { id = contact.AssociateContactWithProject(contact.ProjectId, contact.ContactId) });
+                    }
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+            ViewBag.ContactId = new ContactSelectList(contact.ProjectId);
+            return View(contact);
+        }
+
+        // GET: /Contact/Details/(ContactId)
+        [Authorize(Roles = "canViewDetails")]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -44,7 +72,7 @@ namespace Cec.Controllers
         }
 
         // GET: /Contact/Create
-        [Authorize(Roles = "canAdminister, isEmployee")]
+        [Authorize(Roles = "canEdit")]
         public ActionResult Create()
         {
             return View();
@@ -55,7 +83,7 @@ namespace Cec.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister, isEmployee")]
+        [Authorize(Roles = "canEdit")]
         public ActionResult Create([Bind(Include = "ContactID,FirstName,LastName,Company,Title,Trade,Phone,Email,Chat,Website")] ContactCreateViewModel contact)
         {
             try
@@ -73,8 +101,8 @@ namespace Cec.Controllers
             return View(contact);
         }
 
-        // GET: /Contact/Edit/5
-        [Authorize(Roles = "canAdminister, isEmployee")]
+        // GET: /Contact/Edit/(ContactId)
+        [Authorize(Roles = "canEdit")]
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -90,12 +118,12 @@ namespace Cec.Controllers
             return View(contact);
         }
 
-        // POST: /Contact/Edit/5
+        // POST: /Contact/Edit/(ContactId)
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister, isEmployee")]
+        [Authorize(Roles = "canEdit")]
         public ActionResult Edit([Bind(Include = "ContactID,FirstName,LastName,Company,Title,Trade,Phone,Email,Chat,Website")] ContactEditViewModel contact)
         {
             try
@@ -113,42 +141,41 @@ namespace Cec.Controllers
             return View(contact);
         }
 
-        // GET: /Contact/Delete/5
+        // POST: /Contact/Delete/(ContactId)
+        [HttpPost]
         [Authorize(Roles = "canAdminister")]
-        public ActionResult Delete(Guid? id, bool? saveChangesError = false)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var contactId = id ?? Guid.Empty;
-            var contact = new ContactDeleteViewModel(contactId);
-            if (saveChangesError.GetValueOrDefault())
-            {
-                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
-            }
-            if (contact == null)
-            {
-                return HttpNotFound();
-            }
-            return View(contact);
-        }
-
-        // POST: /Contact/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "canAdminister")]
-        public ActionResult DeleteConfirmed(Guid id)
+        public ActionResult Delete(Guid id)
         {
             try
             {
-                new ContactDeleteViewModel(id).DeleteContact();
+                Contact contact = db.Contacts.Single(c => c.ContactID == id);
+                db.Contacts.Remove(contact);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch (RetryLimitExceededException/* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
+        }
+
+        // POST: /Contact/DeleteProjectContact/(ContactId)
+        [HttpPost]
+        [Authorize(Roles = "canDelete")]
+        public ActionResult DeleteProjectContact(Guid id, Guid contactid)
+        {
+            try
+            {
+                var projectContact = db.ProjectContacts.Single(pc => pc.ProjectID == id && pc.ContactID == contactid);
+                db.ProjectContacts.Remove(projectContact);
+                db.SaveChanges();
+                return RedirectToAction("IndexByProject", new { id = id });
+            }
+            catch (RetryLimitExceededException/* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                return RedirectToAction("IndexByProject", new { id = id, saveChangesError = true });
             }
         }
 

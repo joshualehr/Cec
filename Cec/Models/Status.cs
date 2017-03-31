@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace Cec.Models
 {
@@ -16,7 +14,7 @@ namespace Cec.Models
         [StringLength(20)]
         public string Designation { get; set; }
 
-        public Int16 ListOrder { get; set; }
+        public short ListOrder { get; set; }
 
         public virtual ICollection<Area> Area { get; set; }
     }

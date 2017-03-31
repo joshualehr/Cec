@@ -25,7 +25,7 @@ namespace Cec.Models
         [StringLength(2)]
         public string State { get; set; }
 
-        public Nullable<int> PostalCode { get; set; }
+        public int? PostalCode { get; set; }
 
         [Required()]
         [Index(IsClustered = false, IsUnique = false)]
@@ -49,5 +49,7 @@ namespace Cec.Models
         public virtual ICollection<AreaMaterial> AreaMaterials { get; set; }
 
         public virtual ICollection<Document> Documents { get; set; }
+
+        public virtual ICollection<ToDo> ToDos { get; set; }
     }
 }
