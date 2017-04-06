@@ -46,7 +46,7 @@ namespace Cec.Controllers
             var areaMaterial = new AreaMaterial();
             areaMaterial.Area = db.Areas.Find(id);
             areaMaterial.AreaID = areaMaterial.Area.AreaID;
-            ViewBag.MaterialID = new SelectList(db.Materials, "MaterialID", "Designation");
+            ViewBag.MaterialID = new SelectList(db.Materials.OrderBy(m => m.Designation), "MaterialID", "Designation");
             return View(areaMaterial);
         }
 

@@ -283,6 +283,10 @@
     <Compile Include="Migrations\201602082236425_AddedToDos.Designer.cs">
       <DependentUpon>201602082236425_AddedToDos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704061732029_PhaseQuantities.cs" />
+    <Compile Include="Migrations\201704061732029_PhaseQuantities.Designer.cs">
+      <DependentUpon>201704061732029_PhaseQuantities.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ProjectContact.cs" />
     <Compile Include="Models\Status.cs" />
@@ -437,9 +441,6 @@
     <Content Include="Views\ModelMaterial\Create.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\ModelMaterial\Delete.cshtml">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="Views\ModelMaterial\Edit.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -550,6 +551,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602082236425_AddedToDos.resx">
       <DependentUpon>201602082236425_AddedToDos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704061732029_PhaseQuantities.resx">
+      <DependentUpon>201704061732029_PhaseQuantities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

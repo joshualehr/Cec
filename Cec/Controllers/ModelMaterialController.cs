@@ -2,6 +2,7 @@
 using Cec.ViewModels;
 using System;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 
@@ -77,7 +78,7 @@ namespace Cec.Controllers
         // POST: /ModelMaterial/Edit/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProjectId,Project,ModelID,MaterialID,Material,ImagePath,UnitOfMeasure,Quantity,ApplyToExisting")] ModelMaterialEditViewModel modelMaterial)
+        public ActionResult Edit([Bind(Include = "ProjectId,Project,ModelID,MaterialID,Material,UnitOfMeasure,RoughQuantity,FinishQuantity,ApplyToExisting")] ModelMaterialEditViewModel modelMaterial)
         {
             try
             {
@@ -93,36 +94,26 @@ namespace Cec.Controllers
             return View(modelMaterial);
         }
 
-        // GET: /ModelMaterial/Delete/5
-        public ActionResult Delete(Guid? id, Guid? materialId)
-        {
-            if (id == null | materialId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var modelMaterialDeleteViewModel = new ModelMaterialDeleteViewModel(id ?? Guid.Empty, materialId ?? Guid.Empty);
-            if (modelMaterialDeleteViewModel == null)
-            {
-                return HttpNotFound();
-            }
-            return View(modelMaterialDeleteViewModel);
-        }
-
-        // POST: /ModelMaterial/Delete/
+        // POST: /ModelMaterial/Delete/(ModelId)?materialId=(MaterialId)
         [HttpPost]
-        [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed([Bind(Include = "ProjectId,Project,ModelID,MaterialID,Material,ApplyToExisting")] ModelMaterialDeleteViewModel modelMaterialDeleteViewModel)
+        public ActionResult Delete(Guid id, Guid materialId)
         {
             try
             {
-                return RedirectToAction("Index", new { id = modelMaterialDeleteViewModel.Delete() });
+                var modelMaterial = db.ModelMaterials.Single(mm => mm.ModelID == id & mm.MaterialID == materialId);
+                db.ModelMaterials.Remove(modelMaterial);
+                var areaMaterials = db.AreaMaterials.Where(a => a.Area.ModelID == id & a.MaterialID == materialId);
+                foreach (var areaMaterial in areaMaterials)
+                {
+                    db.AreaMaterials.Remove(areaMaterial);
+                }
+                db.SaveChanges();
             }
             catch (RetryLimitExceededException)
             {
                 ModelState.AddModelError("", "Delete failed. Try again, and if the problem persists see your system administrator.");
             }
-            return View(modelMaterialDeleteViewModel);
+            return RedirectToAction(nameof(ModelMaterialController.Index), new { id = id });
         }
 
         protected override void Dispose(bool disposing)

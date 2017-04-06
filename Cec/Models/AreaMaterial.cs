@@ -8,18 +8,17 @@ namespace Cec.Models
     {
         [Key]
         [Column(Order = 0)]
-        [Display(Name = "Area")]
         public Guid AreaID { get; set; }
 
         [Key]
         [Column(Order = 1)]
-        [Display(Name = "Material")]
         public Guid MaterialID { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F2}", HtmlEncode = false)]
-        [Range(0.01, 10000, ErrorMessage = "Must be between 0.01 and 10,000.00.")]
-        [Required(ErrorMessage = "Quantity is required.")]
         public double Quantity { get; set; }
+
+        public double RoughQuantity { get; set; }
+
+        public double FinishQuantity { get; set; }
 
         public virtual Area Area { get; set; }
 

@@ -308,26 +308,31 @@ namespace Cec.ViewModels
 
         public double Quantity { get; set; }
 
+        [Display(Name = "Rough-In Quantity", ShortName = "Rough Qty")]
+        public double RoughQuantity { get; set; }
+
+        [Display(Name = "Finish Quantity", ShortName = "Finish Qty")]
+        public double FinishQuantity { get; set; }
+
         [Display(Name = "Unit of Measure", ShortName = "U/M")]
         public string UnitOfMeasure { get; set; }
 
         //Constructors
-        public ModelMaterialIndexViewModel()
-        {
-
-        }
+        public ModelMaterialIndexViewModel() { }
 
         public ModelMaterialIndexViewModel(ModelMaterial modelMaterial)
         {
-            this.ProjectId = modelMaterial.Model.ProjectID;
-            this.Project = modelMaterial.Model.Project.Designation;
-            this.ModelId = modelMaterial.ModelID;
-            this.Model = modelMaterial.Model.Designation;
-            this.MaterialId = modelMaterial.MaterialID;
-            this.Material = modelMaterial.Material.Designation;
-            this.ImagePath = modelMaterial.Material.ImagePath;
-            this.Quantity = modelMaterial.Quantity;
-            this.UnitOfMeasure = modelMaterial.Material.UnitOfMeasure.Designation;
+            ProjectId = modelMaterial.Model.ProjectID;
+            Project = modelMaterial.Model.Project.Designation;
+            ModelId = modelMaterial.ModelID;
+            Model = modelMaterial.Model.Designation;
+            MaterialId = modelMaterial.MaterialID;
+            Material = modelMaterial.Material.Designation;
+            ImagePath = modelMaterial.Material.ImagePath;
+            Quantity = modelMaterial.Quantity;
+            RoughQuantity = modelMaterial.RoughQuantity;
+            FinishQuantity = modelMaterial.FinishQuantity;
+            UnitOfMeasure = modelMaterial.Material.UnitOfMeasure.Designation;
         }
 
         //Methods
@@ -369,20 +374,20 @@ namespace Cec.ViewModels
         //Constructors
         public ModelMaterialCreateViewModel()
         {
-            this.Materials = new List<ModelMaterialCreateItemViewModel>();
+            Materials = new List<ModelMaterialCreateItemViewModel>();
         }
 
         public ModelMaterialCreateViewModel(Guid modelId)
         {
             var modelData = db.Models.Find(modelId);
-            this.ProjectId = modelData.ProjectID;
-            this.Project = modelData.Project.Designation;
-            this.ModelId = modelData.ModelID;
-            this.Model = modelData.Designation;
-            this.ApplyToAllAreas = true;
-            this.Materials = new List<ModelMaterialCreateItemViewModel>();
+            ProjectId = modelData.ProjectID;
+            Project = modelData.Project.Designation;
+            ModelId = modelData.ModelID;
+            Model = modelData.Designation;
+            ApplyToAllAreas = true;
+            Materials = new List<ModelMaterialCreateItemViewModel>();
             var currentModelMaterial = db.ModelMaterials.Include(m => m.Material)
-                                                        .Where(m => m.ModelID == this.ModelId)
+                                                        .Where(m => m.ModelID == ModelId)
                                                         .Select(m => m.Material)
                                                         .Distinct();
             var materialExceptCurrent = db.Materials.Except(currentModelMaterial)
@@ -390,51 +395,44 @@ namespace Cec.ViewModels
                                                     .ToList();
             foreach (var item in materialExceptCurrent)
             {
-                this.Materials.Add(new ModelMaterialCreateItemViewModel(this.ModelId, item.MaterialID));
+                Materials.Add(new ModelMaterialCreateItemViewModel(ModelId, item.MaterialID));
             }
         }
 
         //Methods
         public Guid Create()
         {
-            foreach (var item in this.Materials)
+            foreach (var m in Materials)
             {
-                if (item.Quantity > 0)
+                if (m.RoughQuantity > 0 | m.FinishQuantity > 0)
                 {
-                    var modelMaterial = new ModelMaterial();
-                    modelMaterial.ModelID = item.ModelId;
-                    modelMaterial.MaterialID = item.MaterialId;
-                    modelMaterial.Quantity = item.Quantity;
-                    db.ModelMaterials.Add(modelMaterial);
-                    if (this.ApplyToAllAreas) //test to change existing Areas that reference this Model
+                    db.ModelMaterials.Add(new ModelMaterial()
                     {
-                        var areas = db.Areas.Include(a => a.AreaMaterials)
-                                            .Where(a => a.ModelID == item.ModelId)
-                                            .ToList();
+                        ModelID = m.ModelId,
+                        MaterialID = m.MaterialId,
+                        Quantity = m.RoughQuantity + m.FinishQuantity,
+                        RoughQuantity = m.RoughQuantity,
+                        FinishQuantity = m.FinishQuantity
+                    });
+                    if (ApplyToAllAreas) //test to change existing Areas that reference this Model
+                    {
+                        var areas = db.Areas.Where(a => a.ModelID == m.ModelId).ToList();
                         foreach (var a in areas)
                         {
-                            if (a.AreaMaterials.Any(am => am.AreaID == a.AreaID & am.MaterialID == item.MaterialId)) //adjust Quantity for existing AreaMaterial
+                            db.AreaMaterials.Add(new AreaMaterial()
                             {
-                                var existingAreaMaterial = db.AreaMaterials.FirstOrDefault(am => am.AreaID == a.AreaID & am.MaterialID == item.MaterialId);
-                                existingAreaMaterial.Quantity = item.Quantity;
-                                db.Entry(existingAreaMaterial).State = EntityState.Modified;
-                            }
-                            else //add AreaMaterial to Areas
-                            {
-                                var newAreaMaterial = new AreaMaterial
-                                {
-                                    AreaID = a.AreaID, 
-                                    MaterialID = item.MaterialId, 
-                                    Quantity = item.Quantity
-                                };
-                                db.AreaMaterials.Add(newAreaMaterial);
-                            }
+                                AreaID = a.AreaID,
+                                MaterialID = m.MaterialId,
+                                Quantity = m.RoughQuantity + m.FinishQuantity,
+                                RoughQuantity = m.RoughQuantity,
+                                FinishQuantity = m.FinishQuantity
+                            });
                         }
                     }
                 }
             }
             db.SaveChanges();
-            return this.ModelId;
+            return ModelId;
         }
     }
 
@@ -456,14 +454,18 @@ namespace Cec.ViewModels
         [DataType(DataType.MultilineText), Display(ShortName = "Desc.")]
         public string Description { get; set; }
 
-        public string ImagePath { get; set; }
-
         [Display(Name = "Unit of Measure", ShortName = "U/M")]
         public string UnitOfMeasureName { get; set; }
 
         [Range(0, 99999)]
+        [Display(Name = "Rough-In Quantity", ShortName = "Rough Qty")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F0}", HtmlEncode = false)]
-        public int Quantity { get; set; }
+        public double RoughQuantity { get; set; }
+
+        [Range(0, 99999)]
+        [Display(Name = "Finish Quantity", ShortName = "Finish Qty")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F0}", HtmlEncode = false)]
+        public double FinishQuantity { get; set; }
 
         //Constructors
         public ModelMaterialCreateItemViewModel() { }
@@ -471,13 +473,13 @@ namespace Cec.ViewModels
         public ModelMaterialCreateItemViewModel(Guid modelId, Guid materialId)
         {
             var materialData = db.Materials.Find(materialId);
-            this.ModelId = modelId;
-            this.MaterialId = materialId;
-            this.MaterialName = materialData.Designation;
-            this.Description = materialData.Description;
-            this.ImagePath = materialData.ImagePath;
-            this.UnitOfMeasureName = materialData.UnitOfMeasure.Designation;
-            this.Quantity = 0;
+            ModelId = modelId;
+            MaterialId = materialId;
+            MaterialName = materialData.Designation;
+            Description = materialData.Description;
+            UnitOfMeasureName = materialData.UnitOfMeasure.Designation;
+            RoughQuantity = 0;
+            FinishQuantity = 0;
         }
     }
 
@@ -499,36 +501,40 @@ namespace Cec.ViewModels
 
         public string Material { get; set; }
 
-        public string ImagePath { get; set; }
-
         [Display(Name = "Unit of Measure", ShortName = "U/M")]
         public string UnitOfMeasure { get; set; }
 
-        [Range(1, 99999)]
+        public string Quantity { get; set; }
+
+        [Range(0, 99999)]
+        [Display(Name = "Rough-In Quantity", ShortName = "Rough Qty")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F0}", HtmlEncode = false)]
-        public double Quantity { get; set; }
+        public double RoughQuantity { get; set; }
+
+        [Range(0, 99999)]
+        [Display(Name = "Finish Quantity", ShortName = "Finish Qty")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F0}", HtmlEncode = false)]
+        public double FinishQuantity { get; set; }
 
         public bool ApplyToExisting { get; set; }
 
         //Constructors
-        public ModelMaterialEditViewModel()
-        {
-
-        }
+        public ModelMaterialEditViewModel() { }
 
         public ModelMaterialEditViewModel(Guid modelId, Guid materialId)
         {
             var modelMaterial = db.ModelMaterials.Find(modelId, materialId);
-            this.ProjectId = modelMaterial.Model.ProjectID;
-            this.Project = modelMaterial.Model.Project.Designation;
-            this.ModelId = modelMaterial.ModelID;
-            this.Model = modelMaterial.Model.Designation;
-            this.MaterialId = modelMaterial.MaterialID;
-            this.Material = modelMaterial.Material.Designation;
-            this.ImagePath = modelMaterial.Material.ImagePath;
-            this.UnitOfMeasure = modelMaterial.Material.UnitOfMeasure.Designation;
-            this.Quantity = modelMaterial.Quantity;
-            this.ApplyToExisting = true;
+            ProjectId = modelMaterial.Model.ProjectID;
+            Project = modelMaterial.Model.Project.Designation;
+            ModelId = modelMaterial.ModelID;
+            Model = modelMaterial.Model.Designation;
+            MaterialId = modelMaterial.MaterialID;
+            Material = modelMaterial.Material.Designation;
+            UnitOfMeasure = modelMaterial.Material.UnitOfMeasure.Designation;
+            Quantity = modelMaterial.Quantity.ToString();
+            RoughQuantity = modelMaterial.RoughQuantity;
+            FinishQuantity = modelMaterial.FinishQuantity;
+            ApplyToExisting = true;
         }
 
         //Methods
@@ -536,78 +542,26 @@ namespace Cec.ViewModels
         {
             var modelMaterial = new ModelMaterial()
             {
-                ModelID = this.ModelId,
-                MaterialID = this.MaterialId,
-                Quantity = this.Quantity
+                ModelID = ModelId,
+                MaterialID = MaterialId,
+                Quantity = RoughQuantity + FinishQuantity,
+                RoughQuantity = RoughQuantity,
+                FinishQuantity = FinishQuantity
             };
             db.Entry(modelMaterial).State = EntityState.Modified;
-            if (this.ApplyToExisting)
+            if (applyToExisting)
             {
-                var areaMaterials = db.AreaMaterials.Where(a => a.Area.ModelID == this.ModelId && a.MaterialID == this.MaterialId);
-                foreach (var areaMaterial in areaMaterials)
+                var areaMaterials = db.AreaMaterials.Where(a => a.Area.ModelID == ModelId && a.MaterialID == MaterialId);
+                foreach (var am in areaMaterials)
                 {
-                    areaMaterial.Quantity = this.Quantity;
-                    db.Entry(areaMaterial).State = EntityState.Modified;
+                    am.Quantity = RoughQuantity + FinishQuantity;
+                    am.RoughQuantity = RoughQuantity;
+                    am.FinishQuantity = FinishQuantity;
+                    db.Entry(am).State = EntityState.Modified;
                 }
             }
             db.SaveChanges();
-            return this.ModelId;
-        }
-    }
-
-    public class ModelMaterialDeleteViewModel
-    {
-        //Private Properties
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        //Public Properties
-        public Guid ProjectId { get; set; }
-
-        public string Project { get; set; }
-
-        public Guid ModelId { get; set; }
-
-        public string Model { get; set; }
-
-        public Guid MaterialId { get; set; }
-
-        public string Material { get; set; }
-
-        public bool ApplyToExisting { get; set; }
-
-        //Constructors
-        public ModelMaterialDeleteViewModel()
-        {
-
-        }
-
-        public ModelMaterialDeleteViewModel(Guid modelId, Guid materialId)
-        {
-            var modelMaterial = db.ModelMaterials.Find(modelId, materialId);
-            this.ProjectId = modelMaterial.Model.ProjectID;
-            this.Project = modelMaterial.Model.Project.Designation;
-            this.ModelId = modelMaterial.ModelID;
-            this.Model = modelMaterial.Model.Designation;
-            this.MaterialId = modelMaterial.MaterialID;
-            this.Material = modelMaterial.Material.Designation;
-            this.ApplyToExisting = true;
-        }
-
-        //Methods
-        public Guid Delete()
-        {
-            var modelMaterial = db.ModelMaterials.Find(this.ModelId, this.MaterialId);
-            db.ModelMaterials.Remove(modelMaterial);
-            if (this.ApplyToExisting)
-            {
-                var areaMaterials = db.AreaMaterials.Where(a => a.Area.ModelID == this.ModelId & a.MaterialID == this.MaterialId);
-                foreach (var areaMaterial in areaMaterials)
-                {
-                    db.AreaMaterials.Remove(areaMaterial);
-                }
-            }
-            db.SaveChanges();
-            return this.ModelId;
+            return ModelId;
         }
     }
 }

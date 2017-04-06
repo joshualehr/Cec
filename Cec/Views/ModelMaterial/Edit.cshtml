@@ -10,7 +10,9 @@
     @Html.ActionLink("Models", "Index", "Model", new { id = Model.ModelId }, null) >
     @Html.ActionLink("Model " + Model.Model, "Details", "Model", new { id = Model.ModelId }, null)
 </p>
-<h2>Edit @Model.Material for Model @Model.Model</h2>
+<h2>Edit @Model.Material</h2>
+<h2>for Model @Model.Model</h2>
+<br/>
 
 @using (Html.BeginForm())
 {
@@ -24,21 +26,26 @@
         @Html.HiddenFor(model => model.Model)
         @Html.HiddenFor(model => model.MaterialId)
         @Html.HiddenFor(model => model.Material)
-        @Html.HiddenFor(model => model.ImagePath)
         @Html.HiddenFor(model => model.UnitOfMeasure)
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <img src="@Model.ImagePath" title="@Model.Material" height="100" width="100" alt="@Model.Material" />
-                <br />
-                Measure by: @Model.UnitOfMeasure
+            @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.Quantity)&nbsp;@Model.UnitOfMeasure
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.RoughQuantity, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Quantity)
+                @Html.EditorFor(model => model.RoughQuantity, new { htmlAttributes = new { @class = "form-control" } })&nbsp;@Model.UnitOfMeasure
+                @Html.ValidationMessageFor(model => model.RoughQuantity)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FinishQuantity, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FinishQuantity, new { htmlAttributes = new { @class = "form-control" } })&nbsp;@Model.UnitOfMeasure
+                @Html.ValidationMessageFor(model => model.FinishQuantity)
             </div>
         </div>
         <div class="form-group">
