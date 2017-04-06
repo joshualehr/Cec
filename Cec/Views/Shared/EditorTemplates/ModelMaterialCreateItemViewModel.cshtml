@@ -4,19 +4,20 @@
     <td class="col-lg-1 text-center">
         @Html.HiddenFor(model => model.ModelId)
         @Html.HiddenFor(model => model.MaterialId)
-        @Html.EditorFor(model => model.Quantity, new { HtmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Quantity)
+        @Html.EditorFor(model => model.RoughQuantity, new { HtmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.RoughQuantity)
+    </td>
+    <td class="col-lg-1 text-center">
+        @Html.EditorFor(model => model.FinishQuantity, new { HtmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.FinishQuantity)
     </td>
     <td class="col-lg-1 text-center">
         @Html.DisplayFor(model => model.UnitOfMeasureName)
     </td>
-    <td class="col-lg-1 text-center">
-        <img title="@Model.MaterialName" height="50" width="50" src="@Model.ImagePath" alt="@Model.MaterialName" />
-    </td>
-    <td class="col-lg-2 text-center">
+    <td class="col-lg-3 text-left">
         @Html.DisplayFor(model => model.MaterialName)
     </td>
-    <td class="col-lg-7 text-justify">
+    <td class="col-lg-6 text-left">
         @Html.DisplayFor(model => model.Description)
     </td>
 </tr>

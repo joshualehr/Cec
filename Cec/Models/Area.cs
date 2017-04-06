@@ -16,6 +16,13 @@ namespace Cec.Models
 
         public string Description { get; set; }
 
+        [Required()]
+        [Index(IsClustered = false, IsUnique = false)]
+        public Guid BuildingID { get; set; }
+
+        [Index(IsClustered = false, IsUnique = false)]
+        public Guid? ModelID { get; set; }
+
         [StringLength(100)]
         public string Address { get; set; }
 
@@ -26,13 +33,6 @@ namespace Cec.Models
         public string State { get; set; }
 
         public int? PostalCode { get; set; }
-
-        [Required()]
-        [Index(IsClustered = false, IsUnique = false)]
-        public Guid BuildingID { get; set; }
-
-        [Index(IsClustered = false, IsUnique = false)]
-        public Guid? ModelID { get; set; }
 
         [Required()]
         [Index(IsClustered = false, IsUnique = false)]
